@@ -24,13 +24,14 @@
 			}
 		})
 			.then(response => response.json())
-			.then(data => console.log(data))
+			.then(data => renderTable(data))
 			.catch(err => console.log(err));
 
-		function renderTable() {
+		function renderTable(data) {
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
+				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
+				data: data,
 				initialSort: [
 					{column: "ev", dir: "desc"},
 				],
