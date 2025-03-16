@@ -6,6 +6,7 @@
 	<title>Daily Dingers</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
+	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
 </head>
 <style>
@@ -24,6 +25,8 @@
 	#table {
 		height: 100%;
 	}
+	#playerTable {
+	}
 </style>
 <body>
 	<nav>
@@ -35,6 +38,10 @@
 	</div>
 	<div id="table-container">
 		<div id="table"></div>
+		<div id="player-table">
+			<h2>Jeff Skinner</h2>
+
+		</div>
 	</div>
 	<script type="text/javascript">
 		const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/nhl/evArr.json";
@@ -47,8 +54,15 @@
 			.then(data => renderTable(data))
 			.catch(err => console.log(err));
 
+		function showPlayerInfo(row) {
+			const el = document.querySelector("#player-table");
+			const html = "";
+			//html.appendChild()
+			el.innerHTML = html;
+		}
 
 		const chartFormatter = function(cell, params, rendered) {
+			const data = cell.getRow().getData();
 			const content = document.createElement("span");
 			const values = cell.getValue().split(",").slice(-20);
 
@@ -63,35 +77,14 @@
 				width: 145
 			}
 
-			if (params.fill) {
-				options.fill = params.fill;
+			options.fill = function(value) {
+				return parseFloat(value) > parseFloat(data.playerHandicap) ? "green" : "red"
 			}
 
 			rendered(function(){
 				peity(content, params.type, options);
 			});
 			return content;
-		}
-
-		const evBookFormatter = function(cell, params, rendered) {
-			const data = cell.getRow().getData();
-			return data.line+" "+cell.getValue().replace("kambi", "br").toUpperCase();
-		}
-
-		const lineFormatter = function(cell, params, rendered) {
-			const data = cell.getRow().getData();
-			const ou = data.under ? "u" : "o";
-			return ou+cell.getValue();
-		}
-
-		const uppercaseFormatter = function(cell, params, rendered) {
-			return cell.getValue().toUpperCase();
-		}
-
-		const titleFormatter = function(cell, params, rendered) {
-			return cell.getValue().split(' ')
-        		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        		.join(' ');
 		}
 
 		function renderTable(data) {
@@ -119,10 +112,18 @@
 					{title: "Kambi", field: "bookOdds.kambi", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "ESPN", field: "bookOdds.espn", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar", fill: function(value, data, cell) {
-						return value > parseFloat(data.playerHandicap) ? "green" : "red";
-					}}}
+					{title: "", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}},
+					{title: "SZN", field: "totalOver", hozAlign: "center", sorter: "number", formatter: percentFormatter},
+					{title: "L10", field: "total10Over", hozAlign: "center", sorter: "number", formatter: percentFormatter},
 				]
+			});
+
+			TABLE.on("rowClick", function(e, row) {
+				TABLE.deselectRow();
+				row.select();
+				const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+				cols.forEach(col => TABLE.hideColumn(col));
+				showPlayerInfo(row);
 			});
 		}
 	</script>
