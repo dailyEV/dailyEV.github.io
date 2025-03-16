@@ -5,7 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Daily Dingers</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
-	<link href="tabulator.min.css" rel="stylesheet">	
+	<script type="text/javascript" src="peity-vanilla.min.js"></script>
+	<link href="tabulator.min.css" rel="stylesheet">
 </head>
 <style>
 	body {
@@ -46,9 +47,41 @@
 			.then(data => renderTable(data))
 			.catch(err => console.log(err));
 
+
+		const chartFormatter = function(cell, params, rendered) {
+			const content = document.createElement("span");
+			const values = cell.getValue().split(",").slice(-20);
+
+			//if (params.invert) {
+			//	values = values.map(val => val * -1);
+			//}
+
+			content.classList.add(params.type);
+			content.innerHTML = values.join(",");
+
+			const options = {
+				width: 145
+			}
+
+			if (params.fill) {
+				options.fill = params.fill;
+			}
+
+			rendered(function(){
+				peity(content, params.type, options);
+			});
+			return content;
+		}
+
 		const evBookFormatter = function(cell, params, rendered) {
 			const data = cell.getRow().getData();
 			return data.line+" "+cell.getValue().replace("kambi", "br").toUpperCase();
+		}
+
+		const lineFormatter = function(cell, params, rendered) {
+			const data = cell.getRow().getData();
+			const ou = data.under ? "u" : "o";
+			return ou+cell.getValue();
 		}
 
 		const uppercaseFormatter = function(cell, params, rendered) {
@@ -76,7 +109,8 @@
 					{title: "Book", field: "book", hozAlign: "center", width: 80, formatter: evBookFormatter},
 					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
 					{title: "Game", field: "game", formatter: uppercaseFormatter, hozAlign: "center"},
-					{title: "Prop", field: "prop", width: 70, hozAlign: "center", formatter: uppercaseFormatter},
+					{title: "Prop", field: "prop", width: 60, hozAlign: "center", formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
+					{title: "Line", field: "playerHandicap", hozAlign: "center", formatter:lineFormatter},
 					{title: "FD", field: "bookOdds.fd", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "MGM", field: "bookOdds.mgm", hozAlign: "center", width: 85, sorter: "number"},
@@ -85,6 +119,9 @@
 					{title: "Kambi", field: "bookOdds.kambi", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "ESPN", field: "bookOdds.espn", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar", fill: function(value, data, cell) {
+						return value > parseFloat(data.playerHandicap) ? "green" : "red";
+					}}}
 				]
 			});
 		}
