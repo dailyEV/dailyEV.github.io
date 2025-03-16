@@ -8,11 +8,20 @@
 	<link href="tabulator.min.css" rel="stylesheet">	
 </head>
 <style>
+	body {
+		margin: 0; padding: 0;
+		font-size: 18px;
+		height: 100vh;
+	}
 	#table-container {
 		padding-top: 1rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		height: 90%;
+	}
+	#table {
+		height: 100%;
 	}
 </style>
 <body>
@@ -27,7 +36,7 @@
 		<div id="table"></div>
 	</div>
 	<script type="text/javascript">
-		const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/nba/html.json";
+		const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/nhl/evArr.json";
 		fetch(url, {
 			headers: {
 				"Accept": "application/vnd.github.v3.raw"
@@ -37,7 +46,23 @@
 			.then(data => renderTable(data))
 			.catch(err => console.log(err));
 
+		const evBookFormatter = function(cell, params, rendered) {
+			const data = cell.getRow().getData();
+			return data.line+" "+cell.getValue().replace("kambi", "br").toUpperCase();
+		}
+
+		const uppercaseFormatter = function(cell, params, rendered) {
+			return cell.getValue().toUpperCase();
+		}
+
+		const titleFormatter = function(cell, params, rendered) {
+			return cell.getValue().split(' ')
+        		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        		.join(' ');
+		}
+
 		function renderTable(data) {
+			data = data.filter(r => !["fgs", "3-way"].includes(r.prop));
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
@@ -48,14 +73,18 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev", hozAlign: "center", width: 60, sorter: "number"},
-					{title: "Book", field: "book", hozAlign: "center", width: 60},
-					{title: "Player", field: "player", headerFilter: "input"},
+					{title: "Book", field: "book", hozAlign: "center", width: 80, formatter: evBookFormatter},
+					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
+					{title: "Game", field: "game", formatter: uppercaseFormatter, hozAlign: "center"},
+					{title: "Prop", field: "prop", width: 70, hozAlign: "center", formatter: uppercaseFormatter},
 					{title: "FD", field: "bookOdds.fd", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "MGM", field: "bookOdds.mgm", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "PN", field: "bookOdds.pn", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "Kambi", field: "bookOdds.kambi", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "ESPN", field: "bookOdds.espn", hozAlign: "center", width: 85, sorter: "number"},
 				]
 			});
 		}
