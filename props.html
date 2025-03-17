@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
+	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 </head>
 <style>
 	body {
@@ -15,56 +16,143 @@
 		font-size: 18px;
 		height: 100vh;
 	}
+	#header {
+		margin-top: 1rem;
+	}
 	#table-container {
 		padding-top: 1rem;
 		display: flex;
-		justify-content: center;
+		justify-content: space-evenly;
 		align-items: center;
 		height: 90%;
 	}
 	#table {
 		height: 100%;
 	}
-	#playerTable {
+	#player-table {
+		display: flex;
+		flex-direction: column;
+		display: none;
+		min-width: 500px;
+	}
+	nav, h2 {
+		text-align: center;
 	}
 </style>
 <body>
-	<nav>
-		<a href="/" onclick="event.preventDefault(); route('/');">Home</a>
-		<a href="/daily-dingers" onclick="event.preventDefault(); route('/daily-dingers');">Daily Dingers</a>
-	</nav>
-	<div>
-		Dingers
+	<div id="header">
+		<nav id="sport-nav">
+			<button>MLB</button>
+			<button>NHL</button>
+		</nav>	
 	</div>
 	<div id="table-container">
 		<div id="table"></div>
 		<div id="player-table">
-			<h2>Jeff Skinner</h2>
-
 		</div>
 	</div>
 	<script type="text/javascript">
-		const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/nhl/evArr.json";
-		fetch(url, {
-			headers: {
-				"Accept": "application/vnd.github.v3.raw"
-			}
+		let TABLE = null;
+		let url = "";
+		const windowURL = new URL(window.location.href);
+		const URLParams = new URLSearchParams(windowURL.search);
+
+		document.querySelectorAll("#sport-nav button").forEach(btn => {
+			btn.addEventListener("click", () => {
+				const sport = btn.textContent;
+				window.location.href = "/props?sport="+sport
+			});
 		})
-			.then(response => response.json())
-			.then(data => renderTable(data))
-			.catch(err => console.log(err));
+
+		fetchData(URLParams.get("sport"));
+
+		function fetchData(sport) {
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${sport}/evArr.json`
+			fetch(url, {
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(data => {
+				renderTable(data);
+				setTimeout(function() {
+					//TABLE.getRows("active")[3].getElement().click()
+				}, 200);
+			}).catch(err => console.log(err));
+		}
 
 		function showPlayerInfo(row) {
+			const cutoff = 0;
+			const data = row.getData();
+			const dtSplits = data.dtSplits.split(",").slice(cutoff);
 			const el = document.querySelector("#player-table");
-			const html = "";
-			//html.appendChild()
-			el.innerHTML = html;
+			el.innerHTML = "";
+
+			const h2 = document.createElement("h2");
+			h2.innerText = title(data.player);
+			el.appendChild(h2);
+
+			const table = document.createElement("div");
+			const logs = data.totalSplits.split(",").slice(cutoff);
+			table.id = "logs";
+			el.appendChild(table);
+			el.style.display = "flex";
+
+			const colors = logs.map(value => {
+				let cond = parseFloat(value) > parseFloat(data.playerHandicap);
+				if (data.under) {
+					cond = parseFloat(value) < parseFloat(data.playerHandicap);
+				}
+				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
+			});
+			const tableData = {
+				x: dtSplits,
+				y: logs.map(v => v != "0" ? v : 0.25),
+				type: "bar",
+				text: logs,
+				textposition: "inside",
+				marker: {
+					color: colors
+				}
+			};
+			const layout = {
+				title: "Game Logs",
+				showlegend: false,
+				xaxis: {
+					title: "Dates",
+					showgrid: false,
+					type: "category",
+					//tickmode: "array",
+					//tickvals: [dtSplits[0],dtSplits.at(-1)],
+					//ticktext: [dtSplits[0],dtSplits.at(-1)],
+					//range: [-0.5, parseFloat(dtSplits.length)+0.5],
+					rangeslider: {},
+					range: [dtSplits.at(-15),dtSplits.at(-1)]
+				},
+				yaxis: {
+					showgrid: false,
+					tickmode: "linear",
+					dtick: 1,
+					fixedrange: true
+				},
+				shapes: [
+					{
+						type: "line",
+						x0: dtSplits[0], x1: dtSplits.at(-1),
+						y0: data.playerHandicap, y1: data.playerHandicap,
+						line: {
+							color: "rgb(96, 125, 139)",
+							dash: "dash"
+						}
+					}
+				]
+			};
+
+			//Plotly.d3.json()
+			Plotly.newPlot("logs", [tableData], layout);
 		}
 
 		const chartFormatter = function(cell, params, rendered) {
 			const data = cell.getRow().getData();
 			const content = document.createElement("span");
-			const values = cell.getValue().split(",").slice(-20);
+			const values = cell.getValue().split(",").slice(-15);
 
 			//if (params.invert) {
 			//	values = values.map(val => val * -1);
@@ -78,7 +166,11 @@
 			}
 
 			options.fill = function(value) {
-				return parseFloat(value) > parseFloat(data.playerHandicap) ? "green" : "red"
+				let cond = parseFloat(value) > parseFloat(data.playerHandicap);
+				if (data.under) {
+					cond = parseFloat(value) < parseFloat(data.playerHandicap);
+				}
+				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
 			}
 
 			rendered(function(){
@@ -112,19 +204,28 @@
 					{title: "Kambi", field: "bookOdds.kambi", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
 					{title: "ESPN", field: "bookOdds.espn", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}},
+					{title: "Game Logs", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}},
 					{title: "SZN", field: "totalOver", hozAlign: "center", sorter: "number", formatter: percentFormatter},
 					{title: "L10", field: "total10Over", hozAlign: "center", sorter: "number", formatter: percentFormatter},
 				]
 			});
 
 			TABLE.on("rowClick", function(e, row) {
-				TABLE.deselectRow();
-				row.select();
-				const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-				cols.forEach(col => TABLE.hideColumn(col));
-				showPlayerInfo(row);
+				rowClick(row);
 			});
+
+			TABLE.on("renderComplete", function() {
+				//console.log(this.getRows())
+				//rowClick(TABLE.getRows()[3])
+			})
+		}
+
+		function rowClick(row) {
+			TABLE.deselectRow();
+			row.select();
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			cols.forEach(col => TABLE.hideColumn(col));
+			showPlayerInfo(row);
 		}
 	</script>
 </body>
