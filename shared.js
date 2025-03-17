@@ -18,20 +18,55 @@ const evBookFormatter = function(cell, params, rendered) {
 	`;
 }
 
+const plusMinusFormatter = function(cell) {
+	let ev = cell.getValue();
+	if (parseFloat(ev) > 0) {
+		ev = "+"+ev;
+	}
+	return ev;
+}
+
+const propFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const ou = data.under ? "u" : "o";
+	let prop = `${ou}${data.playerHandicap} ${data.prop.toUpperCase()}`;
+	if (["atgs"].includes(data.prop)) {
+		return data.prop.toUpperCase();
+	}
+	return prop;
+}
+
 const teamFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	return `<img class='team-img' src='${cell.getValue()}' />`;
 }
 
+const playerFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	const sport = params.sport;
+	const team = "det";
+	const imgs = getGameImgs(data, params);
+	return `
+		<div class='game-container'>${imgs.join("")}</div>
+		${title(data.player)}
+	`
+}
+
+function getGameImgs(data, params) {
+	const away = data.game.split(" @ ")[0];
+	const home = data.game.split(" @ ")[1];
+	return [
+		`<img class='game-img away' src='logos/${params.sport}/${away}.png' />`,
+		`<img class='game-img home' src='logos/${params.sport}/${home}.png' />`
+	];
+}
+
 const gameFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
-	const game = cell.getValue();
-	const away = game.split(" @ ")[0];
-	const home = game.split(" @ ")[1];
+	const gameImgs = getGameImgs(data, params);
 	return `
 		<div class='game-cell'>
-			<img class='game-img' src='logos/${SPORT}/${away}.svg' />
-			<img class='game-img' src='logos/${SPORT}/${home}.svg' />
+			${gameImgs.join("")}
 		</div>
 	`;
 }

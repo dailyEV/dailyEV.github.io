@@ -36,18 +36,19 @@
 		min-width: 500px;
 	}
 	.tabulator-cell {
-		height: 24px;
+		//height: 24px;
 	}
 	.game-cell {
-		display: flex;
-		justify-content: space-evenly;
+		position: relative;
+		display: inline-block;
+		width: 100%; height: 100%;
 	}
 	.evbook-cell {
 		display: flex;
 		justify-content: center;
 	}
 	.game-img {
-		height: 16px; width: 16px;
+		height: 20px; width: 20px;
 	}
 	.book-img {
 		height: 16px; width: 16px;
@@ -55,6 +56,25 @@
 	}
 	nav, h2 {
 		text-align: center;
+	}
+	.game-container {
+		position: relative;
+		min-width: 26px;
+		height: 100%;
+		margin-right: 0.5rem;
+	}
+	.game-img.away {
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: -2px;
+	}
+	.game-img.home {
+		position: absolute;
+		z-index: 2;
+		opacity: 0.8;
+		left: 10px;
+		top: -2px;
 	}
 </style>
 <body>
@@ -218,25 +238,30 @@
 				initialSort: [
 					{column: "ev", dir: "desc"},
 				],
+				columnDefaults: {
+					vertAlign: "middle",
+					hozAlign: "center",
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "EV", field: "ev", hozAlign: "center", width: 60, sorter: "number"},
-					{title: "Book", field: "book", hozAlign: "center", width: 80, formatter: evBookFormatter},
-					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
-					{title: "Game", field: "game", formatter: gameFormatter, hozAlign: "center"},
-					{title: "Prop", field: "prop", width: 60, hozAlign: "center", formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
-					{title: "Line", field: "playerHandicap", hozAlign: "center", formatter:lineFormatter},
-					{title: "FD", field: "bookOdds.fd", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "DK", field: "bookOdds.dk", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "MGM", field: "bookOdds.mgm", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "PN", field: "bookOdds.pn", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "Kambi", field: "bookOdds.kambi", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "CZ", field: "bookOdds.cz", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "ESPN", field: "bookOdds.espn", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "EV", field: "ev",  width: 60, sorter: "number", formatter: plusMinusFormatter},
+					{title: "Prop", field: "prop",  formatter: propFormatter},
+					{title: "Player", field: "player", headerFilter: "input", formatter: playerFormatter, formatterParams:{sport:SPORT}, hozAlign: "left"},
+					{title: "Book", field: "book",  vertAlign:"bottom", width: 80, formatter: evBookFormatter},
+					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
+					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
+					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
+					{title: "FD", field: "bookOdds.fd",  width: 85, sorter: "number"},
+					{title: "DK", field: "bookOdds.dk",  width: 85, sorter: "number"},
+					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number"},
+					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number"},
+					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number"},
+					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number"},
+					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number"},
+					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number"},
 					{title: "Game Logs", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}},
-					{title: "SZN", field: "totalOver", hozAlign: "center", sorter: "number", formatter: percentFormatter},
-					{title: "L10", field: "total10Over", hozAlign: "center", sorter: "number", formatter: percentFormatter},
+					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter},
+					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter},
 				]
 			});
 
