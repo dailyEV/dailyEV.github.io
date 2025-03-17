@@ -5,6 +5,7 @@ const percentFormatter = function(cell, params, rendered) {
 
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	const book = cell.getValue().replace("kambi", "br");
 	let line = data.line;
 	if (parseInt(line) > 0) {
@@ -28,21 +29,34 @@ const plusMinusFormatter = function(cell) {
 
 const propFormatter = function(cell) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	const ou = data.under ? "u" : "o";
 	let prop = `${ou}${data.playerHandicap} ${data.prop.toUpperCase()}`;
-	if (["atgs"].includes(data.prop)) {
-		return data.prop.toUpperCase();
+	if (data.prop == "atgs") {
+		if (data.under) {
+			return "uATGS"
+		} else {
+			return "ATGS"
+		}
+	} else if (data.prop == "ml") {
+		if (data.under) {
+			return data.game.split(" @ ")[1].toUpperCase()+" ML";
+		} else {
+			return data.game.split(" @ ")[0].toUpperCase()+" ML";
+		}
 	}
 	return prop;
 }
 
 const teamFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	return `<img class='team-img' src='${cell.getValue()}' />`;
 }
 
 const playerFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	const sport = params.sport;
 	const team = "det";
 	const imgs = getGameImgs(data, params);
@@ -63,6 +77,7 @@ function getGameImgs(data, params) {
 
 const gameFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	const gameImgs = getGameImgs(data, params);
 	return `
 		<div class='game-cell'>
@@ -73,6 +88,7 @@ const gameFormatter = function(cell, params, rendered) {
 
 const lineFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
 	const ou = data.under ? "u" : "o";
 	return ou+cell.getValue();
 }

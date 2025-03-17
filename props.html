@@ -95,6 +95,7 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = URLParams.get("sport");
+		let PROP = URLParams.get("prop");
 
 		document.querySelectorAll("#sport-nav button").forEach(btn => {
 			btn.addEventListener("click", () => {
@@ -103,10 +104,10 @@
 			});
 		})
 
-		fetchData(SPORT);
+		fetchData();
 
-		function fetchData(sport) {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${sport}/evArr.json`
+		function fetchData() {
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${SPORT}/evArr.json`
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -114,6 +115,11 @@
 				setTimeout(function() {
 					//TABLE.getRows("active")[3].getElement().click()
 					hideCols();
+					if (PROP) {
+						TABLE.setFilter([
+							{field:"prop", type:"=", value: PROP}
+						]);
+					}
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -128,7 +134,13 @@
 		function showPlayerInfo(row) {
 			const cutoff = 0;
 			const data = row.getData();
-			const dtSplits = data.dtSplits.split(",").slice(cutoff);
+			let dtSplits = data.dtSplits.split(",").slice(cutoff);
+			dtSplits = dtSplits.map(dt => {
+				const d = new Date(dt);
+				return d.toLocaleDateString("en-US", {
+					month: "short", day: "numeric", year: "2-digit"
+				}).replace(", ", " '");
+			});
 			const el = document.querySelector("#player-table");
 			el.innerHTML = "";
 
@@ -170,19 +182,23 @@
 					//tickvals: [dtSplits[0],dtSplits.at(-1)],
 					//ticktext: [dtSplits[0],dtSplits.at(-1)],
 					//range: [-0.5, parseFloat(dtSplits.length)+0.5],
-					rangeslider: {},
-					range: [dtSplits.at(-15),dtSplits.at(-1)]
+					rangeslider: {
+						visible: true
+					},
+					range: [dtSplits.length-15.6,dtSplits.length-0.5]
 				},
 				yaxis: {
 					showgrid: false,
 					tickmode: "linear",
 					dtick: 1,
-					fixedrange: true
+					fixedrange: true,
+					showticklabels: false
 				},
 				shapes: [
 					{
 						type: "line",
-						x0: dtSplits[0], x1: dtSplits.at(-1),
+						//x0: dtSplits[0], x1: dtSplits.at(-1),
+						x0: -0.25, x1: dtSplits.length,
 						y0: data.playerHandicap, y1: data.playerHandicap,
 						line: {
 							color: "rgb(96, 125, 139)",
@@ -230,7 +246,18 @@
 		}
 
 		function renderTable(data) {
-			data = data.filter(r => !["fgs", "3-way"].includes(r.prop));
+			data = data.filter(r => 
+				!["fgs", "3-way", "1p_spread"].includes(r.prop)
+			);
+			
+			data.sort((a,b) => {
+				return parseFloat(b.ev) || 0 - parseFloat(a.ev) || 0;
+			});
+			const idx = data.findIndex(item => parseFloat(item.ev) < 0);
+			if (idx != -1) {
+				//data.splice(idx, 0, {prop: "separator", ev: ""});
+			}
+			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
@@ -242,11 +269,42 @@
 					vertAlign: "middle",
 					hozAlign: "center",
 				},
+				rowFormatter: function(row) {
+					if (row.getData().prop == "separator") {
+						row.getElement().style.backgroundColor = "#d3d3d3";
+						row.getElement().style.height = "5px";
+						//row.getElement().innerHTML = "";
+					}
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: 60, sorter: "number", formatter: plusMinusFormatter},
-					{title: "Prop", field: "prop",  formatter: propFormatter},
-					{title: "Player", field: "player", headerFilter: "input", formatter: playerFormatter, formatterParams:{sport:SPORT}, hozAlign: "left"},
+					{
+						title: "Prop",
+						field: "prop",
+						formatter: propFormatter,
+						editor: "input",
+						headerFilter:"list",
+						headerFilterParams:{
+							values:["All", ...props]
+						},
+						headerFilterFunc: function(headerValue, rowValue) {
+							if (headerValue == "All") {
+								return true;
+							}
+							return rowValue.toUpperCase() === headerValue;
+						}
+					},
+					{
+						title: "Player",
+						field: "player",
+						headerFilter: "input",
+						formatter: playerFormatter,
+						formatterParams:{
+							sport: SPORT
+						},
+						hozAlign: "left"
+					},
 					{title: "Book", field: "book",  vertAlign:"bottom", width: 80, formatter: evBookFormatter},
 					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
 					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
