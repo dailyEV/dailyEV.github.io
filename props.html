@@ -35,6 +35,24 @@
 		display: none;
 		min-width: 500px;
 	}
+	.tabulator-cell {
+		height: 24px;
+	}
+	.game-cell {
+		display: flex;
+		justify-content: space-evenly;
+	}
+	.evbook-cell {
+		display: flex;
+		justify-content: center;
+	}
+	.game-img {
+		height: 16px; width: 16px;
+	}
+	.book-img {
+		height: 16px; width: 16px;
+		margin-left: 0.5rem;
+	}
 	nav, h2 {
 		text-align: center;
 	}
@@ -56,15 +74,16 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let SPORT = URLParams.get("sport");
 
 		document.querySelectorAll("#sport-nav button").forEach(btn => {
 			btn.addEventListener("click", () => {
 				const sport = btn.textContent;
-				window.location.href = "/props?sport="+sport
+				window.location.href = "/props?sport="+sport.toLowerCase();
 			});
 		})
 
-		fetchData(URLParams.get("sport"));
+		fetchData(SPORT);
 
 		function fetchData(sport) {
 			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${sport}/evArr.json`
@@ -74,8 +93,16 @@
 				renderTable(data);
 				setTimeout(function() {
 					//TABLE.getRows("active")[3].getElement().click()
+					hideCols();
 				}, 200);
 			}).catch(err => console.log(err));
+		}
+
+		function hideCols() {
+			if (SPORT == "mlb") {
+				const cols = ["prop", "playerHandicap", "totalSplits", "totalOver", "total10Over"];
+				cols.forEach(col => TABLE.hideColumn(col));
+			}
 		}
 
 		function showPlayerInfo(row) {
@@ -152,6 +179,9 @@
 		const chartFormatter = function(cell, params, rendered) {
 			const data = cell.getRow().getData();
 			const content = document.createElement("span");
+			if (!cell.getValue()) {
+				return "";
+			}
 			const values = cell.getValue().split(",").slice(-15);
 
 			//if (params.invert) {
@@ -193,7 +223,7 @@
 					{title: "EV", field: "ev", hozAlign: "center", width: 60, sorter: "number"},
 					{title: "Book", field: "book", hozAlign: "center", width: 80, formatter: evBookFormatter},
 					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
-					{title: "Game", field: "game", formatter: uppercaseFormatter, hozAlign: "center"},
+					{title: "Game", field: "game", formatter: gameFormatter, hozAlign: "center"},
 					{title: "Prop", field: "prop", width: 60, hozAlign: "center", formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
 					{title: "Line", field: "playerHandicap", hozAlign: "center", formatter:lineFormatter},
 					{title: "FD", field: "bookOdds.fd", hozAlign: "center", width: 85, sorter: "number"},

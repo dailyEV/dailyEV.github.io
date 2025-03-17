@@ -5,7 +5,17 @@ const percentFormatter = function(cell, params, rendered) {
 
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
-	return data.line+" "+cell.getValue().replace("kambi", "br").toUpperCase();
+	const book = cell.getValue().replace("kambi", "br");
+	let line = data.line;
+	if (parseInt(line) > 0) {
+		line = "+"+line;
+	}
+	return `
+		<div class='evbook-cell'>
+			${line}
+			<img class='book-img' src='logos/${book}.png' />
+		</div>
+	`;
 }
 
 const teamFormatter = function(cell, params, rendered) {
@@ -18,7 +28,12 @@ const gameFormatter = function(cell, params, rendered) {
 	const game = cell.getValue();
 	const away = game.split(" @ ")[0];
 	const home = game.split(" @ ")[1];
-	return `<img class='team-img' src='${cell.getValue()}' />`;
+	return `
+		<div class='game-cell'>
+			<img class='game-img' src='logos/${SPORT}/${away}.svg' />
+			<img class='game-img' src='logos/${SPORT}/${home}.svg' />
+		</div>
+	`;
 }
 
 const lineFormatter = function(cell, params, rendered) {
@@ -28,7 +43,10 @@ const lineFormatter = function(cell, params, rendered) {
 }
 
 const uppercaseFormatter = function(cell, params, rendered) {
-	return cell.getValue().toUpperCase();
+	if (cell.getValue()) {
+		return cell.getValue().toUpperCase();
+	}
+	return "";
 }
 
 function title(str) {
