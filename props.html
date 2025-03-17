@@ -27,7 +27,6 @@
 		height: 90%;
 	}
 	#table {
-		height: 100%;
 	}
 	#player-table {
 		display: flex;
@@ -116,9 +115,7 @@
 					//TABLE.getRows("active")[3].getElement().click()
 					hideCols();
 					if (PROP) {
-						TABLE.setFilter([
-							{field:"prop", type:"=", value: PROP}
-						]);
+						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
 				}, 200);
 			}).catch(err => console.log(err));
