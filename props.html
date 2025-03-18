@@ -278,6 +278,16 @@
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: 60, sorter: "number", formatter: plusMinusFormatter},
 					{
+						title: "Player",
+						field: "player",
+						headerFilter: "input",
+						formatter: playerFormatter,
+						formatterParams:{
+							sport: SPORT
+						},
+						hozAlign: "left"
+					},
+					{
 						title: "Prop",
 						field: "prop",
 						formatter: propFormatter,
@@ -291,15 +301,6 @@
 								return true;
 							}
 							return rowValue.toUpperCase() === headerValue;
-						}
-					},
-					{
-						title: "Player",
-						field: "player",
-						headerFilter: "input",
-						formatter: playerFormatter,
-						formatterParams:{
-							sport: SPORT
 						},
 						hozAlign: "left"
 					},
