@@ -27,16 +27,21 @@ const plusMinusFormatter = function(cell) {
 	return ev;
 }
 
+function convertProp(prop) {
+	prop = prop.replace("single", "1b").replace("double", "2b").replace("triple", "3b");
+	return prop.toUpperCase();
+}
+
 const propFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	const ou = data.under ? "u" : "o";
-	let prop = `${ou}${data.playerHandicap} ${data.prop.toUpperCase()}`;
-	if (data.prop == "atgs") {
+	let prop = `${ou}${data.playerHandicap} ${convertProp(data.prop)}`;
+	if (["atgs", "rfi"].includes(data.prop)) {
 		if (data.under) {
-			return "uATGS"
+			return `u${prop.toUpperCase()}`
 		} else {
-			return "ATGS"
+			return prop.toUpperCase();
 		}
 	} else if (data.prop == "ml") {
 		if (data.under) {
@@ -44,6 +49,10 @@ const propFormatter = function(cell) {
 		} else {
 			return data.game.split(" @ ")[0].toUpperCase()+" ML";
 		}
+	} else if (data.prop.includes("total")) {
+		return `${ou}${data.handicap}`;
+	} else if (data.prop.includes("spread")) {
+		return `${ou}${data.handicap}`;
 	}
 	return prop;
 }
@@ -60,9 +69,13 @@ const playerFormatter = function(cell, params, rendered) {
 	const sport = params.sport;
 	const team = "det";
 	const imgs = getGameImgs(data, params);
+	let player = title(data.player);
+	if (player == "") {
+		player = data.prop.toUpperCase().replace("_", " ");
+	}
 	return `
 		<div class='game-container'>${imgs.join("")}</div>
-		${title(data.player)}
+		${player}
 	`
 }
 
