@@ -76,6 +76,21 @@
 		left: 10px;
 		top: -2px;
 	}
+	@media (max-width: 600px) {
+		.game-container {
+			margin-right: 0.1rem;
+		}
+		.game-img {
+			height: 16px; width: 16px;
+			top: 0 !important;
+		}
+		.tabulator .tabulator-row {
+			font-size: 12px;
+		}
+		.tabulator .tabulator-cell:nth-child(1) {
+			width: 40px;
+		}
+	}
 </style>
 <body>
 	<div id="header">
@@ -258,6 +273,7 @@
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+				responsiveLayout: "hidden",
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				data: data,
 				initialSort: [
@@ -285,7 +301,8 @@
 						formatterParams:{
 							sport: SPORT
 						},
-						hozAlign: "left"
+						hozAlign: "left",
+						responsive: 0
 					},
 					{
 						title: "Prop",
@@ -304,7 +321,7 @@
 						},
 						hozAlign: "left"
 					},
-					{title: "Book", field: "book",  vertAlign:"bottom", width: 80, formatter: evBookFormatter},
+					{title: "Book", field: "book",  vertAlign:"bottom", width: 80, formatter: evBookFormatter, responsive: 0},
 					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
 					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
 					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
