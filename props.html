@@ -109,6 +109,14 @@
 		width: 50%;
 		align-items: center;
 	}
+	#player-ou {
+		display: flex;
+		flex-direction: column;
+	}
+	#player-ou .active {
+		background-color: #2b2d2e;
+		color: #ffcb05;
+	}
 	.tabulator-cell {
 		//height: 24px;
 	}
@@ -218,7 +226,8 @@
 
 	@media (max-width: 600px) {
 		#donate {
-			right: 12px;
+			/* right: 12px; */
+			position: initial;
 		}
 		#player-tables, #player-header {
 			width: 100%;
@@ -283,6 +292,10 @@
 				<h2></h2>
 				<div id="player-sliders">
 					<div id="player-props-slider" class="nav"></div>
+					<div id="player-ou">
+						<span class="active">O</span>
+						<span>U</span>
+					</div>
 					<div id="player-lines-slider" class="nav"></div>
 				</div>
 				<div id="player-odds"></div>
