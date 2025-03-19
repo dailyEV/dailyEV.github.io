@@ -108,8 +108,14 @@
 		height: 20px; width: 20px;
 	}
 	.book-img {
+		height: 32px; width: 32px;
+	}
+	.tabulator .book-img {
 		height: 16px; width: 16px;
 		margin-left: 0.5rem;
+	}
+	h2 {
+		margin: 0;
 	}
 	nav, h2 {
 		text-align: center;
@@ -134,9 +140,25 @@
 		top: -2px;
 	}
 
+	#player-odds {
+		display: flex;
+		justify-content: space-evenly;
+	}
+	#player-odds div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 5px;
+		width: 80px;
+	}
+	#player-odds div.active {
+		border: 1px solid;
+	}
+
 	#player-sliders {
 		display: flex;
 		overflow: hidden;
+		justify-content: center;
 	}
 	.nav {
 		justify-content: center;
@@ -169,7 +191,7 @@
 		transition: all 0.3s ease;
 	}
 
-	.nav-item.active, .nav button.active {
+	#player-odds div.active, .nav-item.active, .nav button.active {
 		background-color: #2b2d2e;
 		color: #ffcb05;
 		border-color: #ff9f00 !important;
@@ -226,6 +248,7 @@
 					<div id="player-props-slider" class="nav"></div>
 					<div id="player-lines-slider" class="nav"></div>
 				</div>
+				<div id="player-odds"></div>
 			</div>
 			<div id="player-table">
 				<div id="log-chart"></div>
@@ -264,7 +287,7 @@
 			}).then(response => response.json()).then(data => {
 				renderTable(data);
 				setTimeout(function() {
-					//TABLE.getRows("active")[6].getElement().click()
+					TABLE.getRows("active")[2].getElement().click()
 					hideCols();
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
@@ -302,6 +325,7 @@
 			document.querySelector("#player-tables").style.display = "flex";
 			document.querySelector("#player-header h2").innerText = title(data.player);
 
+			// Props Nav
 			const propsSlider = document.querySelector("#player-props-slider");
 			propsSlider.innerHTML = "";
 			playerProps.forEach(p => {
@@ -322,6 +346,7 @@
 				propsSlider.appendChild(el);
 			});
 
+			// Lines Nav
 			const lineSlider = document.querySelector("#player-lines-slider");
 			lineSlider.innerHTML = "";
 			playerLines.forEach(p => {
@@ -334,6 +359,26 @@
 				lineSlider.appendChild(el);
 			});
 
+			// Odds Display
+			const playerOdds = document.querySelector("#player-odds");
+			playerOdds.innerHTML = "";
+			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
+			for (book of books) {
+				if (!data.bookOdds[book]) {
+					continue;
+				}
+				const odds = data.bookOdds[book];
+				const div = document.createElement("div");
+				if (parseFloat(data.ev) > 0 && data.book == book) {
+					div.classList.add("active");
+				}
+				div.innerHTML = `
+					<img class='book-img' src='logos/${book.replace("kambi", "br")}.png' />
+					${odds}`;
+				playerOdds.appendChild(div);
+			}
+
+			// Plotly
 			const logs = data.totalSplits.split(",").slice(cutoff);
 			const colors = logs.map(value => {
 				let cond = parseFloat(value) > parseFloat(data.playerHandicap);
@@ -386,7 +431,7 @@
 						x0: -0.25, x1: dtSplits.length,
 						y0: data.playerHandicap, y1: data.playerHandicap,
 						line: {
-							color: "rgb(96, 125, 139)",
+							color: "rgb(60, 60, 60)",
 							dash: "dash"
 						}
 					}
@@ -480,7 +525,6 @@
 						field: "prop",
 						formatter: propFormatter,
 						width: 80,
-						editor: "input",
 						headerFilter:"list",
 						headerFilterParams:{
 							values:["All", ...props]
@@ -517,12 +561,18 @@
 		}
 
 		function rowClick(row) {
+			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-			cols.forEach(col => TABLE.hideColumn(col));
-			showPlayerInfo(row);
-			TABLE.scrollToRow(row, "center");
-			row.select();
+			if (sel.length > 0 && sel[0] == row) {
+				cols.forEach(col => TABLE.showColumn(col));
+				document.querySelector("#player-tables").style.display = "none";
+			} else {
+				cols.forEach(col => TABLE.hideColumn(col));
+				showPlayerInfo(row);
+				TABLE.scrollToRow(row, "center");
+				row.select();
+			}
 		}
 	</script>
 </body>
