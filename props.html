@@ -80,6 +80,7 @@
 		justify-content: space-evenly;
 		align-items: center;
 		height: 90%;
+		flex-direction: column;
 	}
 	#table {
 		height: 100%;
@@ -137,7 +138,7 @@
 		display: flex;
 		overflow: hidden;
 	}
-	.nav,#player-props-slider,#player-lines-slider {
+	.nav {
 		justify-content: center;
 		display: flex;
 		gap: 10px;
@@ -177,6 +178,15 @@
 	}
 
 	@media (max-width: 600px) {
+		#table-container {
+			flex-direction: column;
+		}
+		#table {
+			width: 100%;
+		}
+		#log-chart {
+			max-width: 400px;
+		}
 		.game-container {
 			margin-right: 0.1rem;
 		}
@@ -211,11 +221,10 @@
 		<div id="player-table">
 			<h2></h2>
 			<div id="player-sliders">
-				<div id="player-props-slider"></div>
-				<div id="player-lines-slider"></div>
+				<div id="player-props-slider" class="nav"></div>
+				<div id="player-lines-slider" class="nav"></div>
 			</div>
 			<div id="log-chart"></div>
-
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -277,7 +286,6 @@
 				.map(r => r.getData());
 			const playerProps = new Set(playerRows.map(r => r.prop));
 			const playerLines = new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap));
-			console.log(playerProps, playerLines);
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
 				const d = new Date(dt);
@@ -292,11 +300,18 @@
 			const propsSlider = document.querySelector("#player-props-slider");
 			propsSlider.innerHTML = "";
 			playerProps.forEach(p => {
-				const el = document.createElement("div");
+				const el = document.createElement("button");
 				el.className = "nav-item";
 				if (p == data.prop) {
 					el.classList.add("active");
 				}
+				el.addEventListener("click", function(event) {
+					let el = document.querySelector("#player-props-slider .active");
+					if (el) {
+						el.classList.remove("active");
+					}
+					event.target.classList.add("active");
+				});
 				el.innerText = p.toUpperCase();
 				propsSlider.appendChild(el);
 			});
@@ -304,7 +319,7 @@
 			const lineSlider = document.querySelector("#player-lines-slider");
 			lineSlider.innerHTML = "";
 			playerLines.forEach(p => {
-				const el = document.createElement("div");
+				const el = document.createElement("button");
 				el.className = "nav-item";
 				if (p == data.playerHandicap) {
 					el.classList.add("active");
@@ -499,8 +514,9 @@
 			TABLE.deselectRow();
 			row.select();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-			cols.forEach(col => TABLE.hideColumn(col));
+			//cols.forEach(col => TABLE.hideColumn(col));
 			showPlayerInfo(row);
+			TABLE.scrollToRow(row, "center");
 		}
 	</script>
 </body>
