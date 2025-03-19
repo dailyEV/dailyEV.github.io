@@ -69,8 +69,7 @@ const playerFormatter = function(cell, params, rendered) {
 	if (player == "") {
 		player = data.prop.replace("_", " ").toUpperCase();
 		if (data.prop == "ml") {
-			//const g = SPORT == "ncaab" ? data.gameId : data.game;
-			const g = title(data.game);
+			const g = SPORT == "ncaab" ? title(data.game) : data.game.toUpperCase();
 			player = data.under ? g.split(" @ ")[1] : g.split(" @ ")[0];
 		}
 	}

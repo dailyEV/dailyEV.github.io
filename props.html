@@ -46,11 +46,11 @@
 	.tabulator-row {
 		background-color: #181a1b !important;
 	}
-	.tabulator-row.tabulator-selected {
-		background-color: #153867 !important;
-	}
 	.tabulator-row.tabulator-row-even {
 		background-color: #212425 !important;
+	}
+	.tabulator-row.tabulator-selected {
+		background-color: #153867 !important;
 	}
 	.tabulator-row .tabulator-cell {
 		border-right-color: #484e51;
@@ -80,12 +80,12 @@
 		justify-content: space-evenly;
 		align-items: center;
 		height: 90%;
-		flex-direction: column;
 	}
 	#table {
-		height: 100%;
+		height: 95%;
+		min-height: 200px;
 	}
-	#player-table {
+	#player-tables {
 		display: flex;
 		flex-direction: column;
 		display: none;
@@ -213,18 +213,23 @@
 		<nav id="sport-nav" class="nav">
 			<button id="mlb">MLB</button>
 			<button id="nhl">NHL</button>
+			<!-- <button id="nba">NBA</button> -->
 			<button id="ncaab">NCAAB</button>
 		</nav>
 	</div>
 	<div id="table-container">
 		<div id="table"></div>
-		<div id="player-table">
-			<h2></h2>
-			<div id="player-sliders">
-				<div id="player-props-slider" class="nav"></div>
-				<div id="player-lines-slider" class="nav"></div>
+		<div id="player-tables">
+			<div id="player-header">
+				<h2></h2>
+				<div id="player-sliders">
+					<div id="player-props-slider" class="nav"></div>
+					<div id="player-lines-slider" class="nav"></div>
+				</div>
 			</div>
-			<div id="log-chart"></div>
+			<div id="player-table">
+				<div id="log-chart"></div>
+			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -259,7 +264,7 @@
 			}).then(response => response.json()).then(data => {
 				renderTable(data);
 				setTimeout(function() {
-					//TABLE.getRows("active")[3].getElement().click()
+					//TABLE.getRows("active")[6].getElement().click()
 					hideCols();
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
@@ -294,8 +299,8 @@
 				}).replace(", ", " '");
 			});
 
-			document.querySelector("#player-table").style.display = "flex";
-			document.querySelector("#player-table h2").innerText = title(data.player);
+			document.querySelector("#player-tables").style.display = "flex";
+			document.querySelector("#player-header h2").innerText = title(data.player);
 
 			const propsSlider = document.querySelector("#player-props-slider");
 			propsSlider.innerHTML = "";
@@ -306,11 +311,12 @@
 					el.classList.add("active");
 				}
 				el.addEventListener("click", function(event) {
-					let el = document.querySelector("#player-props-slider .active");
-					if (el) {
-						el.classList.remove("active");
-					}
-					event.target.classList.add("active");
+					const rows = TABLE.getRows().filter(function(r) {
+						const d = r.getData();
+						const currLine = document.querySelector("#player-lines-slider .active")
+						return d.prop == event.target.innerText.toLowerCase() && d.player == data.player && d.under == false;
+					});
+					rowClick(rows[0]);
 				});
 				el.innerText = p.toUpperCase();
 				propsSlider.appendChild(el);
@@ -512,11 +518,11 @@
 
 		function rowClick(row) {
 			TABLE.deselectRow();
-			row.select();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-			//cols.forEach(col => TABLE.hideColumn(col));
+			cols.forEach(col => TABLE.hideColumn(col));
 			showPlayerInfo(row);
 			TABLE.scrollToRow(row, "center");
+			row.select();
 		}
 	</script>
 </body>
