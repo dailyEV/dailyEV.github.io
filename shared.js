@@ -39,16 +39,12 @@ const propFormatter = function(cell) {
 	let prop = `${ou}${data.playerHandicap} ${convertProp(data.prop)}`;
 	if (["atgs", "rfi"].includes(data.prop)) {
 		if (data.under) {
-			return `u${prop.toUpperCase()}`
+			return `u${data.prop.toUpperCase()}`
 		} else {
-			return prop.toUpperCase();
+			return data.prop.toUpperCase();
 		}
 	} else if (data.prop == "ml") {
-		if (data.under) {
-			return data.game.split(" @ ")[1].toUpperCase()+" ML";
-		} else {
-			return data.game.split(" @ ")[0].toUpperCase()+" ML";
-		}
+		return "ML";
 	} else if (data.prop.includes("total")) {
 		return `${ou}${data.handicap}`;
 	} else if (data.prop.includes("spread")) {
@@ -71,7 +67,12 @@ const playerFormatter = function(cell, params, rendered) {
 	const imgs = getGameImgs(data, params);
 	let player = title(data.player);
 	if (player == "") {
-		player = data.prop.toUpperCase().replace("_", " ");
+		player = data.prop.replace("_", " ").toUpperCase();
+		if (data.prop == "ml") {
+			//const g = SPORT == "ncaab" ? data.gameId : data.game;
+			const g = title(data.game);
+			player = data.under ? g.split(" @ ")[1] : g.split(" @ ")[0];
+		}
 	}
 	return `
 		<div class='game-container'>${imgs.join("")}</div>
@@ -80,8 +81,8 @@ const playerFormatter = function(cell, params, rendered) {
 }
 
 function getGameImgs(data, params) {
-	const away = data.game.split(" @ ")[0];
-	const home = data.game.split(" @ ")[1];
+	let away = data.awayTeamId || data.game.split(" @ ")[0];
+	let home = data.homeTeamId || data.game.split(" @ ")[1];
 	return [
 		`<img class='game-img away' src='logos/${params.sport}/${away}.png' />`,
 		`<img class='game-img home' src='logos/${params.sport}/${home}.png' />`
