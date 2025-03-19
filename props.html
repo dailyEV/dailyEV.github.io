@@ -75,6 +75,23 @@
 		justify-content: center;
 		align-items: center;
 	}
+	#donate {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		top: 24px; right: 48px;
+	}
+	#donate img {
+		width: 32px; height: 32px;
+		vertical-align: middle;
+	}
+	#donate img:hover {
+		cursor: pointer;
+	}
+	#donate div {
+		text-align: center;
+	}
 	#table-container {
 		display: flex;
 		justify-content: space-evenly;
@@ -238,6 +255,17 @@
 			<!-- <button id="nba">NBA</button> -->
 			<button id="ncaab">NCAAB</button>
 		</nav>
+		<div id="donate">
+			<div>
+				<a href="https://cash.app/$intersectinglines" target="_blank">
+					<img src="logos/cashapp.png" />
+				</a>
+				<a href="https://buymeacoffee.com/interlines" target="_blank">
+					<img src="logos/coffee.png" />
+				</a>
+			</div>
+			<div>Tip Jar</div>
+		</div>
 	</div>
 	<div id="table-container">
 		<div id="table"></div>
@@ -274,6 +302,13 @@
 			});
 		});
 
+		document.querySelectorAll("#donate img").forEach(btn => {
+			btn.addEventListener("click", () => {
+				const sport = btn.textContent;
+				window.location.href = "/props?sport="+sport.toLowerCase();
+			});
+		});
+
 		fetchData();
 
 		function fetchData() {
@@ -287,7 +322,7 @@
 			}).then(response => response.json()).then(data => {
 				renderTable(data);
 				setTimeout(function() {
-					TABLE.getRows("active")[2].getElement().click()
+					TABLE.getRows("active")[0].getElement().click()
 					hideCols();
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
