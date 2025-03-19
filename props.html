@@ -109,17 +109,6 @@
 		width: 50%;
 		align-items: center;
 	}
-	#player-ou {
-		display: flex;
-		flex-direction: column;
-	}
-	#player-ou .active {
-		background-color: #2b2d2e;
-		color: #ffcb05;
-	}
-	.tabulator-cell {
-		//height: 24px;
-	}
 	.game-cell {
 		position: relative;
 		display: inline-block;
@@ -176,7 +165,7 @@
 		padding: 5px;
 		width: 80px;
 	}
-	#player-odds div.active {
+	#player-odds .active, #player-ou .active {
 		border: 1px solid;
 	}
 
@@ -184,6 +173,7 @@
 		display: flex;
 		overflow: hidden;
 		justify-content: center;
+		align-items: center;
 	}
 	.nav {
 		justify-content: center;
@@ -194,8 +184,22 @@
 		padding: 10px;
 		border-radius: 5px;
 	}
-	#player-lines-slider {
+	#player-ou {
+		display: flex;
+		flex-direction: column;
 		margin-left: 0.5rem;
+	}
+	#player-ou button {
+		border-radius: 8px;
+		cursor: pointer;
+	}
+	#player-ou .active {
+		background-color: #2b2d2e;
+		color: #ffcb05;
+		border-color: #ff9f00 !important;
+		box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+	}
+	#player-lines-slider {
 	}
 
 	.nav-item, .nav button {
@@ -209,7 +213,7 @@
 		border-width: 1px;
 	}
 
-	.nav-item:hover, .nav button:hover {
+	.nav-item:hover, .nav button:hover, #player-ou button:hover {
 		background-color: #3a3f44;
 		color: #e8e6e3;
 		border-color: #596068;
@@ -292,10 +296,7 @@
 				<h2></h2>
 				<div id="player-sliders">
 					<div id="player-props-slider" class="nav"></div>
-					<div id="player-ou">
-						<span class="active">O</span>
-						<span>U</span>
-					</div>
+					<div id="player-ou"></div>
 					<div id="player-lines-slider" class="nav"></div>
 				</div>
 				<div id="player-odds"></div>
@@ -371,6 +372,7 @@
 				.map(r => r.getData());
 			const playerProps = new Set(playerRows.map(r => r.prop));
 			const playerLines = new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap));
+			const playerOUs = new Set(playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap).map(r => r.under));
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
 				const d = new Date(dt);
@@ -394,7 +396,6 @@
 				el.addEventListener("click", function(event) {
 					const rows = TABLE.getRows().filter(function(r) {
 						const d = r.getData();
-						const currLine = document.querySelector("#player-lines-slider .active")
 						return d.prop == event.target.innerText.toLowerCase() && d.player == data.player && d.under == false;
 					});
 					rowClick(rows[0]);
@@ -402,6 +403,36 @@
 				el.innerText = p.toUpperCase();
 				propsSlider.appendChild(el);
 			});
+
+			// OU Nav
+			const playerOU = document.querySelector("#player-ou");
+			playerOU.innerHTML = "";
+			const overBtn = document.createElement("button");
+			overBtn.innerText = "O";
+			const underBtn = document.createElement("button");
+			underBtn.innerText = "U";
+			let ouBtn = null;
+			if (data.under) {
+				underBtn.classList.add("active");
+				ouBtn = overBtn;
+			} else {
+				overBtn.classList.add("active");
+				ouBtn = underBtn;
+			}
+			ouBtn.addEventListener("click", function(event) {
+				const rows = TABLE.getRows().filter(function(r) {
+					const d = r.getData();
+					return d.prop == data.prop && d.player == data.player && d.under == (event.target.innerText == "U");
+				});
+				rowClick(rows[0]);
+			});
+			if (playerOUs.has(false)) {
+				playerOU.appendChild(overBtn);
+			}
+			if (playerOUs.has(true)) {
+				playerOU.appendChild(underBtn);
+			}
+
 
 			// Lines Nav
 			const lineSlider = document.querySelector("#player-lines-slider");
