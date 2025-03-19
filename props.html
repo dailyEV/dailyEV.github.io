@@ -180,7 +180,7 @@
 	.nav {
 		justify-content: center;
 		display: flex;
-		gap: 10px;
+		gap: 2px;
 		overflow: hidden;
 		white-space: nowrap;
 		padding: 10px;
@@ -217,6 +217,15 @@
 	}
 
 	@media (max-width: 600px) {
+		#donate {
+			right: 12px;
+		}
+		#player-tables, #player-header {
+			width: 100%;
+		}
+		#player-odds {
+			overflow-x: scroll;
+		}
 		#table-container {
 			flex-direction: column;
 		}
@@ -233,7 +242,7 @@
 			height: 16px; width: 16px;
 			top: 0 !important;
 		}
-		.tabulator .tabulator-row {
+		.tabulator .tabulator-row, #player-odds {
 			font-size: 12px;
 		}
 		.tabulator .tabulator-cell:nth-child(1) {
