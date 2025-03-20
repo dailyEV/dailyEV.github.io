@@ -80,7 +80,7 @@ const playerFormatter = function(cell, params, rendered) {
 		} else if (data.prop == "total" && SPORT == "ncaab") {
 			player = `Total (${data.gameId.toUpperCase()})`;
 		} else if (data.prop.includes("away_total") || data.prop.includes("home_total")) {
-			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
+			player = `${team.toUpperCase()} ${data.prop.replace("home_", "").replace("away_", "").toUpperCase()}`;
 		} else if (data.prop.includes("spread")) {
 			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
 		}

@@ -448,11 +448,11 @@
 			}).then(response => response.json()).then(data => {
 				renderTable(data);
 				setTimeout(function() {
-					TABLE.getRows("active")[0].getElement().click()
-					hideCols();
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
+					TABLE.getRows("active")[0].getElement().click()
+					hideCols();
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -474,7 +474,7 @@
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
 			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
-			const playerLines = Array.from(new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap)));
+			const playerLines = Array.from(new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap || r.handicap)));
 			const playerOUs = new Set(playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap).map(r => r.under));
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
@@ -485,14 +485,18 @@
 			});
 
 			document.querySelector("#player-tables").style.display = "flex";
+			let player = title(data.player);
+			if (!player) {
+				player = data.team.toUpperCase();
+			}
 			if (SPORT == "ncaab") {
 				document.querySelector("#player-header h2").innerHTML = `
 					<img src="logos/ncaab/${data.teamId}.png" width=32 height=32 style="vertical-align: middle;" />
-					${title(data.player)}
+					${player}
 				`;
 			} else {
 				document.querySelector("#player-header h2").innerHTML = `
-					${title(data.player)}
+					${player}
 				`;	
 			}
 
@@ -541,7 +545,7 @@
 			playerLines.sort((a, b) => a - b);
 			playerLines.forEach(p => {
 				const el = document.createElement("option");
-				if (p == data.playerHandicap) {
+				if (p == (data.playerHandicap || data.handicap)) {
 					el.selected = true;
 				}
 				el.innerText = p;
@@ -571,9 +575,9 @@
 			// Plotly
 			const logs = data.totalSplits.split(",").slice(cutoff);
 			const colors = logs.map(value => {
-				let cond = parseFloat(value) > parseFloat(data.playerHandicap);
+				let cond = parseFloat(value) > parseFloat(data.playerHandicap || data.handicap);
 				if (data.under) {
-					cond = parseFloat(value) < parseFloat(data.playerHandicap);
+					cond = parseFloat(value) < parseFloat(data.playerHandicap || data.handicap);
 				}
 				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
 			});
@@ -624,7 +628,7 @@
 						type: "line",
 						//x0: dtSplits[0], x1: dtSplits.at(-1),
 						x0: -0.25, x1: dtSplits.length,
-						y0: data.playerHandicap, y1: data.playerHandicap,
+						y0: data.playerHandicap || data.handicap, y1: data.playerHandicap || data.handicap,
 						line: {
 							color: "#5A5A5A",
 							dash: "dash"
@@ -657,9 +661,10 @@
 			}
 
 			options.fill = function(value) {
-				let cond = parseFloat(value) > parseFloat(data.playerHandicap);
+				const line = data.playerHandicap || data.handicap || 0;
+				let cond = parseFloat(value) > parseFloat(line);
 				if (data.under) {
-					cond = parseFloat(value) < parseFloat(data.playerHandicap);
+					cond = parseFloat(value) < parseFloat(line);
 				}
 				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
 			}
