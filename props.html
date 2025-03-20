@@ -75,12 +75,20 @@
 		justify-content: center;
 		align-items: center;
 	}
+	h1 {
+		position: absolute;
+		left: 3rem;
+		top: auto;
+		margin: 0;
+	}
 	#donate {
 		position: absolute;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		top: 24px; right: 48px;
+		align-items: center;
+		top: auto; right: 48px;
+		gap: 5px;
 	}
 	#donate img {
 		width: 32px; height: 32px;
@@ -133,6 +141,7 @@
 	}
 	h2 {
 		margin: 0;
+		margin-top: 1rem;
 	}
 	nav, h2 {
 		text-align: center;
@@ -168,36 +177,25 @@
 		padding: 5px;
 		width: 80px;
 	}
-	#player-odds .active, #player-ou .active {
+	#player-odds .active {
 		border: 1px solid;
 	}
 
-	#player-sliders {
+	#player-dropdowns {
 		display: flex;
 		overflow: hidden;
 		justify-content: center;
 		align-items: center;
+		margin: 1rem 0;
 	}
-	#player-props-slider {
-		width: 300px;
+	#player-ou-select {
+		min-width: 80px;
 	}
-	#player-lines-slider {
-		width: 150px;
+	#player-lines-select {
+		min-width: 70px;
 	}
-	#player-ou {
-		display: flex;
-		flex-direction: column;
-		margin: 0 0.5rem;
-	}
-	#player-ou button {
-		border-radius: 8px;
-		cursor: pointer;
-	}
-	#player-ou .active {
-		background-color: #2b2d2e;
-		color: #ffcb05;
-		border-color: #ff9f00 !important;
-		box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+	#player-props-select {
+		min-width: 120px;
 	}
 
 	.nav {
@@ -280,11 +278,23 @@
 	}
 
 	@media (max-width: 600px) {
-		#donate {
-			/* right: 12px; */
-			position: initial;
+		#header {
+			flex-direction: column;
+			height: auto;
+			margin-bottom: 0.75rem;
 		}
-		#player-tables, #player-header {
+		h1 {
+			position: initial;
+			width: 100%;
+			margin-top: 1rem;
+			text-align: center;
+		}
+		#donate {
+			flex-direction: row;
+			position: initial;
+			margin: 0.5rem 0;
+		}
+		#player-tables, #player-header, #player-table {
 			width: 100%;
 		}
 		#player-header {
@@ -300,7 +310,7 @@
 			width: 100%;
 		}
 		#log-chart {
-			max-width: 400px;
+			max-width: 100%;
 		}
 		.game-container {
 			margin-right: 0.1rem;
@@ -325,6 +335,18 @@
 </style>
 <body>
 	<div id="header">
+		<h1>Daily EV</h1>
+		<div id="donate">
+			<div>Tip Jar</div>
+			<div>
+				<a href="https://cash.app/$intersectinglines" target="_blank">
+					<img src="logos/cashapp.png" />
+				</a>
+				<a href="https://buymeacoffee.com/interlines" target="_blank">
+					<img src="logos/coffee.png" />
+				</a>
+			</div>
+		</div>
 		<div class="dropdown">
 			<select id="sport-select">
 				<option value="mlb">⚾MLB</option>
@@ -334,27 +356,25 @@
 			</select>
 			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 		</div>
-		<div id="donate">
-			<div>
-				<a href="https://cash.app/$intersectinglines" target="_blank">
-					<img src="logos/cashapp.png" />
-				</a>
-				<a href="https://buymeacoffee.com/interlines" target="_blank">
-					<img src="logos/coffee.png" />
-				</a>
-			</div>
-			<div>Tip Jar</div>
-		</div>
 	</div>
 	<div id="table-container">
 		<div id="table"></div>
 		<div id="player-tables">
 			<div id="player-header">
 				<h2></h2>
-				<div id="player-sliders">
-					<div id="player-props-slider" class="nav"></div>
-					<div id="player-ou"></div>
-					<div id="player-lines-slider" class="nav"></div>
+				<div id="player-dropdowns">
+					<div class="dropdown">
+						<select id="player-ou-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown" style="margin: 0 0.5rem;">
+						<select id="player-lines-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown">
+						<select id="player-props-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
 				</div>
 				<div id="player-odds"></div>
 			</div>
@@ -380,11 +400,32 @@
 			window.location.href = "/props?sport="+sport;
 		});
 
-		document.querySelectorAll("#sport-nav button").forEach(btn => {
-			btn.addEventListener("click", () => {
-				const sport = btn.textContent;
-				window.location.href = "/props?sport="+sport.toLowerCase();
+		document.querySelector("#player-props-select").addEventListener("change", function(event) {
+			const rowData = TABLE.getSelectedRows()[0].getData();
+			const prop = event.target.value;
+			const rows = TABLE.getRows().filter(function(r) {
+				const d = r.getData();
+				return d.prop == prop && d.player == rowData.player && d.under == false;
 			});
+			rowClick(rows[0]);
+		});
+
+		document.querySelector("#player-lines-select").addEventListener("change", function(event) {
+			const rowData = TABLE.getSelectedRows()[0].getData();
+			const rows = TABLE.getRows().filter(function(r) {
+				const d = r.getData();
+				return d.prop == rowData.prop && d.player == rowData.player && d.under == false && d.playerHandicap == event.target.value;
+			});
+			rowClick(rows[0]);
+		});
+
+		document.querySelector("#player-ou-select").addEventListener("change", function(event) {
+			const rowData = TABLE.getSelectedRows()[0].getData();
+			const rows = TABLE.getRows().filter(function(r) {
+				const d = r.getData();
+				return d.prop == rowData.prop && d.player == rowData.player && d.under == (event.target.value == "under") && d.playerHandicap == rowData.playerHandicap;
+			});
+			rowClick(rows[0]);
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -432,7 +473,7 @@
 			const playerRows = TABLE.getRows()
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
-			const playerProps = new Set(playerRows.map(r => r.prop));
+			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
 			const playerLines = Array.from(new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap)));
 			const playerOUs = new Set(playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap).map(r => r.under));
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
@@ -447,47 +488,36 @@
 			document.querySelector("#player-header h2").innerText = title(data.player);
 
 			// Props Nav
-			let propsSlider = document.querySelector("#player-props-slider");
-			propsSlider.innerHTML = "";
+			let propsSelect = document.querySelector("#player-props-select");
+			propsSelect.innerHTML = "";
+			playerProps.sort((a, b) => a - b);
 			playerProps.forEach(p => {
-				const el = document.createElement("button");
-				el.className = "nav-item";
-				if (p == data.prop) {
-					el.classList.add("active");
-				}
-				el.addEventListener("click", function(event) {
-					const rows = TABLE.getRows().filter(function(r) {
-						const d = r.getData();
-						return d.prop == event.target.innerText.toLowerCase() && d.player == data.player && d.under == false;
-					});
-					rowClick(rows[0]);
-				});
+				const el = document.createElement("option");
+				el.value = p;
 				el.innerText = p.toUpperCase();
-				propsSlider.appendChild(el);
+				if (p == data.prop) {
+					el.selected = true;
+				}
+				propsSelect.appendChild(el);
 			});
 
 			// OU Nav
-			const playerOU = document.querySelector("#player-ou");
+			const playerOU = document.querySelector("#player-ou-select");
 			playerOU.innerHTML = "";
-			const overBtn = document.createElement("button");
-			overBtn.innerText = "O";
-			const underBtn = document.createElement("button");
-			underBtn.innerText = "U";
+			const overBtn = document.createElement("option");
+			overBtn.value = "over";
+			overBtn.innerText = "Over";
+			const underBtn = document.createElement("option");
+			underBtn.value = "under";
+			underBtn.innerText = "Under";
 			let ouBtn = null;
 			if (data.under) {
-				underBtn.classList.add("active");
+				underBtn.selected = true;
 				ouBtn = overBtn;
 			} else {
-				overBtn.classList.add("active");
+				overBtn.selected = true;
 				ouBtn = underBtn;
 			}
-			ouBtn.addEventListener("click", function(event) {
-				const rows = TABLE.getRows().filter(function(r) {
-					const d = r.getData();
-					return d.prop == data.prop && d.player == data.player && d.under == (event.target.innerText == "U");
-				});
-				rowClick(rows[0]);
-			});
 			if (playerOUs.has(false)) {
 				playerOU.appendChild(overBtn);
 			}
@@ -497,17 +527,17 @@
 
 
 			// Lines Nav
-			const lineSlider = document.querySelector("#player-lines-slider");
-			lineSlider.innerHTML = "";
+			const lineSelect = document.querySelector("#player-lines-select");
+			lineSelect.innerHTML = "";
 			playerLines.sort((a, b) => a - b);
 			playerLines.forEach(p => {
-				const el = document.createElement("button");
-				el.className = "nav-item";
+				const el = document.createElement("option");
 				if (p == data.playerHandicap) {
-					el.classList.add("active");
+					el.selected = true;
 				}
 				el.innerText = p;
-				lineSlider.appendChild(el);
+				el.value = p;
+				lineSelect.appendChild(el);
 			});
 
 			// Odds Display
@@ -551,10 +581,14 @@
 			const layout = {
 				title: "Game Logs",
 				showlegend: false,
+				responsive: true,
+				plot_bgcolor: '#181a1b',
 				paper_bgcolor: "#181a1b",
 				font: {
 					color: "#e8e6e3"
 				},
+				width: '100%',
+				margin: { l: 10, r: 10, t: 20, b: 20 },
 				xaxis: {
 					title: "Dates",
 					showgrid: false,
@@ -582,7 +616,7 @@
 						x0: -0.25, x1: dtSplits.length,
 						y0: data.playerHandicap, y1: data.playerHandicap,
 						line: {
-							color: "rgb(60, 60, 60)",
+							color: "#5A5A5A",
 							dash: "dash"
 						}
 					}
