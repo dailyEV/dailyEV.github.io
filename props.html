@@ -259,7 +259,7 @@
 	}
 
 	#sport-select {
-		width: 100px;
+		min-width: 120px;
 	}
 
 	.nav-item:hover, .nav button:hover, #player-ou button:hover {
@@ -485,7 +485,16 @@
 			});
 
 			document.querySelector("#player-tables").style.display = "flex";
-			document.querySelector("#player-header h2").innerText = title(data.player);
+			if (SPORT == "ncaab") {
+				document.querySelector("#player-header h2").innerHTML = `
+					<img src="logos/ncaab/${data.teamId}.png" width=32 height=32 style="vertical-align: middle;" />
+					${title(data.player)}
+				`;
+			} else {
+				document.querySelector("#player-header h2").innerHTML = `
+					${title(data.player)}
+				`;	
+			}
 
 			// Props Nav
 			let propsSelect = document.querySelector("#player-props-select");
