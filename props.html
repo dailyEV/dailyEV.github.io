@@ -175,19 +175,16 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.nav {
-		justify-content: center;
-		display: flex;
-		gap: 2px;
-		overflow: hidden;
-		white-space: nowrap;
-		padding: 10px;
-		border-radius: 5px;
+	#player-props-slider {
+		width: 300px;
+	}
+	#player-lines-slider {
+		width: 150px;
 	}
 	#player-ou {
 		display: flex;
 		flex-direction: column;
-		margin-left: 0.5rem;
+		margin: 0 0.5rem;
 	}
 	#player-ou button {
 		border-radius: 8px;
@@ -199,18 +196,33 @@
 		border-color: #ff9f00 !important;
 		box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
 	}
-	#player-lines-slider {
+
+	.nav {
+		justify-content: center;
+		display: flex;
+		gap: 2px;
+		overflow-x: auto;
+		white-space: nowrap;
+		padding: 10px;
+		border-radius: 5px;
+		scrollbar-width: none;
+	}
+
+	.nav::-webkit-scrollbar {
+		display: none; /* Hides scrollbar for WebKit browsers */
 	}
 
 	.nav-item, .nav button {
 		padding: 8px 16px;
 		background-color: #e8e6e3;
-  		color: black;
-		border-radius: 8px;
+		color: black;
+		border-radius: 20px;
 		text-align: center;
 		cursor: pointer;
 		flex-shrink: 0;
 		border-width: 1px;
+		overflow-x: auto;
+		scroll-behavior: smooth;
 	}
 
 	.nav-item:hover, .nav button:hover, #player-ou button:hover {
@@ -234,6 +246,9 @@
 			position: initial;
 		}
 		#player-tables, #player-header {
+			width: 100%;
+		}
+		#player-header {
 			width: 100%;
 		}
 		#player-odds {
@@ -274,7 +289,7 @@
 		<nav id="sport-nav" class="nav">
 			<button id="mlb">MLB</button>
 			<button id="nhl">NHL</button>
-			<!-- <button id="nba">NBA</button> -->
+			<button id="nba">NBA</button>
 			<button id="ncaab">NCAAB</button>
 		</nav>
 		<div id="donate">
@@ -371,7 +386,7 @@
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
 			const playerProps = new Set(playerRows.map(r => r.prop));
-			const playerLines = new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap));
+			const playerLines = Array.from(new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap)));
 			const playerOUs = new Set(playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap).map(r => r.under));
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
@@ -385,7 +400,7 @@
 			document.querySelector("#player-header h2").innerText = title(data.player);
 
 			// Props Nav
-			const propsSlider = document.querySelector("#player-props-slider");
+			let propsSlider = document.querySelector("#player-props-slider");
 			propsSlider.innerHTML = "";
 			playerProps.forEach(p => {
 				const el = document.createElement("button");
@@ -437,6 +452,7 @@
 			// Lines Nav
 			const lineSlider = document.querySelector("#player-lines-slider");
 			lineSlider.innerHTML = "";
+			playerLines.sort((a, b) => a - b);
 			playerLines.forEach(p => {
 				const el = document.createElement("button");
 				el.className = "nav-item";
@@ -445,6 +461,19 @@
 				}
 				el.innerText = p;
 				lineSlider.appendChild(el);
+			});
+
+			const activeButton = document.querySelector("#player-props-slider .active");
+			const buttonOffsetLeft = activeButton.offsetLeft;
+			const buttonWidth = activeButton.offsetWidth;
+			const navWidth = propsSlider.offsetWidth;
+
+			const scrollPosition = buttonOffsetLeft - (navWidth / 2) + (buttonWidth / 2);
+			console.log(scrollPosition)
+
+			propsSlider.scrollTo({
+			    left: scrollPosition,
+			    //behavior: 'smooth'
 			});
 
 			// Odds Display

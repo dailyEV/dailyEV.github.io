@@ -28,7 +28,9 @@ const plusMinusFormatter = function(cell) {
 }
 
 function convertProp(prop) {
-	prop = prop.replace("single", "1b").replace("double", "2b").replace("triple", "3b");
+	prop = prop
+		.replace("single", "1b").replace("double", "2b").replace("triple", "3b")
+		.replace("pts+", "p+").replace("+ast", "+a").replace("+reb", "+r")
 	return prop.toUpperCase();
 }
 
