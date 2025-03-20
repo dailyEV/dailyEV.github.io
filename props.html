@@ -118,6 +118,9 @@
 		display: flex;
 		justify-content: center;
 	}
+	.sport-img {
+		height: 36px; width: 36px;
+	}
 	.game-img {
 		height: 20px; width: 20px;
 	}
@@ -225,6 +228,42 @@
 		scroll-behavior: smooth;
 	}
 
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+	.dropdown select {
+		font-weight: 600;
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		-ms-appearance: none;
+		margin: 0;
+		padding: 12px;
+		border-radius: 4px;
+		border: 1px solid rgba(164, 164, 170, 0.3);
+		outline: none;
+		text-indent: 0px;
+		background-color: #1b1d1e;
+		color: #d3cfca;
+		outline-color: currentcolor;
+		cursor: pointer;
+	}
+	.dropdown svg {
+		position: absolute;
+		top: 50%;
+		transform: translate(0, -50%) rotate(90deg);
+  		right: 6px;
+  		overflow: hidden;
+  		pointer-events: none;
+	}
+
+	#sport-select {
+		width: 100px;
+	}
+
 	.nav-item:hover, .nav button:hover, #player-ou button:hover {
 		background-color: #3a3f44;
 		color: #e8e6e3;
@@ -286,12 +325,15 @@
 </style>
 <body>
 	<div id="header">
-		<nav id="sport-nav" class="nav">
-			<button id="mlb">MLB</button>
-			<button id="nhl">NHL</button>
-			<button id="nba">NBA</button>
-			<button id="ncaab">NCAAB</button>
-		</nav>
+		<div class="dropdown">
+			<select id="sport-select">
+				<option value="mlb">⚾MLB</option>
+				<option value="nhl">🏒NHL</option>
+				<option value="nba">🏀NBA</option>
+				<option value="ncaab">🏀NCAAB</option>
+			</select>
+			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+		</div>
 		<div id="donate">
 			<div>
 				<a href="https://cash.app/$intersectinglines" target="_blank">
@@ -330,8 +372,13 @@
 		let PROP = URLParams.get("prop");
 
 		if (SPORT) {
-			document.querySelector(`#${SPORT}`).classList.add("active");
+			document.querySelector("#sport-select").value = SPORT;
 		}
+
+		document.querySelector("#sport-select").addEventListener("change", (event) => {
+			const sport = event.target.value;
+			window.location.href = "/props?sport="+sport;
+		});
 
 		document.querySelectorAll("#sport-nav button").forEach(btn => {
 			btn.addEventListener("click", () => {
@@ -461,19 +508,6 @@
 				}
 				el.innerText = p;
 				lineSlider.appendChild(el);
-			});
-
-			const activeButton = document.querySelector("#player-props-slider .active");
-			const buttonOffsetLeft = activeButton.offsetLeft;
-			const buttonWidth = activeButton.offsetWidth;
-			const navWidth = propsSlider.offsetWidth;
-
-			const scrollPosition = buttonOffsetLeft - (navWidth / 2) + (buttonWidth / 2);
-			console.log(scrollPosition)
-
-			propsSlider.scrollTo({
-			    left: scrollPosition,
-			    //behavior: 'smooth'
 			});
 
 			// Odds Display
