@@ -45,12 +45,16 @@ const propFormatter = function(cell) {
 		} else {
 			return data.prop.toUpperCase();
 		}
-	} else if (data.prop == "ml") {
-		return "ML";
+	} else if (data.prop.includes("ml")) {
+		return `${data.prop.toUpperCase()}`;
 	} else if (data.prop.includes("total")) {
 		return `${ou}${data.handicap}`;
 	} else if (data.prop.includes("spread")) {
-		return `${ou}${data.handicap}`;
+		let v = parseFloat(data.handicap);
+		if (data.under) {
+			v *= -1;
+		}
+		return v < 0 ? v : `+${v}`;
 	}
 	return prop;
 }
@@ -65,14 +69,20 @@ const playerFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	const sport = params.sport;
-	const team = "det";
+	const team = SPORT == "ncaab" ? data.teamId : data.team;
 	const imgs = getGameImgs(data, params);
 	let player = title(data.player);
 	if (player == "") {
 		player = data.prop.replace("_", " ").toUpperCase();
-		if (data.prop == "ml") {
+		if (data.prop.includes("ml")) {
 			const g = SPORT == "ncaab" ? title(data.game) : data.game.toUpperCase();
 			player = data.under ? g.split(" @ ")[1] : g.split(" @ ")[0];
+		} else if (data.prop == "total" && SPORT == "ncaab") {
+			player = `Total (${data.gameId.toUpperCase()})`;
+		} else if (data.prop.includes("away_total") || data.prop.includes("home_total")) {
+			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
+		} else if (data.prop.includes("spread")) {
+			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
 		}
 	}
 	return `
