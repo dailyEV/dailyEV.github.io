@@ -14,7 +14,7 @@ const evBookFormatter = function(cell, params, rendered) {
 	return `
 		<div class='evbook-cell'>
 			${line}
-			<img class='book-img' src='logos/${book}.png' />
+			<img class='book-img' src='logos/${book}.png' alt='${book}' />
 		</div>
 	`;
 }
@@ -62,7 +62,7 @@ const propFormatter = function(cell) {
 const teamFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
-	return `<img class='team-img' src='${cell.getValue()}' />`;
+	return `<img class='team-img' src='${cell.getValue()}' alt='${data.team}' />`;
 }
 
 const playerFormatter = function(cell, params, rendered) {
@@ -95,8 +95,8 @@ function getGameImgs(data, params) {
 	let away = data.awayTeamId || data.game.split(" @ ")[0];
 	let home = data.homeTeamId || data.game.split(" @ ")[1];
 	return [
-		`<img class='game-img away' src='logos/${params.sport}/${away}.png' />`,
-		`<img class='game-img home' src='logos/${params.sport}/${home}.png' />`
+		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${away}' />`,
+		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${home}' />`
 	];
 }
 

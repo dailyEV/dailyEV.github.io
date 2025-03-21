@@ -197,6 +197,9 @@
 	#player-props-select {
 		min-width: 120px;
 	}
+	#log-chart {
+		
+	}
 
 	.nav {
 		justify-content: center;
@@ -283,6 +286,12 @@
 			height: auto;
 			margin-bottom: 0.75rem;
 		}
+		#sub-header {
+			width: 100%;
+			display: flex;
+			justify-content: space-evenly;
+			margin: 0.25rem 0;
+		}
 		h1 {
 			position: initial;
 			width: 100%;
@@ -292,7 +301,6 @@
 		#donate {
 			flex-direction: row;
 			position: initial;
-			margin: 0.5rem 0;
 		}
 		#player-tables, #player-header, #player-table {
 			width: 100%;
@@ -336,25 +344,27 @@
 <body>
 	<div id="header">
 		<h1>Daily EV</h1>
-		<div id="donate">
-			<div>Tip Jar</div>
-			<div>
-				<a href="https://cash.app/$intersectinglines" target="_blank">
-					<img src="logos/cashapp.png" />
-				</a>
-				<a href="https://buymeacoffee.com/interlines" target="_blank">
-					<img src="logos/coffee.png" />
-				</a>
+		<div id="sub-header">
+			<div id="donate">
+				<div>Tip Jar</div>
+				<div>
+					<a href="https://cash.app/$intersectinglines" target="_blank">
+						<img src="logos/cashapp.png" alt="cashapp" />
+					</a>
+					<a href="https://buymeacoffee.com/interlines" target="_blank">
+						<img src="logos/coffee.png" alt="coffee" />
+					</a>
+				</div>
 			</div>
-		</div>
-		<div class="dropdown">
-			<select id="sport-select">
-				<option value="mlb">⚾MLB</option>
-				<option value="nhl">🏒NHL</option>
-				<option value="nba">🏀NBA</option>
-				<option value="ncaab">🏀NCAAB</option>
-			</select>
-			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			<div class="dropdown">
+				<select id="sport-select">
+					<option value="mlb">⚾ MLB</option>
+					<option value="nhl">🏒 NHL</option>
+					<option value="nba">🏀 NBA</option>
+					<option value="ncaab">🏀 NCAAB</option>
+				</select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
 		</div>
 	</div>
 	<div id="table-container">
@@ -489,16 +499,10 @@
 			if (!player) {
 				player = data.team.toUpperCase(); 
 			}
-			if (SPORT == "ncaab") {
-				document.querySelector("#player-header h2").innerHTML = `
-					<img src="logos/ncaab/${data.teamId}.png" width=32 height=32 style="vertical-align: middle;" />
-					${player}
-				`;
-			} else {
-				document.querySelector("#player-header h2").innerHTML = `
-					${player}
-				`;	
-			}
+			document.querySelector("#player-header h2").innerHTML = `
+				<img src="logos/${SPORT}/${data.teamId || data.team}.png" width=32 height=32 style="vertical-align: middle;" />
+				${player}
+			`;
 
 			// Props Nav
 			let propsSelect = document.querySelector("#player-props-select");
