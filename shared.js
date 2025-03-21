@@ -95,8 +95,8 @@ function getGameImgs(data, params) {
 	let away = data.awayTeamId || data.game.split(" @ ")[0];
 	let home = data.homeTeamId || data.game.split(" @ ")[1];
 	return [
-		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${away}' />`,
-		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${home}' />`
+		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${data.game.split(" @ ")[0]}' />`,
+		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${data.game.split(" @ ")[1]}' />`
 	];
 }
 
