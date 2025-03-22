@@ -94,9 +94,15 @@ const playerFormatter = function(cell, params, rendered) {
 function getGameImgs(data, params) {
 	let away = data.awayTeamId || data.game.split(" @ ")[0];
 	let home = data.homeTeamId || data.game.split(" @ ")[1];
+	let awayAlt = data.game.split(" @ ")[0].toUpperCase();
+	let homeAlt = data.game.split(" @ ")[1].toUpperCase();
+	if (SPORT == "ncaab") {
+		awayAlt = title(awayAlt);
+		homeAlt = title(homeAlt);
+	}
 	return [
-		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${data.game.split(" @ ")[0]}' />`,
-		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${data.game.split(" @ ")[1]}' />`
+		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${awayAlt}' />`,
+		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${homeAlt}' />`
 	];
 }
 
