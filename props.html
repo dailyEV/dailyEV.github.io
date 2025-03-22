@@ -188,8 +188,13 @@
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
 			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
-			const playerLines = Array.from(new Set(playerRows.filter(r => r.prop == data.prop).map(r => r.playerHandicap || r.handicap)));
-			const playerOUs = new Set(playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap).map(r => r.under));
+
+			const playerRowsLines = playerRows.filter(r => r.prop == data.prop);
+			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
+			
+			const playerRowsOUs = playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap);
+			//console.log(playerRowsOUs)
+			const playerOUs = new Set(playerRowsOUs.map(r => r.under));
 			let dtSplits = data.dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
 				const d = new Date(dt+" 10:00");
@@ -403,8 +408,8 @@
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
-				//layout: "fitColumns",
-				responsiveLayout: true,
+				layout: "fitColumns",
+				responsiveLayout: "hide",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -429,6 +434,7 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
+						width: MOBILE ? 120 : 160,
 						formatterParams:{
 							sport: SPORT
 						},
@@ -465,9 +471,9 @@
 					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 10},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 11},
 					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 12},
-					{title: "Game Logs", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}, responsive: 2},
-					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter, responsive: 3},
-					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter, resopnsive: 1},
+					{title: "Game Logs", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}, responsive: 3},
+					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
+					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, resopnsive: 1},
 				]
 			});
 
@@ -481,10 +487,11 @@
 			TABLE.deselectRow();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
 			if (sel.length > 0 && sel[0] == row) {
-				cols.forEach(col => TABLE.showColumn(col));
+				//cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#player-tables").style.display = "none";
 			} else {
 				//cols.forEach(col => TABLE.hideColumn(col));
+				document.querySelector("#table-container").style.width = "100%";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
