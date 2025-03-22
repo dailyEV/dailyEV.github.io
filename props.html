@@ -39,7 +39,7 @@
 	</div>
 	<div id="body">
 		<div id="table-container">
-			<div id="updated">Synced: </div>
+			<div id="updated">Updated: </div>
 			<div id="table"></div>
 		</div>
 		<div id="player-tables">
@@ -167,7 +167,7 @@
 				const options = { hour: '2-digit', minute: '2-digit' };
 				const formattedTime = date.toLocaleString('en-US', options);
 				document.querySelector("#updated").innerText = 
-					isToday ? `Synced Today ${formattedTime}` : `Synced ${formattedTimeDay}`;
+					isToday ? `Updated Today ${formattedTime}` : `Updated ${formattedTimeDay}`;
 			}).catch(err => console.log(err));
 		}
 
@@ -189,7 +189,7 @@
 				.map(r => r.getData());
 			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
 
-			const playerRowsLines = playerRows.filter(r => r.prop == data.prop);
+			let playerRowsLines = playerRows.filter(r => r.prop == data.prop);
 			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
 			
 			const playerRowsOUs = playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap);
@@ -255,14 +255,19 @@
 			// Lines Nav
 			const lineSelect = document.querySelector("#player-lines-select");
 			lineSelect.innerHTML = "";
-			playerLines.sort((a, b) => a - b);
-			playerLines.forEach(p => {
+			playerRowsLines = playerRowsLines.filter(r => r.under == data.under);
+
+			playerRowsLines.sort((a,b) => (a.playerHandicap || a.handicap) - (b.playerHandicap || b.handicap));
+			playerRowsLines.forEach(p => {
+				const line = p.playerHandicap || p.handicap;
 				const el = document.createElement("option");
-				if (p == (data.playerHandicap || data.handicap)) {
+				if (line == (data.playerHandicap || data.handicap)) {
 					el.selected = true;
 				}
-				el.innerText = p;
-				el.value = p;
+				el.setAttribute("data-display", line);
+				//el.innerText = `${line} (${p.ev})`;
+				el.innerText = `${line}`;
+				el.value = line;
 				lineSelect.appendChild(el);
 			});
 
@@ -471,7 +476,14 @@
 					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 10},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 11},
 					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 12},
-					{title: "Game Logs", field: "totalSplits", width:160, formatter: chartFormatter, formatterParams:{type:"bar"}, responsive: 3},
+					{
+						title: "Game Logs",
+						field: "totalSplits",
+						width:160,
+						formatter: chartFormatter,
+						formatterParams:{type:"bar"},
+						responsive: 3
+					},
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, resopnsive: 1},
 				]
@@ -486,7 +498,7 @@
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-			if (sel.length > 0 && sel[0] == row) {
+			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				//cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#player-tables").style.display = "none";
 			} else {
