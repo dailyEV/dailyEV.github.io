@@ -142,7 +142,7 @@
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
-					TABLE.getRows("active")[1].getElement().click()
+					TABLE.getRows("active").filter(r => r.getData().prop != "ml")[0].getElement().click()
 					hideCols();
 				}, 200);
 			}).catch(err => console.log(err));
@@ -413,8 +413,8 @@
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
-				layout: "fitColumns",
-				responsiveLayout: "hide",
+				layout: "fitDataFill",
+				responsiveLayout: MOBILE ? "hide" : "",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -499,11 +499,14 @@
 			TABLE.deselectRow();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
-				//cols.forEach(col => TABLE.showColumn(col));
+				cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#player-tables").style.display = "none";
-			} else {
-				//cols.forEach(col => TABLE.hideColumn(col));
+				document.querySelector("#table").style["max-width"] = "1340px";
 				document.querySelector("#table-container").style.width = "100%";
+			} else {
+				cols.forEach(col => TABLE.hideColumn(col));
+				document.querySelector("#table-container").style.width = "50%";
+				document.querySelector("#table").style["max-width"] = "660px";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
