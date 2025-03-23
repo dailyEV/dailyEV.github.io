@@ -141,8 +141,13 @@ h1 {
 	width: 100%; height: 100%;
 }
 .evbook-cell {
+	position: relative;
 	display: flex;
 	justify-content: center;
+}
+.evbook-implied {
+	display: none;
+	position: absolute;
 }
 .sport-img {
 	height: 36px; width: 36px;

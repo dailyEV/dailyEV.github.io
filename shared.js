@@ -8,9 +8,20 @@ const evBookFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 	const book = cell.getValue().replace("kambi", "br");
 	let line = data.line;
-	if (parseInt(line) > 0) {
+	let lineInt = parseInt(line);
+	let implied = -lineInt / (-lineInt + 100);
+	if (lineInt > 0) {
 		line = "+"+line;
+		implied = 100 / (lineInt + 100);
 	}
+	/*
+	implied = 0
+		if row[-1]["line"] > 0:
+			implied = 100 / (row[-1]["line"] + 100)
+		else:
+			implied = -1*row[-1]["line"] / (-1*row[-1]["line"] + 100)
+		implied *= 100
+		*/
 	return `
 		<div class='evbook-cell'>
 			${line}
