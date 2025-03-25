@@ -49,8 +49,13 @@ const propFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	const ou = data.under ? "u" : "o";
-	let prop = `${ou}${data.playerHandicap} ${convertProp(data.prop)}`;
-	if (["atgs", "rfi"].includes(data.prop)) {
+	if (["playoffs", "roty", "mvp", "division"].includes(data.prop)) {
+		if (data.under) {
+			return "No";
+		} else {
+			return "Yes";
+		}
+	} else if (["atgs", "rfi"].includes(data.prop)) {
 		if (data.under) {
 			return `u${data.prop.toUpperCase()}`
 		} else {
@@ -67,7 +72,23 @@ const propFormatter = function(cell) {
 		}
 		return v < 0 ? v : `+${v}`;
 	}
+
+	let prop = `${ou}${data.playerHandicap}`;
+	if (!["team_wins"].includes(data.prop)) {
+		prop += ` ${convertProp(data.prop)}`;
+	}
 	return prop;
+}
+
+const kellyFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
+	let dec = data.line / 100;
+	if (data.line < 0) {
+		dec = 100 / data.line;
+	}
+	const kelly = parseFloat(data.ev) / Math.abs(dec) / 4;
+	return `${kelly.toFixed(2)}u`;
 }
 
 const teamFormatter = function(cell, params, rendered) {
@@ -76,13 +97,34 @@ const teamFormatter = function(cell, params, rendered) {
 	return `<img class='team-img' src='${cell.getValue()}' alt='${data.team}' />`;
 }
 
+const dtFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
+	if (!cell.getValue()) return "";
+	const d = new Date(cell.getValue()+" 10:00");
+	return d.toLocaleDateString("en-US", {
+		month: "short", day: "numeric", year: "2-digit"
+	}).replace(", ", " '");
+}
+
 const playerFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	const sport = params.sport;
+	let player = title(data.player);
+
+	if (sport.includes("futures")) {
+		if (data.prop == "team_wins") {
+			return player.toUpperCase()+" Wins";
+		} else if (["playoffs", "roty", "mvp", "division"].includes(data.prop)) {
+			return `${player.toUpperCase()} ${title(data.prop)}`;
+		}
+		return player;
+	}
+
 	const team = SPORT == "ncaab" ? data.teamId : data.team;
 	const imgs = getGameImgs(data, params);
-	let player = title(data.player);
+
 	if (player == "") {
 		player = data.prop.replace("_", " ").toUpperCase();
 		if (data.prop.includes("ml")) {
@@ -112,8 +154,8 @@ function getGameImgs(data, params) {
 		homeAlt = title(homeAlt);
 	}
 	return [
-		`<img class='game-img away' src='logos/${params.sport}/${away}.png' alt='${awayAlt}' />`,
-		`<img class='game-img home' src='logos/${params.sport}/${home}.png' alt='${homeAlt}' />`
+		`<img class='game-img away' src='logos/${params.sport.replace("dingers", "mlb")}/${away}.png' alt='${awayAlt}' />`,
+		`<img class='game-img home' src='logos/${params.sport.replace("dingers", "mlb")}/${home}.png' alt='${homeAlt}' />`
 	];
 }
 

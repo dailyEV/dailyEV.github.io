@@ -1,12 +1,14 @@
-
+/*
 * {
-    /* outline: 1px solid red; */
+    outline: 1px solid red; 
 }
+*/
 
 html {
 	background-color: #181a1b !important;
 }
 body {
+	display: flex;
 	width:100%;
 	margin: 0; padding: 0;
 	font-size: 18px;
@@ -63,6 +65,7 @@ input, textarea, select {
 	border-top-color: currentcolor;
 }
 #header {
+	width: 100%;
 	height: 10%;
 	display: flex;
 	justify-content: center;
@@ -81,34 +84,45 @@ h1 {
 	top: auto;
 	margin: 0;
 }
-#donate {
+#donate, #donate-mobile {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	top: auto; right: 48px;
+	top: 16px; right: 48px;
 	gap: 5px;
 }
-#donate img {
+#donate-mobile {
+	display: none;
+}
+#donate img, #donate-mobile img {
 	width: 32px; height: 32px;
 	vertical-align: middle;
 }
-#donate img:hover {
+#donate img:hover, #donate-mobile img:hover {
 	cursor: pointer;
 }
-#donate div {
+#donate div, #donate-mobile div {
 	text-align: center;
 }
-#donate a {
+#donate a, #donate-mobile a {
 	color: transparent;
 }
-#body {
+.body {
 	display: flex;
+	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-	height: 90%;
+	height: 100%;
+	width: 50%;
+}
+#left-body {
 	width: 100%;
+}
+#right-body {
+	display: none;
+	position: relative;
 }
 #updated {
 	font-style: italic;
@@ -116,24 +130,31 @@ h1 {
 	margin-bottom: 0.25rem;
 }
 #table-container {
-	height: 100%;
+	height: 90%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	width: 50%;
 }
 #table {
 	height: 95%;
-	width: 95%;
 	min-height: 200px;
+}
+#player-table {
+	width: 90%;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 #player-tables {
 	display: flex;
 	flex-direction: column;
-	display: none;
-	width: 50%;
-	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+#player-ev {
+	padding-left: 5px;
+}
+#player-ev span {
 }
 .game-cell {
 	position: relative;
@@ -156,19 +177,21 @@ h1 {
 	height: 20px; width: 20px;
 }
 .book-img {
-	height: 32px; width: 32px;
+	height: 24px; width: 24px;
 }
-#player-odds .book-img {
-	margin-bottom: 0.25rem;
+.team-img {
+	height: 18px; width: 18px;
 }
 .tabulator .book-img {
 	height: 16px; width: 16px;
 	margin-left: 0.5rem;
 }
 h2 {
-	margin: 0;
+	display: flex;
+	gap: 10px;
+	margin-bottom: 1rem;
 }
-nav, h2 {
+nav {
 	text-align: center;
 }
 .game-container {
@@ -193,33 +216,40 @@ nav, h2 {
 
 #player-odds {
 	display: flex;
-	justify-content: center;
+	width: 100%;
+	margin: 0.25rem 0;
 }
 #player-odds div {
 	display: flex;
-	flex-direction: column;
 	align-items: center;
 	padding: 5px;
-	width: 70px;
-}
-#player-odds .active {
-	border: 1px solid;
+	gap: 5px;
 }
 #player-header {
 	width: 100%;
 }
 #player-controls {
+	position: relative;
 	display: flex;
+	flex-direction: column;
 	justify-content: space-evenly;
-	align-items: center;
+	align-items: left;
 	width: 100%;
-	margin-bottom: 0.5rem;
 }
-#player-dropdowns {
+.player-dropdowns {
 	display: flex;
 	overflow: hidden;
-	justify-content: center;
 	align-items: center;
+	margin-top: 0.25rem;
+	/*
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	*/
+}
+#player-venue-select {
+	min-width: 80px;
 }
 #player-ou-select {
 	min-width: 80px;
@@ -304,7 +334,11 @@ nav, h2 {
 	transition: all 0.3s ease;
 }
 
-#player-odds div.active, .nav-item.active, .nav button.active {
+#player-odds .active {
+	color: #ffcb05;
+}
+
+.nav-item.active, .nav button.active {
 	background-color: #2b2d2e;
 	color: #ffcb05;
 	border-color: #ff9f00 !important;
@@ -313,6 +347,12 @@ nav, h2 {
 }
 
 @media (max-width: 600px) {
+	body {
+		flex-direction: column;
+	}
+	.body, #left-body {
+		width: 100%;
+	}
 	#header {
 		flex-direction: column;
 		height: auto;
@@ -331,25 +371,36 @@ nav, h2 {
 		text-align: center;
 	}
 	h2 {
-		margin-top: 0.5rem;
-		font-size: 1.5rem;
+		font-size: 1.35rem;
+		justify-content: center;
+		margin-top: 0.75rem;
+		margin-bottom: 0;
 	}
 	#updated {
 		font-size: 0.85rem;
 	}
 	.book-img {
-		height: 24px; width: 24px;
+		height: 18px; width: 18px;
+	}
+	#player-ev {
+		text-align: center;
+		margin: 0;
+		font-size: 1rem;
 	}
 	#player-controls {
-		flex-direction: column;
+		align-items: center;
 	}
-	#player-dropdowns {
+	.player-dropdowns {
 		margin: 0.5rem 0;
 	}
-	#player-odds div {
-		width: 60px;
+	#player-odds {
+		justify-content: center;
 	}
 	#donate {
+		display: none;
+	}
+	#donate-mobile {
+		display: flex;
 		flex-direction: row;
 		position: initial;
 	}

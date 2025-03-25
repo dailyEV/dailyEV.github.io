@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily Dingers</title>
+	<title>Daily EV</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
@@ -12,56 +12,80 @@
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 </head>
 <body>
-	<div id="header">
-		<h1>Daily EV</h1>
-		<div id="sub-header">
-			<div class="dropdown">
-				<select id="sport-select">
-					<option value="mlb">⚾ MLB</option>
-					<option value="nhl">🏒 NHL</option>
-					<option value="nba">🏀 NBA</option>
-					<option value="ncaab">🏀 NCAAB</option>
-				</select>
-				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-			</div>
-			<div id="donate">
-				<div>Tip Jar</div>
-				<div>
-					<a href="https://cash.app/$intersectinglines" target="_blank">
-						<img src="logos/cashapp.png" alt="cashapp" />
-					</a>
-					<a href="https://buymeacoffee.com/interlines" target="_blank">
-						<img src="logos/coffee.png" alt="coffee" />
-					</a>
+	<div id="left-body" class="body">
+		<div id="header">
+			<h1>Daily EV</h1>
+			<div id="sub-header">
+				<div class="dropdown">
+					<select id="sport-select">
+						<option value="mlbfutures">⚾ MLB Futures</option>
+						<option value="nhl">🏒 NHL</option>
+						<option value="nba">🏀 NBA</option>
+						<option value="ncaab">🏀 NCAAB</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+				<div id="donate-mobile">
+					<div>Tip Jar</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="body">
 		<div id="table-container">
 			<div id="updated">Updated: </div>
 			<div id="table"></div>
 		</div>
+	</div>
+	<div id="right-body" class="body">
+		<div id="donate">
+			<div>Tip Jar</div>
+			<div>
+				<a href="https://cash.app/$intersectinglines" target="_blank">
+					<img src="logos/cashapp.png" alt="cashapp" />
+				</a>
+				<a href="https://buymeacoffee.com/interlines" target="_blank">
+					<img src="logos/coffee.png" alt="coffee" />
+				</a>
+			</div>
+		</div>
 		<div id="player-tables">
 			<div id="player-header">
-				<div id="player-controls">
-					<h2></h2>
-					<div id="player-dropdowns">
-						<div class="dropdown">
-							<select id="player-ou-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown" style="margin: 0 0.5rem;">
-							<select id="player-lines-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown">
-							<select id="player-props-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
+				<h2></h2>
+			</div>
+			<div id="player-ev"></div>
+			<div id="player-odds"></div>
+			<div id="player-controls">
+				<div class="player-dropdowns">
+					<div class="dropdown">
+						<select id="player-ou-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown" style="margin: 0 0.5rem;">
+						<select id="player-lines-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown">
+						<select id="player-props-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 				</div>
-				<div id="player-odds"></div>
+				<div class="player-dropdowns">
+					<div class="dropdown">
+						<select id="player-venue-select" style="display:none">
+							<option selected>A+H</option>
+							<option>Away</option>
+							<option>Home</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+				</div>
 			</div>
 			<div id="player-table">
 				<div id="log-chart"></div>
@@ -114,6 +138,40 @@
 			rowClick(rows[0]);
 		});
 
+		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
+			const data = TABLE.getSelectedRows()[0].getData();
+			const venue = event.target.value.toLowerCase();
+			const dtSplits = data.dtSplits.split(",");
+			const logs = data.totalSplits.split(",");
+
+			let newX = [], newY = [];
+			if (venue == "away") {
+				const awaySplits = dtSplits.map((date, idx) => {
+					if (data.awayHomeSplits.split(",")[idx] == "A") {
+						return { date, total: logs[idx] };
+					}
+					return null;
+				}).filter(item => item != null);
+				newX = awaySplits.map(r => r.date);
+				newY = awaySplits.map(r => r.total);
+			} else if (venue == "home") {
+				const homeSplits = dtSplits.map((date, idx) => {
+					if (data.awayHomeSplits.split(",")[idx] == "H") {
+						return { date, total: logs[idx] };
+					}
+					return null;
+				}).filter(item => item != null);
+				newX = homeSplits.map(r => r.date);
+				newY = homeSplits.map(r => r.total);
+			} else {
+				newX = dtSplits;
+				newY = logs;
+			}
+			console.log(newX, newY)
+			Plotly.update("log-chart", { x: [newX], y: [newY] }, {}, [0]);
+			
+		});
+
 		document.querySelectorAll("#donate img").forEach(btn => {
 			btn.addEventListener("click", () => {
 				const sport = btn.textContent;
@@ -142,14 +200,18 @@
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
-					TABLE.getRows("active").filter(r => r.getData().prop != "ml")[0].getElement().click()
+					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
+					if (rows.length > 0) {
+						rows[0].getElement().click();
+					}
 					hideCols();
+					TABLE.redraw();
 				}, 200);
 			}).catch(err => console.log(err));
 		}
 
 		function fetchUpdated() {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -172,12 +234,16 @@
 		}
 
 		function hideCols() {
-			if (SPORT == "mlb") {
+			if (SPORT == "mlb" || SPORT.includes("futures")) {
 				const cols = ["totalSplits", "totalOver", "total10Over"];
 				if (PROP == "hr") {
 					cols.push("prop");
 				}
 				cols.forEach(col => TABLE.hideColumn(col));
+			}
+
+			if (SPORT == "mlbfutures") {
+				TABLE.showColumn("bookOdds.bv");
 			}
 		}
 
@@ -203,7 +269,8 @@
 				}).replace(", ", " '");
 			});
 
-			document.querySelector("#player-tables").style.display = "flex";
+			document.querySelector("#left-body").style.width = MOBILE ? "100%" : "50%";
+			document.querySelector("#right-body").style.display = "flex";
 			let player = title(data.player);
 			if (!player) {
 				player = data.team.toUpperCase(); 
@@ -211,6 +278,20 @@
 			document.querySelector("#player-header h2").innerHTML = `
 				<img src="logos/${SPORT}/${data.teamId || data.team}.png" width=32 height=32 style="vertical-align: middle;" alt="${data.team}" />
 				${player}
+			`;
+
+			let dec = data.line / 100;
+			if (data.line < 0) {
+				dec = 100 / data.line;
+			}
+			const kelly = parseFloat(data.ev) / Math.abs(dec) / 4;
+			let evStr = data.ev;
+			if (parseFloat(data.ev) > 0) {
+				evStr = "+"+evStr;
+			}
+			document.querySelector("#player-ev").innerHTML = `
+				<span>EV% = ${evStr}%, </span>
+				<span><sup>&frac14;</sup> Kelly = ${kelly.toFixed(2)}u</span>
 			`;
 
 			// Props Nav
@@ -292,6 +373,18 @@
 
 			// Plotly
 			const logs = data.totalSplits.split(",").slice(cutoff);
+			const awaySplits = dtSplits.map((date, idx) => {
+				if (data.awayHomeSplits.split(",")[idx] == "A") {
+					return { date, total: logs[idx] };
+				}
+				return null;
+			}).filter(item => item != null);
+			const homeSplits = dtSplits.map((date, idx) => {
+				if (data.awayHomeSplits.split(",")[idx] == "H") {
+					return { date, total: logs[idx] };
+				}
+				return null;
+			}).filter(item => item != null);
 			const colors = logs.map(value => {
 				let cond = parseFloat(value) > parseFloat(data.playerHandicap || data.handicap);
 				if (data.under) {
@@ -321,7 +414,7 @@
 				},
 				width: '100%',
 				dragmode: 'pan',
-				margin: { l: 10, r: 10, t: 20, b: 20 },
+				margin: { l: 0, r: 10, t: 20, b: 20 },
 				xaxis: {
 					title: "Dates",
 					showgrid: false,
@@ -434,6 +527,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
 						field: "player",
@@ -476,6 +570,7 @@
 					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
 					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
+					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},
 					{
 						title: "Game Logs",
 						field: "totalSplits",
@@ -485,7 +580,7 @@
 						responsive: 3
 					},
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
-					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, resopnsive: 1},
+					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
 				]
 			});
 
@@ -495,18 +590,23 @@
 		}
 
 		function rowClick(row) {
+			if (SPORT.includes("futures")) {
+				return;
+			}
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
 			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			if (MOBILE) {
+				cols.push("kelly");
+			}
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				cols.forEach(col => TABLE.showColumn(col));
-				document.querySelector("#player-tables").style.display = "none";
+				document.querySelector("#right-body").style.display = "none";
 				document.querySelector("#table").style["max-width"] = "1340px";
-				document.querySelector("#table-container").style.width = "100%";
+				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				cols.forEach(col => TABLE.hideColumn(col));
-				document.querySelector("#table-container").style.width = "50%";
-				document.querySelector("#table").style["max-width"] = "660px";
+				document.querySelector("#table").style["max-width"] = "720px";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();

@@ -3,163 +3,221 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily Dingers</title>
+	<title>Daily EV</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
-	<link href="tabulator.min.css" rel="stylesheet">
+	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
+	<link href="tabulator.min.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 </head>
-<style>
-	body {
-		margin: 0; padding: 0;
-		font-size: 18px;
-		height: 100vh;
-	}
-	#table-container {
-		padding-top: 1rem;
-		display: flex;
-		justify-content: space-evenly;
-		align-items: center;
-		height: 90%;
-	}
-	#all {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-	#all h2 {
-		text-align: center;
-	}
-	#table {
-		height: 100%;
-	}
-	.team-cell {
-		padding: 0;
-	}
-	.team-img {
-		height: 18px; width: 18px;
-	}
-	.tabulator-cell {
-		height: 24px;
-	}
-	#player-table {
-		width: 300px;
-	}
-</style>
 <body>
-	<nav>
-		<a href="/" onclick="event.preventDefault(); route('/');">Home</a>
-		<a href="/daily-dingers" onclick="event.preventDefault(); route('/daily-dingers');">Daily Dingers</a>
-	</nav>
-	<div>
-		Dingers
-	</div>
-	<div id="table-container">
-		<div id="table"></div>
-		<div id="all">
-			<h2></h2>
-			<div id="yby"></div>
+	<div id="left-body" class="body">
+		<div id="header">
+			<h1>Daily EV</h1>
+			<div id="sub-header">
+				<div class="dropdown">
+					<select id="sport-select">
+						<option value="dingers">⚾ Dingers</option>
+						<option value="mlbfutures">⚾ MLB Futures</option>
+						<option value="nhl">🏒 NHL</option>
+						<option value="nba">🏀 NBA</option>
+						<option value="ncaab">🏀 NCAAB</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+			</div>
+			<div id="donate" style="top:8px;">
+				<div>Tip Jar</div>
+				<div>
+					<a href="https://cash.app/$intersectinglines" target="_blank">
+						<img src="logos/cashapp.png" alt="cashapp" />
+					</a>
+					<a href="https://buymeacoffee.com/interlines" target="_blank">
+						<img src="logos/coffee.png" alt="coffee" />
+					</a>
+				</div>
+			</div>
+		</div>
+		<div id="table-container">
+			<div id="updated">Updated: </div>
+			<div id="table"></div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		let TABLE = null;
-		let YBY = {};
-		function checkParams() {
-			setTimeout(function() {
-				const url = new URL(window.location.href);
-				const params = new URLSearchParams(url.search);
-				const result = params.get("result");
-				if (result) {
-					TABLE.setFilter([
-						{field:"result", type:"=", value: result}
-					]);
-				}
-			}, 100);
-		}
-		function updateYBY(res) {
-			var hrAB = {
-				x: [], y: [],
-				type: 'scatter'
-			};
+		let url = "";
+		const windowURL = new URL(window.location.href);
+		const URLParams = new URLSearchParams(windowURL.search);
+		let SPORT = "dingers";
+		let MOBILE = window.innerWidth <= 600;
 
-			for (row of res) {
-				hrAB.x.push(row.year);
-				hrAB.y.push(parseInt(row.hr) / parseInt(row.ab));
-				if (hrAB.x.length == 10) {
-					break;
-				}
-			}
-			Plotly.newPlot("yby", [hrAB]);
+		if (SPORT) {
+			document.querySelector("#sport-select").value = SPORT;
 		}
-		function fetchFeed(render=false) {
-			const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/dailyev/feed.json";
+
+		document.querySelector("#sport-select").addEventListener("change", (event) => {
+			const sport = event.target.value;
+			if (sport == "dingers") {
+				window.location.href = "/dingers";
+			} else {
+				window.location.href = "/props?sport="+sport;
+			}
+		});
+
+		document.querySelectorAll("#donate img").forEach(btn => {
+			btn.addEventListener("click", () => {
+				const sport = btn.textContent;
+				window.location.href = "/props?sport="+sport.toLowerCase();
+			});
+		});
+
+		window.addEventListener("resize", () => {
+			MOBILE = window.innerWidth <= 600;
+		});
+
+		fetchUpdated();
+		fetchData();
+
+		function fetchData() {
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/dailyev/evArr.json`;
 			fetch(url, {
-				headers: {
-					"Accept": "application/vnd.github.v3.raw"
-				}
-			}).then(
-				response => response.json()
-			).then(res => {
-				const data = [];
-				for (game of Object.keys(res)) {
-					if (game == "all") {
-						updateAllInfo(res);
-						continue;
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(data => {
+				renderTable(data);
+				setTimeout(function() {
+					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
+					if (rows.length > 0) {
+						//rows[0].getElement().click();
 					}
-					for (row of res[game]) {
-						data.push(row);
-					}
-				}
-				if (render) {
-					renderTable(data);
-					checkParams();
-				} else {
-					TABLE.setData(data)
-				}
+				}, 200);
 			}).catch(err => console.log(err));
 		}
-		fetchFile("mlb/year_by_year.json", updateYBY);
-		fetchFeed(render=true);
-		//setInterval(() => fetchFeed(), 10 * 1000);
 
-		function updateAllInfo(data) {
-			const h2 = document.querySelector("#all h2");
-			const allData = data["all"];
-			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			h2.innerText = `${allData.hr} HRs (${hrPerAB.toFixed(5)} per AB)`;
+		function fetchUpdated() {
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
+			fetch(url, {
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(data => {
+				const [datePart, timePart] = data[SPORT].split(" ");
+				const formattedString = `${datePart}T${timePart.split(".")[0]}`;
+				const today = new Date();
+				const date = new Date(formattedString);
+				const isToday =
+					today.getFullYear() == date.getFullYear() &&
+					today.getMonth() == date.getMonth() &&
+					today.getDate() == date.getDate();
+
+				const optionsDay = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
+				const formattedTimeDay = date.toLocaleString('en-US', optionsDay);
+				const options = { hour: '2-digit', minute: '2-digit' };
+				const formattedTime = date.toLocaleString('en-US', options);
+				document.querySelector("#updated").innerText = 
+					isToday ? `Updated Today ${formattedTime}` : `Updated ${formattedTimeDay}`;
+			}).catch(err => console.log(err));
+		}
+
+		function hideCols() {
+			if (SPORT == "mlb" || SPORT.includes("futures")) {
+				const cols = ["totalSplits", "totalOver", "total10Over"];
+				if (PROP == "hr") {
+					cols.push("prop");
+				}
+				cols.forEach(col => TABLE.hideColumn(col));
+			}
+
+			if (SPORT == "mlbfutures") {
+				TABLE.showColumn("bookOdds.bv");
+			}
 		}
 
 		function renderTable(data) {
+			data.sort((a,b) => {
+				return parseFloat(b.ev) || 0 - parseFloat(a.ev) || 0;
+			});
+			const idx = data.findIndex(item => parseFloat(item.ev) < 0);
+			if (idx != -1) {
+				//data.splice(idx, 0, {prop: "separator", ev: ""});
+			}
+			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
+				layout: "fitDataFill",
+				responsiveLayout: MOBILE ? "hide" : "",
+				autoResize: true,
 				data: data,
 				initialSort: [
-					{column: "pa", dir: "desc"},
-					{column: "in", dir: "desc"},
-					{column: "dt", dir: "desc"},
+					{column: "ev", dir: "desc"},
 				],
+				columnDefaults: {
+					vertAlign: "middle",
+					hozAlign: "center",
+				},
+				rowFormatter: function(row) {
+					if (row.getData().prop == "separator") {
+						row.getElement().style.backgroundColor = "#d3d3d3";
+						row.getElement().style.height = "5px";
+						//row.getElement().innerHTML = "";
+					}
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
-					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
-					{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
-					{title: "In", field: "in", hozAlign: "center", sorter: "number"},
-					{title: "Result", field: "result", width: 85, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number"},
-					{title: "LA", field: "la", hozAlign: "center", sorter: "number"},
-					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number"},
-					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
-					{title: "DT", field: "dt", visible: false, mutator: dtMutator},
-				],
-				rowFormatter: function(row) {
-					const data = row.getData();
-					if (data.result == "Home Runssss") {
-						const el = row.getElement();
-						el.style.backgroundColor = "rgb(100, 149, 237)";
-						el.style.color = "white";
-					}
-				}
+					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
+					{
+						title: "Player",
+						field: "player",
+						headerFilter: "input",
+						formatter: playerFormatter,
+						width: MOBILE ? 120 : 160,
+						formatterParams:{
+							sport: SPORT
+						},
+						hozAlign: "left",
+						responsive: 0
+					},
+					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 80, formatter: evBookFormatter, responsive: 0},
+					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 85, sorter: "number"},
+					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
+					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number"},
+					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number"},
+					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number"},
+					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number"},
+					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number"},
+					{title: "Pinch Hits", field: "ph"},
+					{title: "Vs Pitcher", field: "bvp"},
+					{title: "Last HR", field: "lastHR"},
+				]
 			});
+
+			TABLE.on("rowClick", function(e, row) {
+				rowClick(row);
+			});
+		}
+
+		function rowClick(row) {
+			if (SPORT.includes("futures")) {
+				return;
+			}
+			const sel = TABLE.getSelectedRows();
+			TABLE.deselectRow();
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			if (MOBILE) {
+				cols.push("kelly");
+			}
+			if (sel.length > 0 && sel[0] == row && !MOBILE) {
+				cols.forEach(col => TABLE.showColumn(col));
+				document.querySelector("#right-body").style.display = "none";
+				document.querySelector("#table").style["max-width"] = "1340px";
+				document.querySelector("#left-body").style.width = "100%";
+			} else {
+				cols.forEach(col => TABLE.hideColumn(col));
+				document.querySelector("#table").style["max-width"] = "720px";
+				showPlayerInfo(row);
+				TABLE.scrollToRow(row, "center");
+				row.select();
+			}
 		}
 	</script>
 </body>
