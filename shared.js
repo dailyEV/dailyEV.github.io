@@ -25,7 +25,7 @@ const evBookFormatter = function(cell, params, rendered) {
 	return `
 		<div class='evbook-cell'>
 			${line}
-			<img class='book-img' src='logos/${book}.png' alt='${book}' />
+			<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 		</div>
 	`;
 }
@@ -94,7 +94,7 @@ const kellyFormatter = function(cell, params, rendered) {
 const teamFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
-	return `<img class='team-img' src='${cell.getValue()}' alt='${data.team}' />`;
+	return `<img class='team-img' src='${cell.getValue()}' alt='${data.team}' title='${data.team}' />`;
 }
 
 const dtFormatter = function(cell, params, rendered) {
@@ -105,6 +105,23 @@ const dtFormatter = function(cell, params, rendered) {
 	return d.toLocaleDateString("en-US", {
 		month: "short", day: "numeric", year: "2-digit"
 	}).replace(", ", " '");
+}
+
+const windFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
+	if (!data.weather || !data.weather["wind speed"]) {
+		return "";
+	}
+	if (data.weather["wind"].includes("Roof")) {
+		return `Roof`;
+	}
+	return `
+		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
+		<span style='margin: 0 0.25rem;'>${data.weather["wind speed"]}</span>
+		<span>${data.weather["wind dir"]}</span>
+		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replace(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
+	`;
 }
 
 const playerFormatter = function(cell, params, rendered) {
@@ -154,8 +171,8 @@ function getGameImgs(data, params) {
 		homeAlt = title(homeAlt);
 	}
 	return [
-		`<img class='game-img away' src='logos/${params.sport.replace("dingers", "mlb")}/${away}.png' alt='${awayAlt}' />`,
-		`<img class='game-img home' src='logos/${params.sport.replace("dingers", "mlb")}/${home}.png' alt='${homeAlt}' />`
+		`<img class='game-img away' src='logos/${params.sport.replace("dingers", "mlb")}/${away}.png' alt='${awayAlt}' title='${awayAlt}' />`,
+		`<img class='game-img home' src='logos/${params.sport.replace("dingers", "mlb")}/${home}.png' alt='${homeAlt}' title='${homeAlt}' />`
 	];
 }
 
@@ -185,7 +202,8 @@ const uppercaseFormatter = function(cell, params, rendered) {
 }
 
 function title(str) {
-	return str.split(' ')
+	if (!str) return "";
+	return str.split(" ")
 		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ');
 }

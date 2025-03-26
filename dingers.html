@@ -11,11 +11,21 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 </head>
+<style type="text/css">
+	#sub-header {
+		gap: 10px;
+	}
+	.game-img {
+		height: 18px; width: 18px;
+	}
+</style>
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
 			<h1>Daily EV</h1>
 			<div id="sub-header">
+				<button onclick="groupByGame();">Group By Game</button>
+				<button onclick="groupByTop();">Group By Top</button>
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
@@ -161,9 +171,12 @@
 						//row.getElement().innerHTML = "";
 					}
 				},
+				groupHeader: function(value, count, data, group){
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{title: "EV", field: "ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -177,46 +190,47 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 80, formatter: evBookFormatter, responsive: 0},
-					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 85, sorter: "number"},
-					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
-					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number"},
-					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number"},
-					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number"},
-					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number"},
-					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number"},
+					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, responsive: 0},
+					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
+					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
+					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
+					{title: "MGM", field: "bookOdds.mgm",  width: 70, sorter: "number"},
+					{title: "ESPN", field: "bookOdds.espn",  width: 70, sorter: "number"},
+					{title: "CZ", field: "bookOdds.cz",  width: 70, sorter: "number"},
+					{title: "PN", field: "bookOdds.pn",  width: 70, sorter: "number"},
+					{title: "Kambi", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "Pinch Hits", field: "ph"},
-					{title: "Vs Pitcher", field: "bvp"},
-					{title: "Last HR", field: "lastHR"},
+					//{title: "Stadium", field: "weather.stadium", formatter: titleFormatter, hozAlign: "left"},
+					{title: "Wind", field: "", formatter: windFormatter, hozAlign: "left"},
+					{title: "Pitcher", field: "pitcher", formatter: titleFormatter, hozAlign: "left"},
+					{title: "Vs Pitcher", field: "bvp", hozAlign: "left"},
+					//{title: "Last HR", field: "lastHR"},
 				]
-			});
-
-			TABLE.on("rowClick", function(e, row) {
-				rowClick(row);
 			});
 		}
 
-		function rowClick(row) {
-			if (SPORT.includes("futures")) {
-				return;
-			}
-			const sel = TABLE.getSelectedRows();
-			TABLE.deselectRow();
-			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
-			if (MOBILE) {
-				cols.push("kelly");
-			}
-			if (sel.length > 0 && sel[0] == row && !MOBILE) {
-				cols.forEach(col => TABLE.showColumn(col));
-				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1340px";
-				document.querySelector("#left-body").style.width = "100%";
+		function groupByGame() {
+			if (!TABLE.options.groupBy) {
+				TABLE.setGroupBy("game");
 			} else {
-				cols.forEach(col => TABLE.hideColumn(col));
-				document.querySelector("#table").style["max-width"] = "720px";
-				showPlayerInfo(row);
-				TABLE.scrollToRow(row, "center");
-				row.select();
+				TABLE.setGroupBy();
+			}
+			TABLE.getRows().forEach(r => r.getElement().style.display = "");
+		}
+
+		function groupByTop() {
+			if (!TABLE.options.groupBy) {
+				TABLE.setGroupBy("game");
+				const groups = TABLE.getGroups();
+				groups.forEach(group => {
+					group.getRows().slice(3).forEach(row => {
+						row.getElement().style.display = "none";
+					});
+				});
+				TABLE.redraw();
+			} else {
+				TABLE.setGroupBy();
+				TABLE.getRows().forEach(r => r.getElement().style.display = "");
 			}
 		}
 	</script>

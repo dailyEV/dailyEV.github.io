@@ -18,6 +18,7 @@
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="sport-select">
+						<option value="dingers">⚾ Dingers</option>
 						<option value="mlbfutures">⚾ MLB Futures</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
@@ -107,7 +108,11 @@
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
-			window.location.href = "/props?sport="+sport;
+			if (sport == "dingers") {
+				window.location.href = "/dingers";
+			} else {
+				window.location.href = "/props?sport="+sport;
+			}
 		});
 
 		document.querySelector("#player-props-select").addEventListener("change", function(event) {
@@ -602,7 +607,7 @@
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1340px";
+				document.querySelector("#table").style["max-width"] = "1400px";
 				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				cols.forEach(col => TABLE.hideColumn(col));
