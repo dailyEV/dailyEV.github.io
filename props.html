@@ -20,12 +20,14 @@
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
 						<option value="mlbfutures">⚾ MLB Futures</option>
+						<option value="mlb">⚾ MLB</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<button onclick="groupByGame();">Group By Game</button>
 				<div id="donate-mobile">
 					<div>Tip Jar</div>
 					<div>
@@ -193,9 +195,6 @@
 
 		function fetchData() {
 			let s = SPORT;
-			if (SPORT == "mlb" && PROP == "hr") {
-				s = "dailyev";
-			}
 			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -206,7 +205,7 @@
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
 					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
-					if (rows.length > 0) {
+					if (rows.length > 0 && SPORT != "mlb") {
 						rows[0].getElement().click();
 					}
 					hideCols();
@@ -239,7 +238,7 @@
 		}
 
 		function hideCols() {
-			if (SPORT == "mlb" || SPORT.includes("futures")) {
+			if (SPORT.includes("futures")) {
 				const cols = ["totalSplits", "totalOver", "total10Over"];
 				if (PROP == "hr") {
 					cols.push("prop");
@@ -532,6 +531,9 @@
 						//row.getElement().innerHTML = "";
 					}
 				},
+				groupHeader: function(value, count, data, group){
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
@@ -618,6 +620,14 @@
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
+			}
+		}
+
+		function groupByGame() {
+			if (!TABLE.options.groupBy) {
+				TABLE.setGroupBy("game");
+			} else {
+				TABLE.setGroupBy();
 			}
 		}
 	</script>

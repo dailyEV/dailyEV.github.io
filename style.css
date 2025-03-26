@@ -78,6 +78,7 @@ input, textarea, select {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 10px;
 }
 #sub-header button {
 	margin: 0;
