@@ -249,6 +249,11 @@
 			if (SPORT == "mlbfutures") {
 				TABLE.showColumn("bookOdds.bv");
 			}
+
+			if (SPORT == "mlb") {
+				["totalSplits", "totalOver"].forEach(col => TABLE.hideColumn(col));
+				["logsLYR", "hitRateLYR"].forEach(col => TABLE.showColumn(col));
+			}
 		}
 
 		function showPlayerInfo(row) {
@@ -466,6 +471,7 @@
 		const chartFormatter = function(cell, params, rendered) {
 			const data = cell.getRow().getData();
 			const content = document.createElement("span");
+			console.log(cell.getField(), cell.getValue());
 			if (!cell.getValue()) {
 				return "";
 			}
@@ -589,6 +595,16 @@
 						formatterParams:{type:"bar"},
 						responsive: 3
 					},
+					{
+						title: "LYR Logs",
+						field: "logsLYR",
+						width:160,
+						formatter: chartFormatter,
+						formatterParams:{type:"bar"},
+						responsive: 3,
+						visible: false
+					},
+					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
 				]
