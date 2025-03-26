@@ -120,7 +120,7 @@ const windFormatter = function(cell, params, rendered) {
 		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
 		<span style='margin: 0 0.25rem;'>${data.weather["wind speed"]}</span>
 		<span>${data.weather["wind dir"]}</span>
-		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replace(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
+		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replace(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
 	`;
 }
 
