@@ -17,10 +17,21 @@
 		font-size: 18px;
 		height: 100vh;
 	}
+	#left-body {
+		width: 50%;
+	}
+	#right-body {
+		display: flex;
+		justify-content: normal;
+	}
+	#sub-header {
+		gap: 10px;
+	}
 	#all {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		width: 100%;
 	}
 	#all h2 {
 		text-align: center;
@@ -33,12 +44,39 @@
 	}
 </style>
 <body>
-	<div class="body">
+	<div id="left-body" class="body">
+		<div id="header">
+			<h1>Daily Feed</h1>
+			<div id="sub-header">
+				<button onclick="filterHR();">Filter HR</button>
+				<div class="dropdown">
+					<select id="sport-select">
+						<option value="dingers">⚾ Dingers</option>
+						<option value="mlbfutures">⚾ MLB Futures</option>
+						<option value="nhl">🏒 NHL</option>
+						<option value="nba">🏀 NBA</option>
+						<option value="ncaab">🏀 NCAAB</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+			</div>
+			<div id="donate" style="top:8px;">
+				<div>Tip Jar</div>
+				<div>
+					<a href="https://cash.app/$intersectinglines" target="_blank">
+						<img src="logos/cashapp.png" alt="cashapp" />
+					</a>
+					<a href="https://buymeacoffee.com/interlines" target="_blank">
+						<img src="logos/coffee.png" alt="coffee" />
+					</a>
+				</div>
+			</div>
+		</div>
 		<div id="table-container">
 			<div id="table"></div>
 		</div>
 	</div>
-	<div class="body">
+	<div id="right-body" class="body">
 		<div id="all">
 			<h2></h2>
 			<div id="yby"></div>
@@ -59,6 +97,15 @@
 				}
 			}, 100);
 		}
+		function filterHR() {
+			if (TABLE.getFilters().length > 0) {
+				TABLE.clearFilter();
+			} else {
+				TABLE.setFilter([
+					{field:"result", type:"=", value: "Home Run"}
+				]);
+			}
+		}
 		function updateYBY(res) {
 			var hrAB = {
 				x: [], y: [],
@@ -74,13 +121,18 @@
 			}
 
 			const layout = {
+				title: {
+					text: "Yearly HR/AB"
+				},
 				plot_bgcolor: '#181a1b',
 				paper_bgcolor: "#181a1b",
 				font: {
 					color: "#e8e6e3"
 				},
 				yaxis: {
-					title: "HR/AB"
+					title: { 
+						text: "HR/AB"
+					}
 				}
 			}
 			Plotly.newPlot("yby", [hrAB], layout);
@@ -120,7 +172,7 @@
 			const h2 = document.querySelector("#all h2");
 			const allData = data["all"];
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			h2.innerText = `${allData.hr} HRs (${hrPerAB.toFixed(5)} per AB)`;
+			h2.innerText = `${allData.hr} HRs Today (${hrPerAB.toFixed(5)} per AB)`;
 		}
 
 		function renderTable(data) {

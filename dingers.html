@@ -18,14 +18,25 @@
 	.game-img {
 		height: 18px; width: 18px;
 	}
+	@media (max-width: 1350px) {
+		#table-container {
+			justify-content: normal;
+		}
+		#table-container, #table {
+			width: 100%;
+		}
+	}
+	@media (max-width: 600px) {
+		#table {
+			height: 85%;
+		}
+	}
 </style>
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<h1>Daily EV</h1>
+			<h1>Dinger Tuesday EV</h1>
 			<div id="sub-header">
-				<button onclick="groupByGame();">Group By Game</button>
-				<button onclick="groupByTop();">Group By Top</button>
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
@@ -36,6 +47,8 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<button onclick="groupByGame();">Group By Game</button>
+				<button onclick="groupByTop();">Group By Top</button>
 			</div>
 			<div id="donate" style="top:8px;">
 				<div>Tip Jar</div>
@@ -154,7 +167,7 @@
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
-				responsiveLayout: MOBILE ? "hide" : "",
+				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -199,6 +212,7 @@
 					{title: "CZ", field: "bookOdds.cz",  width: 70, sorter: "number"},
 					{title: "PN", field: "bookOdds.pn",  width: 70, sorter: "number"},
 					{title: "Kambi", field: "bookOdds.kambi",  width: 70, sorter: "number"},
+					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number"},
 					{title: "Pinch Hits", field: "ph"},
 					//{title: "Stadium", field: "weather.stadium", formatter: titleFormatter, hozAlign: "left"},
 					{title: "Wind", field: "", formatter: windFormatter, hozAlign: "left"},

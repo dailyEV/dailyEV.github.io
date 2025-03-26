@@ -419,7 +419,7 @@
 				},
 				width: '100%',
 				dragmode: 'pan',
-				margin: { l: 0, r: 10, t: 20, b: 20 },
+				margin: { l: 0, r: 0, t: 20, b: 20 },
 				xaxis: {
 					title: "Dates",
 					showgrid: false,
@@ -438,7 +438,10 @@
 					tickmode: "linear",
 					dtick: 1,
 					fixedrange: true,
-					showticklabels: false
+					showticklabels: false,
+					title: {
+						text: data.prop.toUpperCase()
+					}
 				},
 				shapes: [
 					{
