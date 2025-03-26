@@ -6,6 +6,16 @@ const percentFormatter = function(cell, params, rendered) {
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
+
+	if (params.book) {
+		return `
+			<div class='evbook-cell'>
+				${data.bookOdds[params.book]}
+				<img class='book-img' src='logos/${params.book}.png' alt='${params.book}' title='${params.book}' />
+			</div>
+		`;
+	}
+
 	const book = cell.getValue().replace("kambi", "br");
 	let line = data.line;
 	let lineInt = parseInt(line);

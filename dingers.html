@@ -72,6 +72,7 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
 		let MOBILE = window.innerWidth <= 600;
+		let BOOK = URLParams.get("book");
 
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
@@ -110,6 +111,14 @@
 					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
 					if (rows.length > 0) {
 						//rows[0].getElement().click();
+					}
+
+					if (BOOK == "dk") {
+						TABLE.hideColumn("ev");
+						TABLE.showColumn("dk_ev");
+						TABLE.setSort([
+							{column: "dk_ev", dir: "desc"}
+						]);
 					}
 				}, 200);
 			}).catch(err => console.log(err));
@@ -188,6 +197,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -201,7 +211,7 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, responsive: 0},
+					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
 					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
