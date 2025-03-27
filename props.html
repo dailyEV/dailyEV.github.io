@@ -251,12 +251,13 @@
 			}
 
 			if (SPORT == "mlb") {
-				["totalOver"].forEach(col => TABLE.hideColumn(col));
+				["totalOver", "total10Over"].forEach(col => TABLE.hideColumn(col));
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
 		}
 
 		function showPlayerInfo(row) {
+			const lastYear = SPORT == "mlb";
 			const cutoff = 0;
 			const data = row.getData();
 			const playerRows = TABLE.getRows()
@@ -270,7 +271,9 @@
 			const playerRowsOUs = playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap);
 			//console.log(playerRowsOUs)
 			const playerOUs = new Set(playerRowsOUs.map(r => r.under));
-			let dtSplits = data.dtSplits.split(",").slice(cutoff);
+			let dtSplits = lastYear ? data.dtSplitsLYR : data.dtSplits;
+			console.log(dtSplits);
+			dtSplits = dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
 				const d = new Date(dt+" 10:00");
 				return d.toLocaleDateString("en-US", {
@@ -381,7 +384,7 @@
 			}
 
 			// Plotly
-			const logs = data.totalSplits.split(",").slice(cutoff);
+			const logs = lastYear ? data.logsLYR.split(",") : data.totalSplits.split(",");
 			const awaySplits = dtSplits.map((date, idx) => {
 				if (data.awayHomeSplits.split(",")[idx] == "A") {
 					return { date, total: logs[idx] };

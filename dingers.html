@@ -113,11 +113,11 @@
 						//rows[0].getElement().click();
 					}
 
-					if (BOOK == "dk") {
+					if (BOOK) {
 						TABLE.hideColumn("ev");
-						TABLE.showColumn("dk_ev");
+						TABLE.showColumn(`${BOOK}_ev`);
 						TABLE.setSort([
-							{column: "dk_ev", dir: "desc"}
+							{column: `${BOOK}_ev`, dir: "desc"}
 						]);
 					}
 				}, 200);
@@ -198,6 +198,7 @@
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
