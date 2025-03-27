@@ -117,9 +117,7 @@ const dtFormatter = function(cell, params, rendered) {
 	}).replace(", ", " '");
 }
 
-const windFormatter = function(cell, params, rendered) {
-	const data = cell.getRow().getData();
-	if (data.prop == "separator") return "";
+function getWindHTML(data) {
 	if (!data.weather || !data.weather["wind speed"]) {
 		return "";
 	}
@@ -130,8 +128,14 @@ const windFormatter = function(cell, params, rendered) {
 		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
 		<span style='margin: 0 0.25rem;'>${data.weather["wind speed"]}</span>
 		<span>${data.weather["wind dir"]}</span>
-		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replace(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
-	`;
+		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replaceAll(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
+	`;	
+}
+
+const windFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
+	return getWindHTML(data);
 }
 
 const playerFormatter = function(cell, params, rendered) {
