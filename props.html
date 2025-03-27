@@ -204,7 +204,10 @@
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
-					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
+					const rows = TABLE.getRows("active").filter(r => {
+						let data = r.getData();
+						return data.prop != "ml" && !data.prop.includes("total")
+					});
 					if (rows.length > 0) {
 						rows[0].getElement().click();
 					}
@@ -272,7 +275,6 @@
 			//console.log(playerRowsOUs)
 			const playerOUs = new Set(playerRowsOUs.map(r => r.under));
 			let dtSplits = lastYear ? data.dtSplitsLYR : data.dtSplits;
-			console.log(dtSplits);
 			dtSplits = dtSplits.split(",").slice(cutoff);
 			dtSplits = dtSplits.map(dt => {
 				const d = new Date(dt+" 10:00");
