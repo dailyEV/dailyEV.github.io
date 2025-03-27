@@ -205,7 +205,7 @@
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
 					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
-					if (rows.length > 0 && SPORT != "mlb") {
+					if (rows.length > 0) {
 						rows[0].getElement().click();
 					}
 					hideCols();
