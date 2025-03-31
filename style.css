@@ -65,12 +65,18 @@ input, textarea, select {
 	border-bottom-color: #43494c;
 	border-top-color: currentcolor;
 }
-#header {
+#header, #mobile-header {
 	width: 100%;
 	height: 10%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+#mobile-header {
+	display: none;
+	flex-direction: column;
+	margin-bottom: 0.5rem;
+	height: auto;
 }
 #sub-header {
 	position: relative;
@@ -78,7 +84,7 @@ input, textarea, select {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+	gap: 5px;
 }
 #sub-header button {
 	margin: 0;
@@ -94,35 +100,45 @@ input, textarea, select {
 #sub-header button:hover {
 	cursor: pointer;
 }
+#button-container {
+	display: flex;
+	justify-content: space-evenly;
+}
 h1 {
 	position: absolute;
 	left: 3rem;
 	top: auto;
 	margin: 0;
 }
-#donate, #donate-mobile {
-	position: absolute;
+#donate {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	top: 16px; right: 48px;
 	gap: 5px;
 }
-#donate-mobile {
-	display: none;
+
+#header #donate {
+	position: absolute;
+	top: 16px; right: 48px;
 }
-#donate img, #donate-mobile img {
+
+#mobile-header #donate {
+	display: none;
+	position: initial;
+  	gap: 5px;
+}
+#donate img {
 	width: 32px; height: 32px;
 	vertical-align: middle;
 }
-#donate img:hover, #donate-mobile img:hover {
+#donate img:hover {
 	cursor: pointer;
 }
-#donate div, #donate-mobile div {
+#donate div {
 	text-align: center;
 }
-#donate a, #donate-mobile a {
+#donate a {
 	color: transparent;
 }
 .body {
@@ -139,6 +155,7 @@ h1 {
 #right-body {
 	display: none;
 	position: relative;
+	padding: 0 2rem;
 }
 #updated {
 	font-style: italic;
@@ -146,6 +163,7 @@ h1 {
 	margin-bottom: 0.25rem;
 }
 #table-container {
+	width: 100%;
 	height: 90%;
 	display: flex;
 	justify-content: center;
@@ -153,6 +171,7 @@ h1 {
 	flex-direction: column;
 }
 #table {
+	width: 100%;
 	height: 95%;
 	min-height: 200px;
 }
@@ -179,13 +198,20 @@ h1 {
 	width: 100%; height: 100%;
 }
 .evbook-cell {
-	position: relative;
 	display: flex;
 	justify-content: center;
+	width: 100%;
+}
+.evbook-cell:hover {
+	.evbook-implied {
+		display: initial;
+	}
+	.evbook-odds {
+		display: none;
+	}
 }
 .evbook-implied {
 	display: none;
-	position: absolute;
 }
 .sport-img {
 	height: 36px; width: 36px;
@@ -262,8 +288,7 @@ nav {
 #player-controls {
 	position: relative;
 	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	align-items: left;
 	width: 100%;
 }
@@ -383,16 +408,21 @@ nav {
 	.body, #left-body {
 		width: 100%;
 	}
+	#mobile-header {
+		display: flex;
+	}
 	#header {
-		flex-direction: column;
-		height: auto;
-		margin-bottom: 0.5rem;
+		display: none;
 	}
 	#sub-header {
 		width: 100%;
 		display: flex;
+		flex-direction: column;
 		justify-content: space-evenly;
 		margin: 0.25rem 0;
+	}
+	#button-container {
+		width: initial;
 	}
 	h1 {
 		position: initial;
@@ -426,13 +456,12 @@ nav {
 	#player-odds {
 		justify-content: center;
 	}
-	#donate {
+	#header #donate {
 		display: none;
 	}
-	#donate-mobile {
+	#mobile-header #donate {
 		display: flex;
 		flex-direction: row;
-		position: initial;
 	}
 	#player-tables, #player-header, #player-table, #player-header, #table,#table-container,#log-chart {
 		width: 100% !important;

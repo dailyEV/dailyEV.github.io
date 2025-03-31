@@ -14,7 +14,20 @@
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<h1>Daily EV</h1>
+			<div style="">
+				<h1>Daily EV</h1>
+				<div id="donate-mobile">
+					<div>Tip Jar</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+			</div>
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="sport-select">
@@ -27,16 +40,9 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="groupByGame();">Group By Game</button>
-				<div id="donate-mobile">
-					<div>Tip Jar</div>
+				<div id="button-container">
 					<div>
-						<a href="https://cash.app/$intersectinglines" target="_blank">
-							<img src="logos/cashapp.png" alt="cashapp" />
-						</a>
-						<a href="https://buymeacoffee.com/interlines" target="_blank">
-							<img src="logos/coffee.png" alt="coffee" />
-						</a>
+						<button onclick="groupByGame();">Group By Game</button>
 					</div>
 				</div>
 			</div>
@@ -81,7 +87,7 @@
 				</div>
 				<div class="player-dropdowns">
 					<div class="dropdown">
-						<select id="player-venue-select" style="display:none">
+						<select id="player-venue-select" style="">
 							<option selected>A+H</option>
 							<option>Away</option>
 							<option>Home</option>
@@ -176,9 +182,75 @@
 				newX = dtSplits;
 				newY = logs;
 			}
-			console.log(newX, newY)
-			Plotly.update("log-chart", { x: [newX], y: [newY] }, {}, [0]);
-			
+			//console.log(newX, newY)
+
+			//Plotly.update("log-chart", { x: [newX], y: [newY] }, {}, [0]);
+			const colors = newY.map(value => {
+				let cond = parseFloat(value) > parseFloat(data.playerHandicap || data.handicap);
+				if (data.under) {
+					cond = parseFloat(value) < parseFloat(data.playerHandicap || data.handicap);
+				}
+				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
+			});
+			const tableData = {
+				x: newX,
+				y: newY.map(v => v != "0" ? v : 0.25),
+				type: "bar",
+				text: newY,
+				textposition: "inside",
+				marker: {
+					color: colors
+				}
+			};
+			const layout = {
+				title: "Game Logs",
+				autosize: true,
+				showlegend: false,
+				responsive: true,
+				plot_bgcolor: '#181a1b',
+				paper_bgcolor: "#181a1b",
+				font: {
+					color: "#e8e6e3"
+				},
+				width: '100%',
+				dragmode: 'pan',
+				margin: { l: 0, r: 0, t: 20, b: 20 },
+				xaxis: {
+					title: "Dates",
+					showgrid: false,
+					type: "category",
+					rangeslider: {
+						visible: true
+					},
+					range: [newX.length-15.6,newX.length-0.5]
+				},
+				yaxis: {
+					showgrid: false,
+					tickmode: "linear",
+					dtick: 1,
+					fixedrange: true,
+					showticklabels: false,
+					title: {
+						text: data.prop.toUpperCase()
+					}
+				},
+				shapes: [
+					{
+						type: "line",
+						//x0: dtSplits[0], x1: dtSplits.at(-1),
+						x0: -0.25, x1: newX.length,
+						y0: data.playerHandicap || data.handicap, y1: data.playerHandicap || data.handicap,
+						line: {
+							color: "#5A5A5A",
+							dash: "dash"
+						}
+					}
+				]
+			};
+			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
+			setTimeout(() => {
+				Plotly.Plots.resize("log-chart")
+			}, 100);
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -197,7 +269,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -368,6 +440,9 @@
 				lineSelect.appendChild(el);
 			});
 
+			// Reset Venue Select
+			document.querySelector("#player-venue-select").value = "A+H";
+
 			// Odds Display
 			const playerOdds = document.querySelector("#player-odds");
 			playerOdds.innerHTML = "";
@@ -484,40 +559,6 @@
 			setTimeout(() => {
 				Plotly.Plots.resize("log-chart")
 			}, 100);
-		}
-
-		const chartFormatter = function(cell, params, rendered) {
-			const data = cell.getRow().getData();
-			const content = document.createElement("span");
-			if (!cell.getValue()) {
-				return "";
-			}
-			const values = cell.getValue().split(",").slice(-15);
-
-			//if (params.invert) {
-			//	values = values.map(val => val * -1);
-			//}
-
-			content.classList.add(params.type);
-			content.innerHTML = values.join(",");
-
-			const options = {
-				width: 145
-			}
-
-			options.fill = function(value) {
-				const line = data.playerHandicap || data.handicap || 0;
-				let cond = parseFloat(value) > parseFloat(line);
-				if (data.under) {
-					cond = parseFloat(value) < parseFloat(line);
-				}
-				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
-			}
-
-			rendered(function(){
-				peity(content, params.type, options);
-			});
-			return content;
 		}
 
 		function renderTable(data) {

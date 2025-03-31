@@ -10,7 +10,8 @@ const evBookFormatter = function(cell, params, rendered) {
 	if (params.book) {
 		return `
 			<div class='evbook-cell'>
-				${data.bookOdds[params.book]}
+				<span>${data.bookOdds[params.book]}</span>
+				<span class='evbook-implied'>20%</span>
 				<img class='book-img' src='logos/${params.book}.png' alt='${params.book}' title='${params.book}' />
 			</div>
 		`;
@@ -24,17 +25,11 @@ const evBookFormatter = function(cell, params, rendered) {
 		line = "+"+line;
 		implied = 100 / (lineInt + 100);
 	}
-	/*
-	implied = 0
-		if row[-1]["line"] > 0:
-			implied = 100 / (row[-1]["line"] + 100)
-		else:
-			implied = -1*row[-1]["line"] / (-1*row[-1]["line"] + 100)
-		implied *= 100
-		*/
+	implied = parseInt(implied * 100);
 	return `
 		<div class='evbook-cell'>
-			${line}
+			<span class='evbook-odds'>${line}</span>
+			<span class='evbook-implied'>${implied}%</span>
 			<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 		</div>
 	`;
@@ -237,4 +232,38 @@ function fetchFile(file, cb) {
 	}).then(response => response.json()).then(res => {
 		cb(res)
 	}).catch(err => console.log(err));
+}
+
+const chartFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	const content = document.createElement("span");
+	if (!cell.getValue()) {
+		return "";
+	}
+	const values = cell.getValue().split(",").slice(-15);
+
+	//if (params.invert) {
+	//	values = values.map(val => val * -1);
+	//}
+
+	content.classList.add(params.type);
+	content.innerHTML = values.join(",");
+
+	const options = {
+		width: 145
+	}
+
+	options.fill = function(value) {
+		const line = data.playerHandicap || data.handicap || 0;
+		let cond = parseFloat(value) > parseFloat(line);
+		if (data.under) {
+			cond = parseFloat(value) < parseFloat(line);
+		}
+		return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
+	}
+
+	rendered(function(){
+		peity(content, params.type, options);
+	});
+	return content;
 }
