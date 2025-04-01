@@ -134,7 +134,7 @@
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
 			if (!book) {
-				window.location.href = "/dingers";
+				window.location.href = "/dingers?book=";
 			} else {
 				window.location.href = "/dingers?book="+book;
 			}
