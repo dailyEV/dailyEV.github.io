@@ -112,7 +112,6 @@ h1 {
 }
 #donate {
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
@@ -461,7 +460,6 @@ nav {
 	}
 	#mobile-header #donate {
 		display: flex;
-		flex-direction: row;
 	}
 	#player-tables, #player-header, #player-table, #player-header, #table,#table-container,#log-chart {
 		width: 100% !important;
