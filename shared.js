@@ -8,17 +8,19 @@ const evBookFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 
 	if (params.book) {
+		const book = params.book.split("-")[0];
+		const line = data.bookOdds[book] || "&nbsp;";
 		return `
 			<div class='evbook-cell'>
-				<span>${data.bookOdds[params.book]}</span>
+				<span>${line}</span>
 				<span class='evbook-implied'>20%</span>
-				<img class='book-img' src='logos/${params.book}.png' alt='${params.book}' title='${params.book}' />
+				<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 			</div>
 		`;
 	}
 
-	const book = cell.getValue().replace("kambi", "br");
-	let line = data.line;
+	const book = cell.getValue().replace("kambi", "br").replace("-50%", "");
+	let line = data.line === undefined ? "-" : data.line;
 	let lineInt = parseInt(line);
 	let implied = -lineInt / (-lineInt + 100);
 	if (lineInt > 0) {

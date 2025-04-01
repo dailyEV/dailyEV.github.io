@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily EV</title>
+	<title>+EV Dingers</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
@@ -32,12 +32,11 @@
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<h1>Dinger Tuesday EV</h1>
+			<h1>+EV Dingers</h1>
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
-						<option value="mlbfutures">⚾ MLB Futures</option>
 						<option value="mlb">⚾ MLB</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
@@ -45,10 +44,17 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<div class="dropdown">
+					<select id="promo-select">
+						<option value="" selected>Promos</option>
+						<option value="fd-50%">FD 50% HR</option>
+						<option value="dk">DK No Sweat</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
 				<button onclick="groupByGame();">Group By Game</button>
-				<button onclick="groupByTop();">Group By Top</button>
 			</div>
-			<div id="donate" style="top:8px;">
+			<div id="donate">
 				<div>Tip Jar</div>
 				<div>
 					<a href="https://cash.app/$intersectinglines" target="_blank">
@@ -61,13 +67,12 @@
 			</div>
 		</div>
 		<div id="mobile-header">
-			<h1>Dinger Tuesday EV</h1>
+			<h1>+EV Dingers</h1>
 			<div id="sub-header">
-				<div style="display: flex;gap:5px;">
+				<div style="display: flex;gap:5px;width: 75%;justify-content: center;">
 					<div class="dropdown">
 						<select id="sport-select">
 							<option value="dingers">⚾ Dingers</option>
-							<option value="mlbfutures">⚾ MLB Futures</option>
 							<option value="mlb">⚾ MLB</option>
 							<option value="nhl">🏒 NHL</option>
 							<option value="nba">🏀 NBA</option>
@@ -75,6 +80,17 @@
 						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
+					<div class="dropdown">
+						<select id="promo-select">
+							<option value="" selected>Promos</option>
+							<option value="fd-50%">FD 50% HR</option>
+							<option value="dk">DK No Sweat</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+				</div>
+				<div style="display: flex; gap:5px;width: 75%;justify-content: center;">
+					<button onclick="groupByGame();">Group By Game</button>
 					<div id="donate" style="top:8px;">
 						<div>Tip Jar</div>
 						<div>
@@ -86,10 +102,6 @@
 							</a>
 						</div>
 					</div>
-				</div>
-				<div>
-					<button onclick="groupByGame();">Group By Game</button>
-					<button onclick="groupByTop();">Group By Top</button>
 				</div>
 			</div>
 		</div>
@@ -110,6 +122,22 @@
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
 		}
+
+		const promoSelect = document.querySelector("#promo-select");
+		if (BOOK) {
+			promoSelect.value = BOOK;
+			document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
+		} else {
+			promoSelect.value = "";
+		}
+
+		promoSelect.addEventListener("change", (event) => {
+			const book = event.target.value;
+			if (!book) {
+				return;
+			}
+			window.location.href = "/dingers?book="+book;
+		});
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
@@ -233,6 +261,7 @@
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -276,7 +305,7 @@
 		}
 
 		function groupByTop() {
-			if (!TABLE.options.groupBy) {
+			if (TABLE.options.groupBy === undefined || TABLE.options.groupBy == "game") {
 				TABLE.setGroupBy("game");
 				const groups = TABLE.getGroups();
 				groups.forEach(group => {

@@ -119,7 +119,7 @@ h1 {
 
 #header #donate {
 	position: absolute;
-	top: 16px; right: 48px;
+	top: auto; right: 48px;
 }
 
 #mobile-header #donate {
@@ -313,6 +313,12 @@ nav {
 }
 #player-props-select {
 	min-width: 120px;
+}
+#promo-select {
+	min-width: 130px;
+}
+#groupby-select {
+	min-width: 105px;
 }
 #log-chart {
 }
