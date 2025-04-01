@@ -134,9 +134,10 @@
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
 			if (!book) {
-				return;
+				window.location.href = "/dingers";
+			} else {
+				window.location.href = "/dingers?book="+book;
 			}
-			window.location.href = "/dingers?book="+book;
 		});
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
