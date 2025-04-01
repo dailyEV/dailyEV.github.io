@@ -196,7 +196,7 @@ h1 {
 	display: inline-block;
 	width: 100%; height: 100%;
 }
-.evbook-cell {
+.evbook-cell, .ev-cell, .kelly-cell {
 	display: flex;
 	justify-content: center;
 	width: 100%;
@@ -209,7 +209,21 @@ h1 {
 		display: none;
 	}
 }
-.evbook-implied {
+.ev-cell:hover {
+	.ou {
+		display: initial;
+	}
+	.ev {
+		display: none;
+	}
+}
+/*
+.kelly-cell:hover {
+	.kelly { display: none; }
+	.kelly-wager { display: initial; }
+}
+*/
+.evbook-implied, .ev-cell .ou, .kelly-wager {
 	display: none;
 }
 .sport-img {
@@ -310,6 +324,10 @@ nav {
 }
 #player-lines-select {
 	min-width: 70px;
+}
+#player-year-select {
+	display: none;
+	min-width: 76px;
 }
 #player-props-select {
 	min-width: 120px;

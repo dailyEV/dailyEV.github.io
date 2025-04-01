@@ -3,17 +3,48 @@ const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
 }
 
+const plusMinusFormatter = function(cell) {
+	let ev = cell.getValue();
+	if (parseFloat(ev) > 0) {
+		ev = "+"+ev;
+	}
+	return ev;
+}
+
+const evFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (data.prop == "separator") return "";
+	let ev = cell.getValue();
+	if (parseFloat(ev) > 0) {
+		ev = "+"+ev;
+	}
+
+	return `
+		<div class='ev-cell'>
+			<span class='ev'>${ev}%</span>
+			<span class='ou'>${data.ou}</span>
+		</div>
+	`;
+}
+
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 
 	if (params.book) {
 		const book = params.book.split("-")[0];
-		const line = data.bookOdds[book] || "&nbsp;";
+		let line = data.bookOdds[book] || 0;
+		const lineInt = parseInt(line);
+		let implied = -lineInt / (-lineInt + 100);
+		if (lineInt > 0) {
+			line = "+"+line;
+			implied = 100 / (lineInt + 100);
+		}
+		implied = parseInt(implied * 100);
 		return `
 			<div class='evbook-cell'>
-				<span>${line}</span>
-				<span class='evbook-implied'>20%</span>
+				<span class='evbook-odds'>${line}</span>
+				<span class='evbook-implied'>${implied}%</span>
 				<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 			</div>
 		`;
@@ -35,14 +66,6 @@ const evBookFormatter = function(cell, params, rendered) {
 			<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 		</div>
 	`;
-}
-
-const plusMinusFormatter = function(cell) {
-	let ev = cell.getValue();
-	if (parseFloat(ev) > 0) {
-		ev = "+"+ev;
-	}
-	return ev;
 }
 
 function convertProp(prop) {
@@ -95,7 +118,12 @@ const kellyFormatter = function(cell, params, rendered) {
 		dec = 100 / data.line;
 	}
 	const kelly = parseFloat(data.ev) / Math.abs(dec) / 4;
-	return `${kelly.toFixed(2)}u`;
+	return `
+		<div class='kelly-cell'>
+			<div class='kelly'>${kelly.toFixed(2)}u</div>
+			<div class='kelly-wager'>$${(kelly * 10).toFixed(2)}</div>
+		</div>
+	`;
 }
 
 const teamFormatter = function(cell, params, rendered) {
@@ -121,11 +149,16 @@ function getWindHTML(data) {
 	if (data.weather["wind"].includes("Roof")) {
 		return `Roof`;
 	}
+	let cond = data.weather["conditions"].toLowerCase().replaceAll(" ", "_");
+	console.log(cond)
+	if (cond == "breezy_and_mostly_cloudy") {
+		cond = "breezy";
+	}
 	return `
 		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
 		<span style='margin: 0 0.25rem;'>${data.weather["wind speed"]}</span>
 		<span>${data.weather["wind dir"]}</span>
-		<img class='weather' src='logos/weather/${data.weather["conditions"].toLowerCase().replaceAll(" ", "_")}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
+		<img class='weather' src='logos/weather/${cond}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
 	`;	
 }
 

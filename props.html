@@ -73,7 +73,14 @@
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 				</div>
-				<div class="player-dropdowns">
+				<div class="player-dropdowns" style="gap: 5px;">
+					<div class="dropdown">
+						<select id="player-year-select" style="">
+							<option selected>2025</option>
+							<option>2024</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
 					<div class="dropdown">
 						<select id="player-venue-select" style="">
 							<option selected>A+H</option>
@@ -140,6 +147,14 @@
 			});
 			rowClick(rows[0]);
 		});
+
+		if (SPORT == "mlb") {
+			//document.querySelector("#player-year-select").style.display = "";
+			document.querySelector("#player-year-select").addEventListener("change", function(event) {
+				const logs = event.target.innerText == "2025" ? data.totalSplits.split(",") : data.logsLYR.split(",");
+
+			});
+		}
 
 		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
 			const data = TABLE.getSelectedRows()[0].getData();
@@ -317,8 +332,8 @@
 			}
 
 			if (SPORT == "mlb") {
-				//["totalOver", "total10Over"].forEach(col => TABLE.hideColumn(col));
-				//["hitRate"].forEach(col => TABLE.showColumn(col));
+				["total10Over"].forEach(col => TABLE.hideColumn(col));
+				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
 		}
 
@@ -553,7 +568,7 @@
 
 		function renderTable(data) {
 			data = data.filter(r => 
-				!["fgs", "3-way", "1p_spread"].includes(r.prop)
+				!["fgs", "3-way", "1p_spread", "f5_spread"].includes(r.prop)
 			);
 			
 			data.sort((a,b) => {
@@ -564,6 +579,7 @@
 				//data.splice(idx, 0, {prop: "separator", ev: ""});
 			}
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
+			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
@@ -591,7 +607,9 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{
+						title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0
+					},
 					{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -623,7 +641,24 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 80, formatter: evBookFormatter, responsive: 0},
+					{
+						title: "Book",
+						field: "book",
+						vertAlign:"bottom",
+						width: MOBILE ? 65 : 80,
+						headerFilter:"list",
+						headerFilterParams:{
+							values:["All", ...books]
+						},
+						headerFilterFunc: function(headerValue, rowValue) {
+							if (headerValue == "All") {
+								return true;
+							}
+							return rowValue.toUpperCase() === headerValue;
+						},
+						formatter: evBookFormatter,
+						responsive: 0
+					},
 					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
 					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
 					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
@@ -644,9 +679,9 @@
 						formatterParams:{type:"bar"},
 						responsive: 3
 					},
-					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
+					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 				]
 			});
 
