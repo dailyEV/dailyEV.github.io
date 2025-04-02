@@ -24,11 +24,11 @@
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
-						<option value="mlbfutures">⚾ MLB Futures</option>
 						<option value="mlb">⚾ MLB</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
+						<option value="feed">⚾ Feed</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -118,8 +118,8 @@
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
-			if (sport == "dingers") {
-				window.location.href = "/dingers";
+			if (["dingers", "feed"].includes(sport)) {
+				window.location.href = `/${sport}`;
 			} else {
 				window.location.href = "/props?sport="+sport;
 			}
@@ -223,6 +223,9 @@
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
+				if (PROP) {
+					data = data.filter(r => r.prop == PROP);
+				}
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
