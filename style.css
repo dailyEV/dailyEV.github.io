@@ -65,6 +65,9 @@ input, textarea, select {
 	border-bottom-color: #43494c;
 	border-top-color: currentcolor;
 }
+.tabulator-cell[tabulator-field=weather] {
+	gap: 3px;
+}
 #header {
 	position: relative;
 }

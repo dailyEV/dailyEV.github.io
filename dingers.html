@@ -238,7 +238,7 @@
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
-				responsiveLayout: MOBILE ? "" : "",
+				responsiveLayout: MOBILE ? "hide" : "",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -265,6 +265,7 @@
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -290,7 +291,7 @@
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number"},
 					{title: "Pinch Hits", field: "ph"},
 					//{title: "Stadium", field: "weather.stadium", formatter: titleFormatter, hozAlign: "left"},
-					{title: "Wind", field: "", formatter: windFormatter, hozAlign: "left"},
+					{title: "Wind", field: "weather", formatter: windFormatter, hozAlign: "left"},
 					{title: "Pitcher", field: "pitcher", formatter: titleFormatter, hozAlign: "left"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left"},
 					{title: "Start", field: "start", visible: false},
