@@ -57,6 +57,10 @@
 	.tabulator .tabulator-header .tabulator-col .tabulator-arrow {
 		display: none !important;
 	}
+	.homer {
+		color: white;
+		background: rgb(56, 142, 60);
+	}
 	@media (max-width: 600px) {
 		#all h2 {
 			margin-top: 0.75rem;
@@ -284,11 +288,8 @@
 					{title: "DT", field: "dt", visible: false},
 				],
 				rowFormatter: function(row) {
-					const data = row.getData();
-					if (data.result == "Home Runs") {
-						const el = row.getElement();
-						el.style.backgroundColor = "rgb(100, 149, 237)";
-						el.style.color = "white";
+					if (row.getData().result == "Home Run") {
+						row.getCells().map(r => r.getElement().classList.add("homer"));
 					}
 				}
 			});

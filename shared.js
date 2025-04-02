@@ -173,7 +173,6 @@ const playerFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 	const sport = params.sport;
 	let player = title(data.player);
-	console.log(cell.getTable().element.id)
 	if (MOBILE && cell.getTable().element.id == "table") {
 		player = player.split(" ");
 		player = player[player.length-1];
