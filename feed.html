@@ -223,7 +223,7 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		setInterval(() => fetchFeed(), 7 * 1000);
+		//setInterval(() => fetchFeed(), 7 * 1000);
 
 		function updateAllInfo(data) {
 			const h2 = document.querySelector("#all h2");
@@ -249,11 +249,11 @@
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
-						width: MOBILE ? 100 : 130
+						width: MOBILE ? 85 : 130
 					},
 					//{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
 					//{title: "In", field: "in", hozAlign: "center", sorter: "number"},
-					{title: "Result", field: "result", width: 85, editor:"input", headerFilter:"list",
+					{title: "Result", field: "result", width: MOBILE ? 70 : 85, editor:"input", headerFilter:"list",
 						headerFilterParams:{
 							values:["All", ...results]
 						},
@@ -266,7 +266,7 @@
 					},
 					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
 					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
-					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number"},
+					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
 					{title: "DT", field: "dt", visible: false},
 				],
