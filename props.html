@@ -206,7 +206,6 @@
 		document.querySelectorAll("#donate img").forEach(btn => {
 			btn.addEventListener("click", () => {
 				const sport = btn.textContent;
-				window.location.href = "/props?sport="+sport.toLowerCase();
 			});
 		});
 
@@ -410,19 +409,17 @@
 					div.classList.add("active");
 				}
 				if (odds.includes("/")) {
-					odds = `
+					odds = `<mfrac>
 						<mn>${odds.split("/")[0]}</mn>
 						<mn>${odds.split("/")[1]}</mn>
-					`;
+					</mfrac>`;
 				} else {
 					odds = `<mn>${odds}</mn>`;
 				}
 				div.innerHTML = `
 					<img class='book-img' src='logos/${book.replace("kambi", "br")}.png' />
 					<math xmlns="http://www.w3.org/1998/Math/MathML">
-						<mfrac>
-							${odds}
-						</mfrac>
+						${odds}
 					</math>
 					`;
 				playerOdds.appendChild(div);
@@ -577,7 +574,7 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 120 : 160,
+						width: MOBILE ? 160 : 180,
 						formatterParams:{
 							sport: SPORT
 						},

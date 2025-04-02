@@ -36,7 +36,7 @@ const evBookFormatter = function(cell, params, rendered) {
 		let line = data.bookOdds[book] || 0;
 		const lineInt = parseInt(line);
 		let implied = -lineInt / (-lineInt + 100);
-		if (lineInt > 0) {
+		if (lineInt > 0 && !line.includes("+")) {
 			line = "+"+line;
 			implied = 100 / (lineInt + 100);
 		}
