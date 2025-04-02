@@ -45,15 +45,18 @@
 		height: 24px;
 	}
 	#table {
-		max-width: 595px;
+		max-width: 475px;
 	}
 	#hrtable {
 		width: max-content;
 		margin-top: 0.5rem;
 	}
 	#yby {
-			display: none;
-		}
+		display: none;
+	}
+	.tabulator .tabulator-header .tabulator-col .tabulator-arrow {
+		display: none !important;
+	}
 	@media (max-width: 600px) {
 		#left-body {
 			width: 100%;
@@ -246,7 +249,7 @@
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
-						width: 130
+						width: MOBILE ? 100 : 130
 					},
 					//{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
 					//{title: "In", field: "in", hozAlign: "center", sorter: "number"},
