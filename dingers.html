@@ -123,9 +123,10 @@
 		let SPORT = "dingers";
 		let MOBILE = window.innerWidth <= 600;
 		let BOOK = URLParams.get("book");
+		const selectId = MOBILE ? "#mobile-header" : "#header";
 
 		if (SPORT) {
-			document.querySelector("#sport-select").value = SPORT;
+			document.querySelector(selectId+" #sport-select").value = SPORT;
 		}
 
 		const promoSelect = document.querySelector("#promo-select");
@@ -145,7 +146,7 @@
 			}
 		});
 
-		document.querySelector("#sport-select").addEventListener("change", (event) => {
+		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
 			if (["dingers", "feed"].includes(sport)) {
 				window.location.href = `/${sport}`;
