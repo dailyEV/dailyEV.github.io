@@ -236,7 +236,7 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		//setInterval(() => fetchFeed(), 5 * 1000);
+		setInterval(() => fetchFeed(), 5 * 1000);
 
 		function updateAllInfo(data) {
 			const h2 = document.querySelector("#all h2");
