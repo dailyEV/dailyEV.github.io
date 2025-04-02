@@ -58,6 +58,9 @@
 		display: none !important;
 	}
 	@media (max-width: 600px) {
+		#all h2 {
+			margin-top: 0.75rem;
+		}
 		#table {
 			max-width: 300px;
 		}
@@ -77,6 +80,13 @@
 		}
 		#table-container {
 			height: initial;
+		}
+		.game-container {
+			min-width: auto;
+		}
+		#table .team-img {
+			margin-top: -2px;
+			margin-right: 0.2rem;
 		}
 	}
 </style>
@@ -226,7 +236,7 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		setInterval(() => fetchFeed(), 5 * 1000);
+		//setInterval(() => fetchFeed(), 5 * 1000);
 
 		function updateAllInfo(data) {
 			const h2 = document.querySelector("#all h2");
@@ -275,7 +285,7 @@
 				],
 				rowFormatter: function(row) {
 					const data = row.getData();
-					if (data.result == "Home Runssss") {
+					if (data.result == "Home Runs") {
 						const el = row.getElement();
 						el.style.backgroundColor = "rgb(100, 149, 237)";
 						el.style.color = "white";
