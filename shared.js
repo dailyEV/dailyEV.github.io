@@ -80,17 +80,11 @@ const propFormatter = function(cell) {
 	if (data.prop == "separator") return "";
 	const ou = data.under ? "u" : "o";
 	if (["playoffs", "roty", "mvp", "division"].includes(data.prop)) {
-		if (data.under) {
-			return "No";
-		} else {
-			return "Yes";
-		}
-	} else if (["atgs", "rfi"].includes(data.prop)) {
-		if (data.under) {
-			return `u${data.prop.toUpperCase()}`
-		} else {
-			return data.prop.toUpperCase();
-		}
+		return data.under ? "No" : "Yes";
+	} else if (data.prop == "rfi") {
+		return data.under ? "NRFI" : "YRFI";
+	} else if (["atgs"].includes(data.prop)) {
+		return data.under ? `u${data.prop.toUpperCase()}` : data.prop.toUpperCase();
 	} else if (data.prop.includes("ml")) {
 		return `${data.prop.toUpperCase()}`;
 	} else if (data.prop.includes("total")) {
@@ -150,15 +144,14 @@ function getWindHTML(data) {
 		return `Roof`;
 	}
 	let cond = data.weather["conditions"].toLowerCase().replaceAll(" ", "_");
-	console.log(cond)
 	if (cond == "breezy_and_mostly_cloudy") {
 		cond = "breezy";
 	}
 	return `
-		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='margin-left:0.15rem;${data.weather["transform"]}' />
-		<span style='margin: 0 0.25rem;'>${data.weather["wind speed"]}</span>
+		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='${data.weather["transform"]}' />
+		<span>${data.weather["wind speed"]}</span>
 		<span>${data.weather["wind dir"]}</span>
-		<img class='weather' src='logos/weather/${cond}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}' style='margin-left:0.15rem;' />
+		<img class='weather' src='logos/weather/${cond}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}'/>
 	`;	
 }
 
@@ -301,4 +294,73 @@ const chartFormatter = function(cell, params, rendered) {
 		peity(content, params.type, options);
 	});
 	return content;
+}
+
+function plotMap(data, newX, newY) {
+	const colors = newY.map(value => {
+		let cond = parseFloat(value) > parseFloat(data.playerHandicap || data.handicap);
+		if (data.under) {
+			cond = parseFloat(value) < parseFloat(data.playerHandicap || data.handicap);
+		}
+		return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
+	});
+	const tableData = {
+		x: newX,
+		y: newY.map(v => v != "0" ? v : 0.25),
+		type: "bar",
+		text: newY,
+		textposition: "inside",
+		marker: {
+			color: colors
+		}
+	};
+	const layout = {
+		title: "Game Logs",
+		autosize: true,
+		showlegend: false,
+		responsive: true,
+		plot_bgcolor: '#181a1b',
+		paper_bgcolor: "#181a1b",
+		font: {
+			color: "#e8e6e3"
+		},
+		width: '100%',
+		dragmode: 'pan',
+		margin: { l: 0, r: 0, t: 20, b: 20 },
+		xaxis: {
+			title: "Dates",
+			showgrid: false,
+			type: "category",
+			rangeslider: {
+				visible: true
+			},
+			range: [newX.length-15.6,newX.length-0.5]
+		},
+		yaxis: {
+			showgrid: false,
+			tickmode: "linear",
+			dtick: 1,
+			fixedrange: true,
+			showticklabels: false,
+			title: {
+				text: data.prop.toUpperCase()
+			}
+		},
+		shapes: [
+			{
+				type: "line",
+				//x0: dtSplits[0], x1: dtSplits.at(-1),
+				x0: -0.25, x1: newX.length,
+				y0: data.playerHandicap || data.handicap, y1: data.playerHandicap || data.handicap,
+				line: {
+					color: "#5A5A5A",
+					dash: "dash"
+				}
+			}
+		]
+	};
+	Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
+	setTimeout(() => {
+		Plotly.Plots.resize("log-chart")
+	}, 100);
 }
