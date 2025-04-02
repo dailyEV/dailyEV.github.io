@@ -31,7 +31,8 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		width: 100%;
+		align-items: center;
+		width: 100%; height: 100%;
 	}
 	#all h2 {
 		text-align: center;
@@ -43,13 +44,41 @@
 	.tabulator-cell {
 		height: 24px;
 	}
+	#table {
+		max-width: 595px;
+	}
+	#hrtable {
+		width: max-content;
+		margin-top: 0.5rem;
+	}
+	#yby {
+			display: none;
+		}
+	@media (max-width: 600px) {
+		#left-body {
+			width: 100%;
+		}
+		#sub-header {
+			flex-direction: row;
+		}
+		#header {
+			flex-direction: row;
+			margin: 0.5rem 0;
+		}
+		h1 {
+			margin-top: 0;
+		}
+		#table-container {
+			height: initial;
+		}
+	}
 </style>
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
 			<h1>Daily Feed</h1>
 			<div id="sub-header">
-				<button onclick="filterHR();">Filter HR</button>
+				<!-- <button onclick="filterHR();">Filter HR</button> -->
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
@@ -82,12 +111,14 @@
 		<div id="all">
 			<h2></h2>
 			<div id="yby"></div>
+			<div id="hrtable"></div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		let SPORT = "feed";
 		let MOBILE = window.innerWidth <= 600;
 		let TABLE = null;
+		let HRTABLE = null;
 		let YBY = {};
 
 		function checkParams() {
@@ -103,6 +134,7 @@
 			}, 100);
 		}
 
+		document.querySelector("#sport-select").value = "feed";
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
 			if (["dingers", "feed"].includes(sport)) {
@@ -162,6 +194,7 @@
 				response => response.json()
 			).then(res => {
 				const data = [];
+				const hrData = [];
 				for (game of Object.keys(res)) {
 					if (game == "all") {
 						updateAllInfo(res);
@@ -169,17 +202,22 @@
 					}
 					for (row of res[game]) {
 						data.push(row);
+						if (row["result"] == "Home Run") {
+							hrData.push(row);
+						}
 					}
 				}
 				if (render) {
 					renderTable(data);
+					renderHRTable(hrData);
 					checkParams();
 				} else {
 					TABLE.setData(data);
+					HRTABLE.setData(hrData);
 				}
 			}).catch(err => console.log(err));
 		}
-		fetchFile("mlb/year_by_year.json", updateYBY);
+		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
 		setInterval(() => fetchFeed(), 10 * 1000);
 
@@ -195,6 +233,7 @@
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				data: data,
+				layout: "fitDataFill",
 				initialSort: [
 					//{column: "pa", dir: "desc"},
 					//{column: "in", dir: "desc"},
@@ -202,10 +241,14 @@
 				],
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
-					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
-					{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
-					{title: "In", field: "in", hozAlign: "center", sorter: "number"},
+					//{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
+					{title: "Player", field: "player", headerFilter: "input",
+						formatter: playerFormatter,
+						formatterParams:{ sport: SPORT },
+						width: 130
+					},
+					//{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
+					//{title: "In", field: "in", hozAlign: "center", sorter: "number"},
 					{title: "Result", field: "result", width: 85, editor:"input", headerFilter:"list",
 						headerFilterParams:{
 							values:["All", ...results]
@@ -217,8 +260,8 @@
 							return rowValue === headerValue;
 						}
 					},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number"},
-					{title: "LA", field: "la", hozAlign: "center", sorter: "number"},
+					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
+					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number"},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
 					{title: "DT", field: "dt", visible: false},
@@ -231,6 +274,28 @@
 						el.style.color = "white";
 					}
 				}
+			});
+		}
+
+		function renderHRTable(data) {
+			HRTABLE = new Tabulator("#hrtable", {
+				tooltipsHeader: true,
+				data: data,
+				initialSort: [
+					{column: "dt", dir: "desc"},
+				],
+				columns: [
+					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
+					//{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
+					{title: "Player", field: "player", headerFilter: "input",
+						formatter: playerFormatter,
+						formatterParams:{ sport: SPORT },
+						width: 130
+					},
+					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
+					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
+					{title: "DT", field: "dt", visible: false},
+				]
 			});
 		}
 	</script>

@@ -161,6 +161,10 @@ const windFormatter = function(cell, params, rendered) {
 	return getWindHTML(data);
 }
 
+const ftFormatter = function(cell, params, rendered) {
+	return cell.getValue()+" ft";
+}
+
 const playerFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
@@ -194,9 +198,9 @@ const playerFormatter = function(cell, params, rendered) {
 			player = "";
 		}
 	}
-	let prop = propFormatter(cell);
-	if (sport == "dingers") {
-		prop = "";
+	let prop = "";
+	if (!["feed", "dingers"].includes(sport)) {
+		prop = propFormatter(cell);
 	}
 	return `
 		<div class="player-cell">
@@ -215,9 +219,10 @@ function getGameImgs(data, params) {
 		awayAlt = title(awayAlt);
 		homeAlt = title(homeAlt);
 	}
+	let sport = params.sport.replace("dingers", "mlb").replace("feed", "mlb");
 	return [
-		`<img class='game-img away' src='logos/${params.sport.replace("dingers", "mlb")}/${away}.png' alt='${awayAlt}' title='${awayAlt}' />`,
-		`<img class='game-img home' src='logos/${params.sport.replace("dingers", "mlb")}/${home}.png' alt='${homeAlt}' title='${homeAlt}' />`
+		`<img class='game-img away' src='logos/${sport}/${away}.png' alt='${awayAlt}' title='${awayAlt}' />`,
+		`<img class='game-img home' src='logos/${sport}/${home}.png' alt='${homeAlt}' title='${homeAlt}' />`
 	];
 }
 
