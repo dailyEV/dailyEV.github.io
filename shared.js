@@ -190,11 +190,19 @@ const playerFormatter = function(cell, params, rendered) {
 			player = `${team.toUpperCase()} ${data.prop.replace("home_", "").replace("away_", "").toUpperCase()}`;
 		} else if (data.prop.includes("spread")) {
 			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
+		} else if (["rfi"].includes(data.prop)) {
+			player = "";
 		}
 	}
+	let prop = propFormatter(cell);
+	if (sport == "dingers") {
+		prop = "";
+	}
 	return `
-		<div class='game-container'>${imgs.join("")}</div>
-		${player}
+		<div class="player-cell">
+			<div class='game-container'>${imgs.join("")}</div>
+			${player} ${prop}
+		</div>
 	`
 }
 
