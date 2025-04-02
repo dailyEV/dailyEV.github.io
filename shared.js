@@ -201,7 +201,7 @@ const playerFormatter = function(cell, params, rendered) {
 	return `
 		<div class="player-cell">
 			<div class='game-container'>${imgs.join("")}</div>
-			${player} ${prop}
+			${player.replace("TOTAL", "")} ${prop}
 		</div>
 	`
 }

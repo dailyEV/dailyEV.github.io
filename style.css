@@ -109,7 +109,7 @@ input, textarea, select {
 }
 h1 {
 	position: absolute;
-	left: 3rem;
+	left: 4px;
 	top: auto;
 	margin: 0;
 }
@@ -153,11 +153,12 @@ h1 {
 }
 #left-body {
 	width: 100%;
+	padding: 0 1rem;
 }
 #right-body {
 	display: none;
 	position: relative;
-	padding: 0 2rem;
+	padding: 0 1rem;
 }
 #updated {
 	font-style: italic;
@@ -525,7 +526,7 @@ nav {
 	#body {
 		flex-direction: column;
 	}
-	#right-body {
+	#right-body, #left-body {
 		padding: 0;
 	}
 	.game-container {
