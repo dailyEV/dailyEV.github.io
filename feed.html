@@ -248,7 +248,8 @@
 			const h2 = document.querySelector("#all h2");
 			const allData = data["all"];
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			h2.innerText = `${allData.hr} HRs Today (${hrPerAB.toFixed(5)} per AB)`;
+			const hrPerG = parseInt(allData.hr) / allData.totGames;
+			h2.innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(3)} per Game)`;
 		}
 
 		function renderTable(data) {
@@ -268,7 +269,7 @@
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
-						width: MOBILE ? 90 : 130
+						width: MOBILE ? 90 : 150
 					},
 					//{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
 					//{title: "In", field: "in", hozAlign: "center", sorter: "number"},
