@@ -35,6 +35,7 @@
 	}
 	#all h2 {
 		text-align: center;
+		margin-top: 1rem;
 	}
 	.team-cell {
 		padding: 0;
@@ -56,11 +57,12 @@
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
+						<option value="feed">⚾ Feed</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 			</div>
-			<div id="donate" style="top:8px;">
+			<div id="donate">
 				<div>Tip Jar</div>
 				<div>
 					<a href="https://cash.app/$intersectinglines" target="_blank">
@@ -83,8 +85,11 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		let SPORT = "feed";
+		let MOBILE = window.innerWidth <= 600;
 		let TABLE = null;
 		let YBY = {};
+
 		function checkParams() {
 			setTimeout(function() {
 				const url = new URL(window.location.href);
@@ -97,6 +102,16 @@
 				}
 			}, 100);
 		}
+
+		document.querySelector("#sport-select").addEventListener("change", (event) => {
+			const sport = event.target.value;
+			if (["dingers", "feed"].includes(sport)) {
+				window.location.href = `/${sport}`;
+			} else {
+				window.location.href = "/props?sport="+sport;
+			}
+		});
+
 		function filterHR() {
 			if (TABLE.getFilters().length > 0) {
 				TABLE.clearFilter();
@@ -122,7 +137,7 @@
 
 			const layout = {
 				title: {
-					text: "Yearly HR/AB"
+					text: "Year by Year HR/AB"
 				},
 				plot_bgcolor: '#181a1b',
 				paper_bgcolor: "#181a1b",
@@ -160,7 +175,7 @@
 					renderTable(data);
 					checkParams();
 				} else {
-					TABLE.setData(data)
+					TABLE.setData(data);
 				}
 			}).catch(err => console.log(err));
 		}
@@ -176,12 +191,13 @@
 		}
 
 		function renderTable(data) {
+			let results = [...new Set(data.map(row => row.result))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				data: data,
 				initialSort: [
-					{column: "pa", dir: "desc"},
-					{column: "in", dir: "desc"},
+					//{column: "pa", dir: "desc"},
+					//{column: "in", dir: "desc"},
 					{column: "dt", dir: "desc"},
 				],
 				columns: [
@@ -190,12 +206,22 @@
 					{title: "Player", field: "player", headerFilter: "input", formatter: titleFormatter},
 					{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
 					{title: "In", field: "in", hozAlign: "center", sorter: "number"},
-					{title: "Result", field: "result", width: 85, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
+					{title: "Result", field: "result", width: 85, editor:"input", headerFilter:"list",
+						headerFilterParams:{
+							values:["All", ...results]
+						},
+						headerFilterFunc: function(headerValue, rowValue) {
+							if (headerValue == "All") {
+								return true;
+							}
+							return rowValue === headerValue;
+						}
+					},
 					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number"},
 					{title: "LA", field: "la", hozAlign: "center", sorter: "number"},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number"},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
-					{title: "DT", field: "dt", visible: false, mutator: dtMutator},
+					{title: "DT", field: "dt", visible: false},
 				],
 				rowFormatter: function(row) {
 					const data = row.getData();
