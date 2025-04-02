@@ -234,7 +234,9 @@
 					checkParams();
 				} else {
 					TABLE.setData(data);
+					TABLE.redraw();
 					HRTABLE.setData(hrData);
+					HRTABLE.redraw();
 				}
 			}).catch(err => console.log(err));
 		}
