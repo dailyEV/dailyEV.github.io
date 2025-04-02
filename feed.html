@@ -249,7 +249,7 @@
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
-						width: MOBILE ? 85 : 130
+						width: MOBILE ? 90 : 130
 					},
 					//{title: "PA", field: "pa", hozAlign: "center", sorter: "number"},
 					//{title: "In", field: "in", hozAlign: "center", sorter: "number"},
@@ -264,8 +264,8 @@
 							return rowValue === headerValue;
 						}
 					},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
-					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60},
+					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
+					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
 					{title: "DT", field: "dt", visible: false},
