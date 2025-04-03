@@ -22,12 +22,34 @@
 		#sub-header {
 			flex-direction: row;
 		}
+
+		@media (max-width: 600px) {
+			#sport-select {
+				min-width: 100px;
+			}
+			#header #donate {
+				position: relative;
+			}
+		}
 	</style>
 </head>
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<h1>Daily EV</h1>
+			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
+				<h1>Daily EV</h1>
+				<div id="donate">
+					<div>Tip</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+			</div>
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="sport-select">
@@ -40,18 +62,14 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="groupByGame();">Group By Game</button>
-			</div>
-			<div id="donate">
-				<div>Tip</div>
-				<div>
-					<a href="https://cash.app/$intersectinglines" target="_blank">
-						<img src="logos/cashapp.png" alt="cashapp" />
-					</a>
-					<a href="https://buymeacoffee.com/interlines" target="_blank">
-						<img src="logos/coffee.png" alt="coffee" />
-					</a>
+				<div id="prop-dropdown" class="dropdown">
+					<!-- <button onclick="toggleFilterProp()">All Props</button> -->
+					<select id="prop-select">
+						
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<button onclick="groupByGame();">Game Filter</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -131,6 +149,14 @@
 			} else {
 				window.location.href = "/props?sport="+sport;
 			}
+		});
+
+		document.querySelector("#prop-select").addEventListener("change", function(event) {
+			const prop = event.target.value;
+			TABLE.setFilter([
+				{field:"prop", type:"=", value: prop.toLowerCase()}
+			]);
+			TABLE.getRows("active")[0].getElement().click();
 		});
 
 		document.querySelector("#player-props-select").addEventListener("change", function(event) {
@@ -548,6 +574,16 @@
 				//data.splice(idx, 0, {prop: "separator", ev: ""});
 			}
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
+			const select = document.querySelector("#prop-select");
+			select.innerHTML = `
+				<option value="all" selected>All</option>
+			`;
+			props.map(prop => {
+				const el = document.createElement("option");
+				el.value = prop;
+				el.innerText = prop;
+				select.appendChild(el);
+			});
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,

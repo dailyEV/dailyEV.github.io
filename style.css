@@ -373,6 +373,9 @@ nav {
 #groupby-select {
 	min-width: 105px;
 }
+#prop-select {
+	max-width: 100px;
+}
 #log-chart {
 }
 
@@ -431,9 +434,9 @@ nav {
 	position: absolute;
 	top: 50%;
 	transform: translate(0, -50%) rotate(90deg);
-		right: 6px;
-		overflow: hidden;
-		pointer-events: none;
+	right: 6px;
+	overflow: hidden;
+	pointer-events: none;
 }
 
 #sport-select {
@@ -478,7 +481,8 @@ nav {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-evenly;
+		justify-content: center;
+		gap: 10px;
 		margin: 0.25rem 0;
 	}
 	#button-container {
@@ -515,9 +519,6 @@ nav {
 	}
 	#player-odds {
 		justify-content: center;
-	}
-	#header #donate {
-		display: none;
 	}
 	#mobile-header #donate {
 		display: flex;
