@@ -63,9 +63,11 @@
 				</div>
 				<div class="dropdown">
 					<select id="promo-select">
-						<option value="" selected>Promos</option>
-						<option value="fd-50%">FD 50% HR</option>
-						<option value="dk">DK No Sweat</option>
+						<option value="" selected>All Books</option>
+						<option value="fd-50%">FD 50%</option>
+						<option value="dk-sweat">DK Sweat</option>
+						<option value="fd">FD</option>
+						<option value="dk">DK</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -115,7 +117,9 @@
 						<select id="promo-select">
 							<option value="" selected>Promos</option>
 							<option value="fd-50%">FD 50% HR</option>
-							<option value="dk">DK No Sweat</option>
+							<option value="dk-sweat">DK No Sweat</option>
+							<option value="fd">FD</option>
+							<option value="dk">DK</option>
 						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
@@ -144,7 +148,7 @@
 			document.querySelector(selectId+" #sport-select").value = SPORT;
 		}
 
-		const promoSelect = document.querySelector(selectId+" #sport-select");
+		const promoSelect = document.querySelector(selectId+" #promo-select");
 		if (BOOK) {
 			promoSelect.value = BOOK;
 			document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
@@ -155,9 +159,9 @@
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
 			if (!book) {
-				window.location.href = "/dingers?book=";
+				window.location.href = "./dingers.html?book=";
 			} else {
-				window.location.href = "/dingers?book="+book;
+				window.location.href = "./dingers.html?book="+book;
 			}
 		});
 
@@ -165,9 +169,9 @@
 		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
 			if (["dingers", "feed"].includes(sport)) {
-				window.location.href = `/${sport}`;
+				window.location.href = `./${sport}`;
 			} else {
-				window.location.href = "/props?sport="+sport;
+				window.location.href = "./props?sport="+sport;
 			}
 		});
 
