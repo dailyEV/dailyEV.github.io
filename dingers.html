@@ -15,6 +15,15 @@
 	.game-img {
 		height: 18px; width: 18px;
 	}
+	.tabulator-cell {
+		height: 24px;
+	}
+	.tabulator .tabulator-header .tabulator-col .tabulator-arrow {
+		display: none !important;
+	}
+	.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+		overflow: visible;
+	}
 	@media (max-width: 1350px) {
 		#table-container {
 			justify-content: normal;
@@ -29,6 +38,13 @@
 		}
 		#header {
 			display: none;
+		}
+		.game-container {
+			min-width: auto;
+		}
+		#table .team-img {
+			margin-top: -2px;
+			margin-right: 0.2rem;
 		}
 	}
 </style>
@@ -71,9 +87,22 @@
 			</div>
 		</div>
 		<div id="mobile-header">
-			<h1>+EV Dingers</h1>
+			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
+				<h1>+EV Dingers</h1>
+				<div id="donate">
+					<div>Tip</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+			</div>
 			<div id="sub-header">
-				<div style="display: flex;gap:5px;width: 75%;justify-content: center;">
+				<div style="display: flex;width: 100%;justify-content: center;gap:10px">
 					<div class="dropdown">
 						<select id="sport-select">
 							<option value="dingers">⚾ Dingers</option>
@@ -96,17 +125,6 @@
 				</div>
 				<div style="display: flex; gap:5px;width: 75%;justify-content: center;">
 					<button onclick="groupByGame();">Group By Game</button>
-					<div id="donate" style="top:8px;">
-						<div>Tip Jar</div>
-						<div>
-							<a href="https://cash.app/$intersectinglines" target="_blank">
-								<img src="logos/cashapp.png" alt="cashapp" />
-							</a>
-							<a href="https://buymeacoffee.com/interlines" target="_blank">
-								<img src="logos/coffee.png" alt="coffee" />
-							</a>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -129,7 +147,7 @@
 			document.querySelector(selectId+" #sport-select").value = SPORT;
 		}
 
-		const promoSelect = document.querySelector("#promo-select");
+		const promoSelect = document.querySelector(selectId+" #sport-select");
 		if (BOOK) {
 			promoSelect.value = BOOK;
 			document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
@@ -146,6 +164,7 @@
 			}
 		});
 
+		document.querySelector(selectId+" #sport-select").value = "dingers";
 		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
 			if (["dingers", "feed"].includes(sport)) {
@@ -241,7 +260,7 @@
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
-				responsiveLayout: MOBILE ? "hide" : "",
+				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -264,7 +283,7 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
+					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0},
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
@@ -275,14 +294,14 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 120 : 160,
+						width: MOBILE ? 90 : 160,
 						formatterParams:{
 							sport: SPORT
 						},
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
+					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
 					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},

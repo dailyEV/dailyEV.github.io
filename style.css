@@ -81,7 +81,7 @@ input, textarea, select {
 #mobile-header {
 	display: none;
 	flex-direction: column;
-	margin-bottom: 0.5rem;
+	margin: 0.5rem 0;
 	height: auto;
 }
 #sub-header {
@@ -136,6 +136,9 @@ h1 {
 #donate img {
 	width: 28px; height: 28px;
 	vertical-align: middle;
+}
+#mobile-header #donate img {
+	width: 24px; height: 24px;
 }
 #donate img:hover {
 	cursor: pointer;
@@ -463,6 +466,7 @@ nav {
 	#header {
 		height: initial;
 		flex-direction: column;
+		justify-content: space-evenly;
 	}
 	#sub-header {
 		width: 100%;
@@ -476,9 +480,9 @@ nav {
 	}
 	h1 {
 		position: initial;
-		width: 100%;
-		margin-top: 0.5rem;
+		margin-top: 0;
 		text-align: center;
+		font-size: 1.8rem;
 	}
 	h2 {
 		font-size: 1.35rem;
