@@ -475,11 +475,13 @@
 			yearSelect.innerHTML = `
 				<option value="${YEAR}" selected>${YEAR}</option>
 			`;
-			for (year of data.playerYears) {
-				const el = document.createElement("option");
-				el.value = year;
-				el.innerText = year;
-				yearSelect.appendChild(el);
+			if (data.playerYears) {
+				for (year of data.playerYears) {
+					const el = document.createElement("option");
+					el.value = year;
+					el.innerText = year;
+					yearSelect.appendChild(el);
+				}
 			}
 
 			// Odds Display
