@@ -16,9 +16,6 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<style>
-		#header {
-			margin: 0.5rem 0;
-		}
 		#sub-header {
 			flex-direction: row;
 		}
@@ -36,7 +33,10 @@
 				position: relative;
 			}
 			#header-container {
-				width: 100%;
+				display: none;
+			}
+			#sub-header {
+				margin: 0.5rem 0;
 			}
 		}
 	</style>
@@ -46,17 +46,6 @@
 		<div id="header">
 			<div id="header-container">
 				<h1>Daily EV</h1>
-				<div id="donate">
-					<div>Tip</div>
-					<div>
-						<a href="https://cash.app/$intersectinglines" target="_blank">
-							<img src="logos/cashapp.png" alt="cashapp" />
-						</a>
-						<a href="https://buymeacoffee.com/interlines" target="_blank">
-							<img src="logos/coffee.png" alt="coffee" />
-						</a>
-					</div>
-				</div>
 			</div>
 			<div id="sub-header">
 				<div class="dropdown">
@@ -81,7 +70,20 @@
 			</div>
 		</div>
 		<div id="table-container">
-			<div id="updated">Updated: </div>
+			<div id="updated-container">
+				<div id="donate">
+					<div>Tip</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+				<div id="updated">Updated: </div>
+			</div>
 			<div id="table"></div>
 		</div>
 	</div>

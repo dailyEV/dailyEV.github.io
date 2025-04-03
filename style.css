@@ -87,8 +87,8 @@ input, textarea, select {
 #mobile-header {
 	display: none;
 	flex-direction: column;
-	margin: 0.5rem 0;
 	height: auto;
+	margin: 0.5rem 0;
 }
 #sub-header {
 	position: relative;
@@ -98,7 +98,7 @@ input, textarea, select {
 	align-items: center;
 	gap: 5px;
 }
-#sub-header button {
+button {
 	margin: 0;
 	padding: 0.5rem;
 	border-radius: 4px;
@@ -127,6 +127,7 @@ h1 {
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
+	margin-left: 0.75rem;
 }
 
 #header #donate {
@@ -140,11 +141,8 @@ h1 {
   	gap: 5px;
 }
 #donate img {
-	width: 28px; height: 28px;
-	vertical-align: middle;
-}
-#mobile-header #donate img {
 	width: 24px; height: 24px;
+	vertical-align: middle;
 }
 #donate img:hover {
 	cursor: pointer;
@@ -158,9 +156,7 @@ h1 {
 .body {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
 	align-items: center;
-	height: 100%;
 	width: 50%;
 }
 .bet-row {
@@ -180,7 +176,7 @@ h1 {
 #updated {
 	font-style: italic;
 	font-size: 1rem;
-	margin-bottom: 0.25rem;
+	margin-right: 0.75rem;
 }
 #table-container {
 	width: 100%;
@@ -189,6 +185,13 @@ h1 {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+}
+#updated-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: end;
+	width: 100%;
+	margin-bottom: 0.25rem;
 }
 #table {
 	width: 100%;
@@ -499,8 +502,11 @@ nav {
 		justify-content: center;
 		margin-bottom: 0;
 	}
-	#updated {
+	#updated, #donate {
 		font-size: 0.85rem;
+	}
+	#donate img {
+		width: 18px; height: 18px;
 	}
 	.book-img {
 		height: 18px; width: 18px;

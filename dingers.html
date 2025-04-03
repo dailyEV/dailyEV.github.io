@@ -30,9 +30,6 @@
 		#table {
 			height: 85%;
 		}
-		#header #donate {
-			display: none;
-		}
 		#header {
 			display: none;
 		}
@@ -71,22 +68,11 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="groupByGame();">Group By Game</button>
-			</div>
-			<div id="donate">
-				<div>Tip Jar</div>
-				<div>
-					<a href="https://cash.app/$intersectinglines" target="_blank">
-						<img src="logos/cashapp.png" alt="cashapp" />
-					</a>
-					<a href="https://buymeacoffee.com/interlines" target="_blank">
-						<img src="logos/coffee.png" alt="coffee" />
-					</a>
-				</div>
+				<button onclick="groupByGame();">Filter Game</button>
 			</div>
 		</div>
 		<div id="mobile-header">
-			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
+			<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="feed">⚾ Feed</option>
@@ -108,6 +94,11 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<button onclick="groupByGame();">Filter Game</button>
+			</div>
+		</div>
+		<div id="table-container">
+			<div id="updated-container">
 				<div id="donate">
 					<div>Tip</div>
 					<div>
@@ -119,10 +110,8 @@
 						</a>
 					</div>
 				</div>
+				<div id="updated">Updated: </div>
 			</div>
-		</div>
-		<div id="table-container">
-			<div id="updated">Updated: </div>
 			<div id="table"></div>
 		</div>
 	</div>
