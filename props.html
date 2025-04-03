@@ -136,6 +136,7 @@
 	</div>
 	<script type="text/javascript">
 		let TABLE = null;
+		let HISTORICAL = {};
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
@@ -218,25 +219,38 @@
 		}
 
 		function getYearLogs(data, year) {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
-			fetch(url, {
-				headers: { "Accept": "application/vnd.github.v3.raw" }
-			}).then(response => response.json()).then(yearData => {
-				console.log(yearData);
-				//plotMap(data, dtSplits, logs);
-			}).catch(err => console.log(err));
+			const player = data.player;
+			if (player in HISTORICAL) {
+				plotMap(data, HISTORICAL[player][year].date, HISTORICAL[player][year][data.prop]);
+			} else {
+				const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
+				fetch(url, {
+					headers: { "Accept": "application/vnd.github.v3.raw" }
+				}).then(response => response.json()).then(yearData => {
+					HISTORICAL = yearData;
+					plotMap(data, yearData[player][year].date, yearData[player][year][data.prop]);
+				}).catch(err => console.log(err));
+			}
 		}
 
 		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
 			const data = TABLE.getSelectedRows()[0].getData();
 			const venue = event.target.value.toLowerCase();
-			const dtSplits = data.dtSplits.split(",");
-			const logs = data.totalSplits.split(",");
+			let dtSplits = data.dtSplits.split(",");
+			let logs = data.totalSplits.split(",");
+			let awayHome = data.awayHomeSplits.split(",");
+			let year = document.querySelector("#player-year-select").value;
+
+			if (year != "2025") {
+				dtSplits = HISTORICAL[player][year].date;
+				logs = HISTORICAL[player][year][data.prop];
+				awayHome = HISTORICAL[player][year].awayHome;
+			}
 
 			let newX = [], newY = [];
 			if (venue == "away") {
 				const awaySplits = dtSplits.map((date, idx) => {
-					if (data.awayHomeSplits.split(",")[idx] == "A") {
+					if (awayHome[idx] == "A") {
 						return { date, total: logs[idx] };
 					}
 					return null;
@@ -245,7 +259,7 @@
 				newY = awaySplits.map(r => r.total);
 			} else if (venue == "home") {
 				const homeSplits = dtSplits.map((date, idx) => {
-					if (data.awayHomeSplits.split(",")[idx] == "H") {
+					if (awayHome[idx] == "H") {
 						return { date, total: logs[idx] };
 					}
 					return null;
@@ -502,7 +516,7 @@
 			if (SPORT == "mlb") {
 				const pitcher = document.querySelector("#player-pitcher");
 				pitcher.innerHTML = `
-					<h4>${data.pitcher}: </h4>
+					<h4>vs ${data.pitcher}: </h4>
 					${data.bvp}
 				`;
 				const weather = document.querySelector("#player-weather");
@@ -599,7 +613,7 @@
 
 		function renderTable(data) {
 			data = data.filter(r => 
-				!["fgs", "3-way", "1p_spread", "f5_spread"].includes(r.prop)
+				!["fgs", "3-way", "1p_spread"].includes(r.prop)
 			);
 			
 			data.sort((a,b) => {
