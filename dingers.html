@@ -87,7 +87,27 @@
 		</div>
 		<div id="mobile-header">
 			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
-				<h1>+EV Dingers</h1>
+				<div class="dropdown">
+					<select id="sport-select">
+						<option value="feed">⚾ Feed</option>
+						<option value="dingers">⚾ Dingers</option>
+						<option value="mlb">⚾ MLB</option>
+						<option value="nhl">🏒 NHL</option>
+						<option value="nba">🏀 NBA</option>
+						<option value="ncaab">🏀 NCAAB</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+				<div class="dropdown">
+					<select id="promo-select">
+						<option value="" selected>All Books</option>
+						<option value="fd-50%">FD 50% HR</option>
+						<option value="dk-sweat">DK No Sweat</option>
+						<option value="fd">FD</option>
+						<option value="dk">DK</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
 				<div id="donate">
 					<div>Tip</div>
 					<div>
@@ -98,34 +118,6 @@
 							<img src="logos/coffee.png" alt="coffee" />
 						</a>
 					</div>
-				</div>
-			</div>
-			<div id="sub-header">
-				<div style="display: flex;width: 100%;justify-content: center;gap:10px">
-					<div class="dropdown">
-						<select id="sport-select">
-							<option value="feed">⚾ Feed</option>
-							<option value="dingers">⚾ Dingers</option>
-							<option value="mlb">⚾ MLB</option>
-							<option value="nhl">🏒 NHL</option>
-							<option value="nba">🏀 NBA</option>
-							<option value="ncaab">🏀 NCAAB</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-					<div class="dropdown">
-						<select id="promo-select">
-							<option value="" selected>Promos</option>
-							<option value="fd-50%">FD 50% HR</option>
-							<option value="dk-sweat">DK No Sweat</option>
-							<option value="fd">FD</option>
-							<option value="dk">DK</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-				</div>
-				<div style="display: flex; gap:5px;width: 75%;justify-content: center;">
-					<button onclick="groupByGame();">Group By Game</button>
 				</div>
 			</div>
 		</div>
