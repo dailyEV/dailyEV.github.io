@@ -1,3 +1,7 @@
+let HTML = "";
+if (window.location.protocol == "file:") {
+	HTML = ".html";
+}
 
 const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
