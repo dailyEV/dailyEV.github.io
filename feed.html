@@ -79,8 +79,13 @@
 			flex-direction: row;
 		}
 		#header {
-			flex-direction: row;
 			margin: 0.5rem 0;
+		}
+		#header #donate {
+			display: flex;
+		}
+		#header #donate {
+			position: relative;
 		}
 		#table-container {
 			height: initial;
@@ -97,9 +102,21 @@
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<h1>Daily Feed</h1>
+			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
+				<h1>Daily Feed</h1>
+				<div id="donate">
+					<div>Tip</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+			</div>
 			<div id="sub-header">
-				<!-- <button onclick="filterHR();">Filter HR</button> -->
 				<div class="dropdown">
 					<select id="sport-select">
 						<option value="dingers">⚾ Dingers</option>
@@ -110,17 +127,6 @@
 						<option value="feed">⚾ Feed</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-			</div>
-			<div id="donate">
-				<div>Tip Jar</div>
-				<div>
-					<a href="https://cash.app/$intersectinglines" target="_blank">
-						<img src="logos/cashapp.png" alt="cashapp" />
-					</a>
-					<a href="https://buymeacoffee.com/interlines" target="_blank">
-						<img src="logos/coffee.png" alt="coffee" />
-					</a>
 				</div>
 			</div>
 		</div>

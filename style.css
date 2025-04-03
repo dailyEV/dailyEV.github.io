@@ -533,6 +533,7 @@ nav {
 		height: 200px;
 	}
 	#player-odds {
+		width: 90%;
 		overflow-x: scroll;
 	}
 	#body {

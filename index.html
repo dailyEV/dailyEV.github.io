@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Z's Daily EV</title>
+	<title>Daily EV</title>
 </head>
 <body>
 	<nav>
@@ -14,17 +14,7 @@
 		TEST
 	</div>
 	<script>
-		async function fetchData() {
-			const url = "https://raw.githubusercontent.com/zhecht/playerprops/main/data.json";
-			const response = await fetch(url);
-			const data = await response.json();
-			document.getElementById('data').innerText = JSON.stringify(data, null, 2);
-		}
-
-		//setInterval(fetchData, 30 * 1000);
-		//fetchData();
-
-		
+		window.location.href = "/dingers";
 	</script>
 </body>
 </html>
