@@ -558,6 +558,9 @@ nav {
 	.tabulator .tabulator-row, #player-odds {
 		font-size: 12px;
 	}
+	.tabulator .tabulator-header input {
+		font-size: 16px;
+	}
 	.tabulator .tabulator-cell:nth-child(1) {
 		width: 40px;
 	}
