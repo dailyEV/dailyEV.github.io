@@ -22,6 +22,11 @@
 		#sub-header {
 			flex-direction: row;
 		}
+		#header-container {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
 
 		@media (max-width: 600px) {
 			#sport-select {
@@ -30,13 +35,16 @@
 			#header #donate {
 				position: relative;
 			}
+			#header-container {
+				width: 100%;
+			}
 		}
 	</style>
 </head>
 <body>
 	<div id="left-body" class="body">
 		<div id="header">
-			<div style="display: flex;width: 100%;justify-content: space-around; align-items: center;">
+			<div id="header-container">
 				<h1>Daily EV</h1>
 				<div id="donate">
 					<div>Tip</div>
@@ -82,10 +90,7 @@
 			<div id="player-header">
 				<div class="player-dropdowns" style="gap: 5px;">
 					<div class="dropdown">
-						<select id="player-year-select" style="">
-							<option selected>2025</option>
-							<option>2024</option>
-						</select>
+						<select id="player-year-select" style=""></select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 					<div class="dropdown">
@@ -137,6 +142,8 @@
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let MOBILE = window.innerWidth <= 600;
+		let YEAR = new Date();
+		YEAR = YEAR.getFullYear();
 
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
@@ -193,18 +200,31 @@
 
 		if (SPORT == "mlb") {
 			const yearSelect = document.querySelector("#player-year-select");
-			yearSelect.value = "2025";
+			yearSelect.value = YEAR;
 			yearSelect.style.display = "flex";
 			yearSelect.addEventListener("change", function(event) {
 				const data = TABLE.getSelectedRows()[0].getData();
 				let logs = data.totalSplits.split(",");
 				let dtSplits = data.dtSplits.split(",");
-				if (event.target.value == "2024") {
-					logs = data.logsLYR.split(",");
-					dtSplits = data.dtSplitsLYR.split(",");
+
+				if (event.target.value == YEAR) {
+					logs = data.totalSplits.split(",");
+					dtSplits = data.dtSplits.split(",");
+					plotMap(data, dtSplits, logs);
+				} else {
+					getYearLogs(data, event.target.value);
 				}
-				plotMap(data, dtSplits, logs);
 			});
+		}
+
+		function getYearLogs(data, year) {
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
+			fetch(url, {
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(yearData => {
+				console.log(yearData);
+				//plotMap(data, dtSplits, logs);
+			}).catch(err => console.log(err));
 		}
 
 		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
@@ -434,7 +454,19 @@
 
 			// Reset Venue Select
 			document.querySelector("#player-venue-select").value = "A+H";
-			document.querySelector("#player-year-select").value = "2025";
+			
+			// Year Dropdown
+			const yearSelect = document.querySelector("#player-year-select");
+			yearSelect.value = YEAR;
+			yearSelect.innerHTML = `
+				<option value="${YEAR}" selected>${YEAR}</option>
+			`;
+			for (year of data.playerYears) {
+				const el = document.createElement("option");
+				el.value = year;
+				el.innerText = year;
+				yearSelect.appendChild(el);
+			}
 
 			// Odds Display
 			const playerOdds = document.querySelector("#player-odds");

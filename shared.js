@@ -210,7 +210,7 @@ const playerFormatter = function(cell, params, rendered) {
 		prop = propFormatter(cell);
 	}
 	let gameContainer = `${imgs.join("")}`;
-	if (["feed", "dingers"].includes(sport)) {
+	if (["feed", "dingers"].includes(sport) && MOBILE) {
 		gameContainer = `<img class='team-img' src='logos/mlb/${data.team}.png' alt='${data.team}' title='${data.team}' />`;
 	}
 	return `
