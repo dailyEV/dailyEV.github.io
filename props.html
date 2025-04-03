@@ -628,7 +628,7 @@
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			const select = document.querySelector("#prop-select");
 			select.innerHTML = `
-				<option value="all" selected>All</option>
+				<option value="all" selected>All Props</option>
 			`;
 			props.map(prop => {
 				const el = document.createElement("option");
