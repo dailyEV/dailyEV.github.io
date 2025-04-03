@@ -153,9 +153,13 @@
 
 		document.querySelector("#prop-select").addEventListener("change", function(event) {
 			const prop = event.target.value;
-			TABLE.setFilter([
-				{field:"prop", type:"=", value: prop.toLowerCase()}
-			]);
+			if (prop == "all") {
+				TABLE.clearFilter();
+			} else {
+				TABLE.setFilter([
+					{field:"prop", type:"=", value: prop.toLowerCase()}
+				]);
+			}
 			TABLE.getRows("active")[0].getElement().click();
 		});
 
