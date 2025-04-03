@@ -553,7 +553,7 @@
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
-				responsiveLayout: MOBILE ? "hide" : "",
+				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -585,7 +585,7 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 160 : 180,
+						width: MOBILE ? 130 : 180,
 						formatterParams:{ sport: SPORT },
 						hozAlign: "left",
 						responsive: 0
@@ -649,7 +649,8 @@
 						width:160,
 						formatter: chartFormatter,
 						formatterParams:{type:"bar"},
-						responsive: 3
+						responsive: 3,
+						visible: MOBILE ? false : true
 					},
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
