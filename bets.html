@@ -162,7 +162,7 @@
 						<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
 						${row["odds"]}
 						${title(row["player"])}
-						(${row["betEV"]}% EV, now ${row["ev"]["line"]})
+						(${row["betEV"]}% EV, +${row["ev"]["fairVal"]} FV, now ${row["ev"]["line"]})
 					`;
 					body.appendChild(el);
 				}
