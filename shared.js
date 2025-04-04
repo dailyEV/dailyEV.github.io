@@ -50,7 +50,7 @@ const evBookFormatter = function(cell, params, rendered) {
 
 	if (params.book) {
 		const book = params.book.split("-")[0];
-		let line = data.bookOdds[book] || 0;
+		let line = data.bookOdds[book] || "0";
 		if (line.includes("/")) {
 			line = line.split("/")[0];
 		}
