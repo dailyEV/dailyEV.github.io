@@ -22,6 +22,12 @@ const plusMinusFormatter = function(cell) {
 	return ev;
 }
 
+const inningFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const icon = data.game.split(" @ ")[0] == data.team ? "▴" : "▾";
+	return `${icon}${data.in}`;
+}
+
 const evFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
@@ -221,7 +227,7 @@ const playerFormatter = function(cell, params, rendered) {
 		prop = propFormatter(cell);
 	}
 	let gameContainer = `${imgs.join("")}`;
-	if (["feed", "dingers"].includes(sport) && MOBILE) {
+	if (["feed", "dingers"].includes(sport)) {
 		gameContainer = `<img class='team-img' src='logos/mlb/${data.team}.png' alt='${data.team}' title='${data.team}' />`;
 	}
 	return `

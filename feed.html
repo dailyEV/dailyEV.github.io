@@ -41,11 +41,8 @@
 	.team-cell {
 		padding: 0;
 	}
-	.tabulator-cell {
-		height: 24px;
-	}
 	#table {
-		max-width: 475px;
+		max-width: 515px;
 	}
 	#hrtable {
 		width: max-content;
@@ -66,7 +63,7 @@
 			margin-top: 0.75rem;
 		}
 		#table {
-			max-width: 280px;
+			max-width: 320px;
 		}
 		#left-body {
 			width: 100%;
@@ -91,7 +88,6 @@
 			min-width: auto;
 		}
 		.team-img {
-			margin-top: -2px;
 			margin-right: 0.2rem;
 		}
 	}
@@ -242,7 +238,7 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		setInterval(() => fetchFeed(), 5 * 1000);
+		//setInterval(() => fetchFeed(), 5 * 1000);
 
 		function updateAllInfo(data) {
 			const h2 = document.querySelector("#all h2");
@@ -266,6 +262,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					//{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
+					{title: "", field: "in", formatter: inningFormatter, hozAlign: "center", width: 30},
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
@@ -307,7 +304,7 @@
 				],
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					//{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
+					{title: "", field: "in", formatter: inningFormatter, hozAlign: "center", width: 30},
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
 						formatterParams:{ sport: SPORT },
@@ -315,6 +312,8 @@
 					},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
+					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
+					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
 					{title: "DT", field: "dt", visible: false},
 				]
 			});
