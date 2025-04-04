@@ -618,7 +618,7 @@
 
 		function renderTable(data) {
 			data = data.filter(r => 
-				!["fgs", "3-way", "1p_spread"].includes(r.prop)
+				!["fgs", "3-way", "1p_spread", "spread"].includes(r.prop)
 			);
 			
 			data.sort((a,b) => {

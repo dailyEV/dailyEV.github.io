@@ -209,8 +209,10 @@ const playerFormatter = function(cell, params, rendered) {
 
 	const team = SPORT == "ncaab" ? data.teamId : data.team;
 	const imgs = getGameImgs(data, params);
+	let isPlayerProp = true;
 
 	if (player == "") {
+		isPlayerProp = false;
 		player = data.prop.replace("_", " ").toUpperCase();
 		if (data.prop.includes("ml")) {
 			const g = SPORT == "ncaab" ? title(data.game) : data.game.toUpperCase();
@@ -225,13 +227,15 @@ const playerFormatter = function(cell, params, rendered) {
 			player = "";
 		}
 	}
+
 	let prop = "";
 	if (!["feed", "dingers"].includes(sport)) {
 		prop = propFormatter(cell);
 	}
 	let gameContainer = `${imgs.join("")}`;
-	if (["feed", "dingers"].includes(sport)) {
-		gameContainer = `<img class='team-img' src='logos/mlb/${data.team}.png' alt='${data.team}' title='${data.team}' />`;
+	if (["feed", "dingers"].includes(sport) || isPlayerProp) {
+		let s = isPlayerProp ? sport : "mlb";
+		gameContainer = `<img class='team-img' src='logos/${s}/${data.team}.png' alt='${data.team}' title='${data.team}' />`;
 	}
 	return `
 		<div class="player-cell">
