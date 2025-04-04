@@ -299,7 +299,7 @@ nav {
 }
 .game-img.home {
 	z-index: 1;
-	left: 10px;
+	margin-left: -7px;
 }
 
 #player-weather {
