@@ -355,7 +355,7 @@ nav {
 	*/
 }
 #player-venue-select {
-	min-width: 80px;
+	min-width: 75px;
 }
 #player-ou-select {
 	min-width: 80px;
@@ -365,7 +365,7 @@ nav {
 }
 #player-year-select {
 	display: none;
-	min-width: 76px;
+	min-width: 70px;
 }
 #player-props-select {
 	min-width: 120px;
@@ -498,7 +498,7 @@ nav {
 		font-size: 1.8rem;
 	}
 	h2 {
-		font-size: 1.35rem;
+		font-size: 1.25rem;
 		justify-content: center;
 		margin-bottom: 0;
 	}
@@ -519,9 +519,7 @@ nav {
 	#player-controls {
 		align-items: center;
 		flex-direction: column;
-	}
-	.player-dropdowns {
-		margin: 0.5rem 0;
+		margin-top: 0.5rem;
 	}
 	#player-odds {
 		justify-content: center;
@@ -530,10 +528,11 @@ nav {
 		display: flex;
 	}
 	#player-header {
-		flex-direction: column;
-		margin: 0;
+		margin-top: 0.75rem;
 		align-items: center;
+		justify-content: space-evenly;
 		gap:0;
+		flex-wrap: wrap;
 	}
 	.player-row {
 		flex-direction: column;

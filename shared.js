@@ -7,6 +7,13 @@ const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
 }
 
+function addPlus(value) {
+	if (parseFloat(value) > 0) {
+		return "+"+value;
+	}
+	return value;
+}
+
 const plusMinusFormatter = function(cell) {
 	let ev = cell.getValue();
 	if (parseFloat(ev) > 0) {
