@@ -61,7 +61,7 @@
 				<div class="dropdown">
 					<select id="promo-select">
 						<option value="" selected>All Books</option>
-						<option value="fd-50%">FD 50%</option>
+						<option value="mgm-20%">MGM 20% HR</option>
 						<option value="dk-sweat">DK Sweat</option>
 						<option value="fd">FD</option>
 						<option value="dk">DK</option>
@@ -89,10 +89,12 @@
 				<div class="dropdown">
 					<select id="promo-select">
 						<option value="" selected>All Books</option>
-						<option value="fd-50%">FD 50% HR</option>
+						<option value="mgm-20%">MGM 20% HR</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="fd">FD</option>
 						<option value="dk">DK</option>
+						<option value="mgm">MGM</option>
+						<option value="espn">ESPN</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -270,6 +272,7 @@
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0},
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
