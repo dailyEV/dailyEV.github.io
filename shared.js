@@ -235,7 +235,8 @@ const playerFormatter = function(cell, params, rendered) {
 	let gameContainer = `${imgs.join("")}`;
 	if (["feed", "dingers"].includes(sport) || isPlayerProp) {
 		let s = ["feed", "dingers"].includes(sport) ? "mlb" : sport;
-		gameContainer = `<img class='team-img' src='logos/${s}/${data.team}.png' alt='${data.team}' title='${data.team}' />`;
+		let t = sport == "ncaab" ? data.teamId : data.team;
+		gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
 	}
 	return `
 		<div class="player-cell">

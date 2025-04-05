@@ -153,6 +153,7 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let MOBILE = window.innerWidth <= 600;
@@ -369,6 +370,16 @@
 				["total10Over"].forEach(col => TABLE.hideColumn(col));
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
+
+			if (BOOK) {
+				TABLE.hideColumn("ev");
+				TABLE.hideColumn("fairVal");
+				TABLE.showColumn(`${BOOK}_ev`);
+				TABLE.showColumn(`${BOOK}_fairVal`);
+				TABLE.setSort([
+					{column: `${BOOK}_ev`, dir: "desc"}
+				]);
+			}
 		}
 
 		function showPlayerInfo(row) {
@@ -499,7 +510,7 @@
 			// Odds Display
 			const playerOdds = document.querySelector("#player-odds");
 			playerOdds.innerHTML = "";
-			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
+			const books = ["fd", "dk", "mgm", "365", "pn", "circa", "kambi", "cz", "espn"];
 			for (book of books) {
 				if (!data.bookOdds[book]) {
 					continue;
@@ -681,6 +692,8 @@
 					},
 					{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter},
+					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{
 						title: "Player",
 						field: "player",
@@ -739,6 +752,7 @@
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
 					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
 					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 8},
+					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
 					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number", responsive: 9},
 					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
@@ -770,18 +784,20 @@
 			}
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
-			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.circa", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
 			if (MOBILE) {
 				cols.push("kelly");
 			}
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1400px";
+				document.querySelector("#table").style["max-width"] = "1425px";
+				document.querySelector("#updated-container").style["max-width"] = "1425px";
 				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				cols.forEach(col => TABLE.hideColumn(col));
 				document.querySelector("#table").style["max-width"] = "720px";
+				document.querySelector("#updated-container").style["max-width"] = "720px";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
