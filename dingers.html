@@ -203,7 +203,9 @@
 
 					if (BOOK) {
 						TABLE.hideColumn("ev");
+						TABLE.hideColumn("fairVal");
 						TABLE.showColumn(`${BOOK}_ev`);
+						TABLE.showColumn(`${BOOK}_fairVal`);
 						TABLE.setSort([
 							{column: `${BOOK}_ev`, dir: "desc"}
 						]);
@@ -291,10 +293,12 @@
 					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "mgm-20-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "dk-sweat_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-365_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -314,10 +318,10 @@
 					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
 					{title: "MGM", field: "bookOdds.mgm",  width: 70, sorter: "number"},
-					{title: "ESPN", field: "bookOdds.espn",  width: 70, sorter: "number"},
+					{title: "ESPN*", field: "bookOdds.espn",  width: 70, sorter: "number"},
 					{title: "CZ", field: "bookOdds.cz",  width: 70, sorter: "number"},
-					{title: "PN*", field: "bookOdds.pn",  width: 70, sorter: "number"},
-					{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
+					{title: "PN", field: "bookOdds.pn",  width: 70, sorter: "number"},
+					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number"},
 					{title: "Pinch Hits", field: "ph"},
 					//{title: "Stadium", field: "weather.stadium", formatter: titleFormatter, hozAlign: "left"},
