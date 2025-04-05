@@ -229,7 +229,7 @@ const playerFormatter = function(cell, params, rendered) {
 	}
 
 	let prop = "";
-	if (!["feed", "dingers"].includes(sport)) {
+	if (!["feed", "dingers"].includes(sport) && !params.noProp) {
 		prop = propFormatter(cell);
 	}
 	let gameContainer = `${imgs.join("")}`;
