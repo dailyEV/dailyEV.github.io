@@ -79,6 +79,8 @@
 						<option value="dk">DK</option>
 						<option value="mgm">MGM</option>
 						<option value="espn">ESPN</option>
+						<option value="vs-365">vs Bet365</option>
+						<option value="vs-circa">vs Circa</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -107,6 +109,8 @@
 						<option value="dk">DK</option>
 						<option value="mgm">MGM</option>
 						<option value="espn">ESPN</option>
+						<option value="vs-365">vs Bet365</option>
+						<option value="vs-circa">vs Circa</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -288,6 +292,8 @@
 					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "dk-sweat_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "vs-365_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
@@ -304,6 +310,7 @@
 					},
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
+					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
 					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
 					{title: "MGM", field: "bookOdds.mgm",  width: 70, sorter: "number"},
