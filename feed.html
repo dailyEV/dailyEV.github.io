@@ -275,7 +275,7 @@
 				for (game of Object.keys(res)) {
 					if (game == "all") {
 						allRow = res;
-						if (res["all"]["totGames"] == 0) {
+						if (res["all"]["liveGames"] == 0) {
 							clearInterval(intervalId);
 						}
 						continue;
@@ -313,7 +313,7 @@
 			const h2 = document.querySelector("#all h2");
 			const allData = data["all"];
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			const hrPerG = parseInt(allData.hr) / allData.totGames;
+			const hrPerG = parseInt(allData.hr) / allData.liveGames;
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
 			document.querySelector("#table-select option[value=almost]").innerText = `${ALMOST.length} ALMOST HRs Today`;
 		}

@@ -156,6 +156,7 @@
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
+		let MIN = URLParams.get("min");
 		let MOBILE = window.innerWidth <= 600;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
@@ -311,6 +312,9 @@
 			}).then(response => response.json()).then(data => {
 				if (PROP) {
 					data = data.filter(r => r.prop == PROP);
+				}
+				if (MIN) {
+					data = data.filter(r => r.books.length >= MIN);
 				}
 				renderTable(data);
 				setTimeout(function() {
