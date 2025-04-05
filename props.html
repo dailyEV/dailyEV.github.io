@@ -475,9 +475,7 @@
 			// Year Dropdown
 			const yearSelect = document.querySelector("#player-year-select");
 			yearSelect.value = YEAR;
-			yearSelect.innerHTML = `
-				<option value="${YEAR}" selected>${YEAR}</option>
-			`;
+			yearSelect.innerHTML = ``;
 			if (data.playerYears) {
 				for (year of data.playerYears) {
 					const el = document.createElement("option");

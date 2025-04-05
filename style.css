@@ -380,6 +380,12 @@ nav {
 #prop-select {
 	max-width: 100px;
 }
+#table-dropdown {
+	width: calc(100% + 24px);
+}
+#table-select {
+	width: 100%;
+}
 #log-chart {
 }
 

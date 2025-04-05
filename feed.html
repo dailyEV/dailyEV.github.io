@@ -17,6 +17,9 @@
 		font-size: 18px;
 		height: 100vh;
 	}
+	#header #donate {
+		position: relative;
+	}
 	#left-body {
 		width: 50%;
 	}
@@ -47,6 +50,7 @@
 	#hrtable {
 		width: max-content;
 		margin-top: 0.5rem;
+		max-height: 80%;
 	}
 	#yby {
 		display: none;
@@ -127,6 +131,15 @@
 	<div id="right-body" class="body">
 		<div id="all">
 			<h2></h2>
+			<div>
+				<div id="table-dropdown" class="dropdown">
+					<select id="table-select">
+						<option value="homers">Homers</option>
+						<option value="almost">Almost</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+			</div>
 			<div id="yby"></div>
 			<div id="hrtable"></div>
 		</div>
@@ -136,6 +149,8 @@
 		let MOBILE = window.innerWidth <= 600;
 		let TABLE = null;
 		let HRTABLE = null;
+		let HRROWS = [];
+		let ALMOST = [];
 		let YBY = {};
 
 		function checkParams() {
@@ -159,6 +174,29 @@
 			} else {
 				window.location.href = `./props${HTML}?sport=${sport}`;
 			}
+		});
+
+		document.querySelector("#table-select").value = "homers";
+		document.querySelector("#table-select").addEventListener("change", (event) => {
+			let result = event.target.value == "homers" ? "Home Run" : "";
+			let rows = [];
+			let sort = [];
+			if (result) {
+				rows = HRROWS;
+				sort = {column: "dt", dir: "desc"};
+			} else {
+				rows = ALMOST;
+				sort = {column: "dist", dir: "desc"};
+			}
+			renderHRTable(rows);
+			setTimeout(() => {
+				HRTABLE.setSort([sort]);
+				if (result == "homers") {
+					HRTABLE.hideColumn("result");
+				} else {
+					HRTABLE.showColumn("result");
+				}
+			}, 200);
 		});
 
 		function filterHR() {
@@ -211,27 +249,33 @@
 				response => response.json()
 			).then(res => {
 				const data = [];
-				const hrData = [];
+				ALMOST = [];
+				HRROWS = [];
+				let allRow = null;
 				for (game of Object.keys(res)) {
 					if (game == "all") {
-						updateAllInfo(res);
+						allRow = res;
 						continue;
 					}
 					for (row of res[game]) {
 						data.push(row);
 						if (row["result"] == "Home Run") {
-							hrData.push(row);
+							HRROWS.push(row);
+						} else if (row["hr/park"] != "") {
+							ALMOST.push(row);
 						}
 					}
 				}
+
+				updateAllInfo(allRow);
 				if (render) {
 					renderTable(data);
-					renderHRTable(hrData);
+					renderHRTable(HRROWS);
 					checkParams();
 				} else {
 					TABLE.setData(data);
 					TABLE.redraw();
-					HRTABLE.setData(hrData);
+					HRTABLE.setData(HRROWS);
 					HRTABLE.redraw();
 				}
 			}).catch(err => console.log(err));
@@ -245,7 +289,8 @@
 			const allData = data["all"];
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
 			const hrPerG = parseInt(allData.hr) / allData.totGames;
-			h2.innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
+			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
+			document.querySelector("#table-select option[value=almost]").innerText = `${ALMOST.length} ALMOST HRs Today`;
 		}
 
 		function renderTable(data) {
@@ -310,6 +355,7 @@
 						formatterParams:{ sport: SPORT },
 						width: 130
 					},
+					{title: "Result", field: "result", visible: false},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number"},
 					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
