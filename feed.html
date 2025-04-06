@@ -322,6 +322,23 @@
 			const hrPerG = parseInt(allData.hr) / allData.liveGames;
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
 			document.querySelector("#table-select option[value=almost]").innerText = `${ALMOST.length} ALMOST HRs Today`;
+			document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
+		}
+
+		function timeAgo(timestamp) {
+			const now = new Date();
+			const past = new Date(timestamp);
+			const diff = Math.floor((now - past) / 1000);
+
+			if (diff < 60) return `${diff} seconds ago`;
+			let min = Math.floor(diff / 60);
+			if (min < 60) {
+				if (min == 1) {
+					return `${min} minute ago`;
+				}
+				return `${min} minutes ago`;
+			}
+			return timestamp;
 		}
 
 		function renderTable(data) {
