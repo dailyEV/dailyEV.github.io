@@ -24,6 +24,9 @@
 			justify-content: space-around;
 			align-items: center;
 		}
+		.player-cell .team-img {
+			margin-top: -2px;
+		}
 
 		@media (max-width: 600px) {
 			#sport-select {
@@ -655,6 +658,9 @@
 						hozAlign: "left",
 						responsive: 0
 					},
+					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter},
+					{title: "Opp", field: "opp", formatter: oppFormatter},
+					{title: "Opp Rank", field: "oppRank"},
 					/*
 					{
 						title: "EV Book",

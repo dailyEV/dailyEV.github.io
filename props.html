@@ -157,6 +157,7 @@
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let MIN = URLParams.get("min");
+		let DEBUG = URLParams.get("debug");
 		let MOBILE = window.innerWidth <= 600;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
@@ -183,7 +184,9 @@
 					{field:"prop", type:"=", value: prop.toLowerCase()}
 				]);
 			}
-			TABLE.getRows("active")[0].getElement().click();
+			if (!DEBUG && window.location.protocol != "file:") {
+				TABLE.getRows("active")[0].getElement().click();
+			}
 		});
 
 		document.querySelector("#player-props-select").addEventListener("change", function(event) {
@@ -325,8 +328,10 @@
 						let data = r.getData();
 						return data.prop != "ml" && !data.prop.includes("total")
 					});
-					if (rows.length > 0) {
-						rows[0].getElement().click();
+					if (rows.length > 0 && !DEBUG) {
+						if (window.location.protocol != "file:") {
+							rows[0].getElement().click();
+						}
 					}
 					hideCols();
 					TABLE.redraw();
@@ -756,12 +761,12 @@
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
 					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
 					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 8},
-					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
 					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number", responsive: 9},
 					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
 					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
 					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},
+					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
 					{
 						title: "Game Logs",
 						field: "totalSplits",

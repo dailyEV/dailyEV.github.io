@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily Dingers</title>
+	<title>⚾ Feed</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
@@ -55,7 +55,7 @@
 	.team-cell {
 		padding: 0;
 	}
-	#table {
+	#table, #updated-container {
 		max-width: 515px;
 	}
 	#hrtable {
@@ -80,7 +80,7 @@
 		#all h2 {
 			margin-top: 0.75rem;
 		}
-		#table {
+		#table, #updated-container {
 			max-width: 320px;
 		}
 		#left-body {
@@ -128,6 +128,10 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+			</div>
+		</div>
+		<div id="table-container">
+			<div id="updated-container">
 				<div id="donate">
 					<div>Tip</div>
 					<div>
@@ -139,9 +143,8 @@
 						</a>
 					</div>
 				</div>
+				<div id="updated">Updated: </div>
 			</div>
-		</div>
-		<div id="table-container">
 			<div id="table"></div>
 		</div>
 	</div>
@@ -200,14 +203,17 @@
 			let sort = [];
 			if (result) {
 				rows = HRROWS;
-				sort = {column: "dt", dir: "desc"};
+				sort = [{column: "dt", dir: "desc"}];
 			} else {
 				rows = ALMOST;
-				sort = {column: "dist", dir: "desc"};
+				sort = [
+					{column: "dist", dir: "desc"},
+					{column: "hr/park", dir: "desc"}
+				];
 			}
 			renderHRTable(rows);
 			setTimeout(() => {
-				HRTABLE.setSort([sort]);
+				HRTABLE.setSort(sort);
 				if (result == "Home Run") {
 					HRTABLE.hideColumn("result");
 					HRTABLE.showColumn("in");
@@ -296,12 +302,12 @@
 					renderHRTable(HRROWS);
 					checkParams();
 				} else {
-					TABLE.setData(data);
-					TABLE.redraw();
-					if (oldHR.length != HRROWS.length) {
-						HRTABLE.setData(HRROWS);
-						HRTABLE.redraw();
+					TABLE.replaceData(data);
+					if (HRROWS.length != oldHR.length) {
+						HRTABLE.replaceData(HRROWS);
 					}
+					//TABLE.redraw();
+					//HRTABLE.redraw();
 				}
 			}).catch(err => console.log(err));
 		}

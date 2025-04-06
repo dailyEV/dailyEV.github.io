@@ -14,6 +14,20 @@ function addPlus(value) {
 	return value;
 }
 
+const avgFormatter= function(cell) {
+	return parseFloat(cell.getValue()).toFixed(3).replace(/^0/, '');
+}
+
+const oppFormatter= function(cell) {
+	const data = cell.getRow().getData();
+	return `
+		<div style='gap: 5px; display: flex;'>
+		${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
+		${getTeamImg(SPORT, cell.getValue())}
+		</div>
+	`;
+}
+
 const plusMinusFormatter = function(cell) {
 	let ev = cell.getValue();
 	if (parseFloat(ev) > 0) {
@@ -143,7 +157,11 @@ const kellyFormatter = function(cell, params, rendered) {
 const teamFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
-	return `<img class='team-img' src='${cell.getValue()}' alt='${data.team}' title='${data.team}' />`;
+	return getTeamImg(SPORT, cell.getValue());
+}
+
+function getTeamImg(sport, team) {
+	return `<img class='team-img' src='logos/${sport}/${team}.png' alt='${team}' title='${team}' />`;
 }
 
 const dtFormatter = function(cell, params, rendered) {
@@ -223,7 +241,7 @@ const playerFormatter = function(cell, params, rendered) {
 			player = `${team.toUpperCase()} ${data.prop.replace("home_", "").replace("away_", "").toUpperCase()}`;
 		} else if (data.prop.includes("spread")) {
 			player = `${team.toUpperCase()} ${data.prop.toUpperCase()}`;
-		} else if (["rfi"].includes(data.prop)) {
+		} else if (["rfi", "gift"].includes(data.prop)) {
 			player = "";
 		}
 	}
