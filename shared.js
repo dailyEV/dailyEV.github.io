@@ -56,7 +56,7 @@ const inningFormatter = function(cell) {
 	const icon = data.game.split(" @ ")[0] == data.team ? "▲" : "▼";
 	return `
 		<div style='display: flex;justify-content:center;align-items:center;gap:1px'>
-			<span style='font-size: 0.5rem;'>${icon}</span>
+			<span style='font-size: 0.5rem;margin-bottom:-2px;'>${icon}</span>
 			${data.in}
 		</div>
 	`;

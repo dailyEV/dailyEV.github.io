@@ -168,7 +168,9 @@
 	<script type="text/javascript">
 		let SPORT = "feed";
 		let MOBILE = window.innerWidth <= 600;
-		let DEBUG = null;
+		const windowURL = new URL(window.location.href);
+		const URLParams = new URLSearchParams(windowURL.search);
+		let DEBUG = URLParams.get("debug");
 		let TABLE = null;
 		let HRTABLE = null;
 		let HRROWS = [];
