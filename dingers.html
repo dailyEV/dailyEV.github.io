@@ -333,22 +333,6 @@
 			});
 		}
 
-		function groupByGame() {
-			if (!TABLE.options.groupBy) {
-				TABLE.setGroupBy("game");
-				TABLE.setSort([
-					{column: `ev`, dir: "desc"},
-					{column: "start", dir: "asc"},
-				])
-			} else {
-				TABLE.setGroupBy();
-				TABLE.setSort([
-					{column: `ev`, dir: "desc"}
-				]);
-			}
-			TABLE.getRows().forEach(r => r.getElement().style.display = "");
-		}
-
 		function groupByTop() {
 			if (TABLE.options.groupBy === undefined || TABLE.options.groupBy == "game") {
 				TABLE.setGroupBy("game");

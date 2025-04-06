@@ -3,6 +3,21 @@ if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
 
+function groupByGame() {
+	if (!TABLE.options.groupBy) {
+		TABLE.setGroupBy("game");
+		TABLE.setSort([
+			{column: `ev`, dir: "desc"},
+			{column: "start", dir: "asc"},
+		])
+	} else {
+		TABLE.setGroupBy();
+		TABLE.setSort([
+			{column: `ev`, dir: "desc"}
+		]);
+	}
+}
+
 const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
 }
