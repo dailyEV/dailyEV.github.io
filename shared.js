@@ -38,8 +38,13 @@ const plusMinusFormatter = function(cell) {
 
 const inningFormatter = function(cell) {
 	const data = cell.getRow().getData();
-	const icon = data.game.split(" @ ")[0] == data.team ? "▴" : "▾";
-	return `${icon}${data.in}`;
+	const icon = data.game.split(" @ ")[0] == data.team ? "▲" : "▼";
+	return `
+		<div style='display: flex;justify-content:center;align-items:center;gap:1px'>
+			<span style='font-size: 0.5rem;'>${icon}</span>
+			${data.in}
+		</div>
+	`;
 }
 
 const evFormatter = function(cell, params, rendered) {
