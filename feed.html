@@ -70,6 +70,9 @@
 		color: white;
 		background: rgb(56, 142, 60);
 	}
+	.player-cell .team-img {
+		margin-top: -2px;
+	}
 	@media (max-width: 600px) {
 		h1 {
 			display: none;
@@ -104,9 +107,6 @@
 		}
 		.game-container {
 			min-width: auto;
-		}
-		.team-img {
-			margin-right: 0.2rem;
 		}
 		.tabulator .tabulator-cell[tabulator-field=in] {
 			font-size: 12px;
@@ -313,7 +313,9 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		let intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+		if (!DEBUG) {
+			let intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+		}
 
 		function updateAllInfo(data) {
 			const h2 = document.querySelector("#all h2");
