@@ -64,6 +64,7 @@
 						<option value="feed">⚾ Feed</option>
 						<option value="dingers">⚾ Dingers</option>
 						<option value="mlb">⚾ MLB</option>
+						<option value="stats">⚾ Stats</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
@@ -668,6 +669,7 @@
 				el.innerText = prop;
 				select.appendChild(el);
 			});
+
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,

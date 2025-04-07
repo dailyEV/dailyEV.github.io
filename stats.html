@@ -180,6 +180,12 @@
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
+		if (!SPORT) {
+			SPORT = "mlb";
+		}
+		if (!PROP) {
+			PROP = "hr";
+		}
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
 		}
@@ -727,6 +733,7 @@
 					// hidden
 					{title: "", field: "bvpHR", sorter: "number", visible: false},
 					{title: "", field: "bvpAvg", sorter: "number", visible: false},
+					{title: "", field: "prop", visible: false},
 				]
 			});
 

@@ -156,7 +156,7 @@
 				<div id="table-dropdown" class="dropdown">
 					<select id="table-select">
 						<option value="homers">Homers</option>
-						<option value="almost">Almost</option>
+						<option value="close">Close</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
@@ -171,6 +171,8 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let DEBUG = URLParams.get("debug");
+		let CLOSE = URLParams.get("close");
+		let DATE = URLParams.get("date");
 		let TABLE = null;
 		let HRTABLE = null;
 		let HRROWS = [];
@@ -200,8 +202,9 @@
 			}
 		});
 
-		document.querySelector("#table-select").value = "homers";
-		document.querySelector("#table-select").addEventListener("change", (event) => {
+		const tableSelect = document.querySelector("#table-select");
+		tableSelect.value = "homers";
+		tableSelect.addEventListener("change", (event) => {
 			let result = event.target.value == "homers" ? "Home Run" : "";
 			let rows = [];
 			let sort = [];
@@ -269,7 +272,10 @@
 			Plotly.newPlot("yby", [hrAB], layout);
 		}
 		function fetchFeed(render=false) {
-			const url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
+			let url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
+			if (DATE) {
+				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${DATE}.json`;
+			}
 			fetch(url, {
 				headers: {
 					"Accept": "application/vnd.github.v3.raw"
@@ -317,8 +323,9 @@
 		}
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
+		let intervalId = 0;
 		if (!DEBUG) {
-			let intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
 		}
 
 		function updateAllInfo(data) {
@@ -327,7 +334,7 @@
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
 			const hrPerG = parseInt(allData.hr) / allData.liveGames;
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
-			document.querySelector("#table-select option[value=almost]").innerText = `${ALMOST.length} ALMOST HRs Today`;
+			document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Call HRs Today`;
 			document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
 		}
 
