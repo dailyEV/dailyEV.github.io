@@ -73,6 +73,7 @@
 					<select id="promo-select">
 						<option value="" selected>All Books</option>
 						<option value="mgm-20">MGM 20% HR</option>
+						<option value="fd-50">FD 50%</option>
 						<option value="dk-sweat">DK Sweat</option>
 						<option value="fd">FD</option>
 						<option value="dk">DK</option>
@@ -103,6 +104,7 @@
 					<select id="promo-select">
 						<option value="" selected>All Books</option>
 						<option value="mgm-20">MGM 20% HR</option>
+						<option value="fd-50">FD 50%</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="fd">FD</option>
 						<option value="dk">DK</option>
@@ -168,7 +170,7 @@
 		document.querySelector(selectId+" #sport-select").value = "dingers";
 		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
-			if (["dingers", "feed"].includes(sport)) {
+			if (["dingers", "feed", "leaders", "stats"].includes(sport)) {
 				window.location.href = `./${sport}${HTML}`;
 			} else {
 				window.location.href = `./props${HTML}?sport=${sport}`;
@@ -290,7 +292,7 @@
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "EV", field: "fd-50%_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "fd-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "dk-sweat_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},

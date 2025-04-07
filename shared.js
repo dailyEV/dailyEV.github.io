@@ -30,17 +30,57 @@ function addPlus(value) {
 }
 
 const avgFormatter= function(cell) {
+	if (cell.getValue() == "-") {
+		return "-";
+	}
 	return parseFloat(cell.getValue()).toFixed(3).replace(/^0/, '');
 }
 
-const oppFormatter= function(cell) {
+const oppFormatter = function(cell) {
 	const data = cell.getRow().getData();
+	if (!data.game) {
+		return "";
+	}
 	return `
-		<div style='gap: 5px; display: flex;'>
-		${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
-		${getTeamImg(SPORT, cell.getValue())}
+		<div class="opp-cell">
+			<span style="width: 12px;text-align:center;">
+				${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
+			</span>
+			${getTeamImg(SPORT, cell.getValue())}
+			${title(data.pitcher)}
 		</div>
 	`;
+}
+
+function addSuffix(num) {
+	let j = num % 10, k = num % 100;
+	
+	if (j == 1 && k != 11) return num + "st";
+	if (j == 2 && k != 12) return num + "nd";
+	if (j == 3 && k != 13) return num + "rd";
+	return num + "th";
+}
+
+const rankingFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const field = cell.getField();
+	if (!data.game) {
+		return "";
+	}
+	if (field == "oppRank") {
+		return `<div class='${data.oppRankClass}'>${data.oppRank}</div>`;
+	} else {
+		if (data.team == "ath") {
+			return "";
+		}
+		let cls = "";
+		if (data.stadiumRank <= 10) {
+			cls = "positive";
+		} else if (data.stadiumRank >= 20) {
+			cls = "negative";
+		}
+		return `<div class='${cls}'>${addSuffix(cell.getValue())}</div>`;
+	}
 }
 
 const plusMinusFormatter = function(cell) {
@@ -206,16 +246,20 @@ function getWindHTML(data) {
 		cond = "breezy";
 	}
 	return `
-		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='${data.weather["transform"]}' />
-		<span>${data.weather["wind speed"]}</span>
-		<span>${data.weather["wind dir"]}</span>
 		<img class='weather' src='logos/weather/${cond}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}'/>
+		<span>${data.weather["wind speed"]}</span>
+		<img class='wind' src='logos/wind-direction.png' alt='${data.weather["wind dir"]}' title='${data.weather["wind dir"]}' style='${data.weather["transform"]}' />
+		<!-- <span>${data.weather["wind dir"]}</span> -->
+		
 	`;	
 }
 
 const windFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
+	if (!data.game) {
+		return "";
+	}
 	return getWindHTML(data);
 }
 
@@ -246,7 +290,6 @@ const playerFormatter = function(cell, params, rendered) {
 	}
 
 	const team = SPORT == "ncaab" ? data.teamId : data.team;
-	const imgs = getGameImgs(data, params);
 	let isPlayerProp = true;
 
 	if (player == "") {
@@ -270,11 +313,13 @@ const playerFormatter = function(cell, params, rendered) {
 	if (!["feed", "dingers"].includes(sport) && !params.noProp) {
 		prop = propFormatter(cell);
 	}
-	let gameContainer = `${imgs.join("")}`;
+	let gameContainer = "";
 	if (["feed", "dingers"].includes(sport) || isPlayerProp) {
 		let s = ["feed", "dingers"].includes(sport) ? "mlb" : sport;
 		let t = sport == "ncaab" ? data.teamId : data.team;
 		gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
+	} else {
+		gameContainer = getGameImgs(data, params).join("");
 	}
 	return `
 		<div class="player-cell">
@@ -355,7 +400,11 @@ const chartFormatter = function(cell, params, rendered) {
 	if (!cell.getValue()) {
 		return "";
 	}
-	const values = cell.getValue().split(",").slice(-15);
+	let values = typeof(cell.getValue()) == "string" ? cell.getValue().split(",") : cell.getValue();
+
+	if (!cell.getField().includes("feed")) {
+		values = values.slice(-15);
+	}
 
 	//if (params.invert) {
 	//	values = values.map(val => val * -1);
@@ -368,13 +417,24 @@ const chartFormatter = function(cell, params, rendered) {
 		width: 145
 	}
 
-	options.fill = function(value) {
-		const line = data.playerHandicap || data.handicap || 0;
-		let cond = parseFloat(value) > parseFloat(line);
-		if (data.under) {
-			cond = parseFloat(value) < parseFloat(line);
+	if (params.type == "line") {
+		options.fill = "none";
+		options.strokeWidth = 2;
+		options.stroke = "#50fa7b";
+	} else {
+		options.fill = function(value) {
+			let line = data.playerHandicap || data.handicap || 0;
+			if (cell.getField() == "feed.evo") {
+				line = 100.0;
+			} else if (cell.getField() == "feed.dist") {
+				line = 300.0;
+			}
+			let cond = parseFloat(value) > parseFloat(line);
+			if (data.under) {
+				cond = parseFloat(value) < parseFloat(line);
+			}
+			return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
 		}
-		return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)"
 	}
 
 	rendered(function(){

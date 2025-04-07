@@ -3,12 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily EV</title>
-
-	<!--
-	<script type="text/javascript" src="test.js"></script>
-	-->
-
+	<title>⚾ Leaders</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
@@ -16,28 +11,11 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<style>
-		#sub-header {
-			flex-direction: row;
-		}
-		#header-container {
-			display: flex;
-			justify-content: space-around;
-			align-items: center;
+		.player-cell .team-img {
+			margin-top: -2px;
 		}
 
 		@media (max-width: 600px) {
-			#sport-select {
-				min-width: 100px;
-			}
-			#header #donate {
-				position: relative;
-			}
-			#header-container {
-				display: none;
-			}
-			#sub-header {
-				margin: 0.5rem 0;
-			}
 		}
 	</style>
 </head>
@@ -63,21 +41,15 @@
 					<select id="sport-select">
 						<option value="feed">⚾ Feed</option>
 						<option value="dingers">⚾ Dingers</option>
-						<option value="mlb">⚾ MLB</option>
+						<option value="mlb">⚾ Props</option>
+						<option value="stats">⚾ Stats</option>
+						<option value="leaders">⚾ Leaders</option>
 						<option value="nhl">🏒 NHL</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<div id="prop-dropdown" class="dropdown">
-					<!-- <button onclick="toggleFilterProp()">All Props</button> -->
-					<select id="prop-select">
-						
-					</select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<button onclick="groupByGame();">Game Filter</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -93,58 +65,8 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated">Updated: </div>
 			</div>
 			<div id="table"></div>
-		</div>
-	</div>
-	<div id="right-body" class="body">
-		<div id="player-tables">
-			<div id="player-header">
-				<h2></h2>
-				<div class="player-dropdowns" style="gap: 5px;">
-					<div class="dropdown">
-						<select id="player-year-select" style=""></select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-					<div class="dropdown">
-						<select id="player-venue-select" style="">
-							<option selected>A+H</option>
-							<option>Away</option>
-							<option>Home</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-				</div>
-				<div id="player-controls">
-					<div class="player-dropdowns">
-						<div class="dropdown">
-							<select id="player-ou-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown" style="margin: 0 0.5rem;">
-							<select id="player-lines-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown">
-							<select id="player-props-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="player-row">
-				<div id="player-ev"></div>
-				<div id="player-odds"></div>
-			</div>
-			<div class="player-row">
-				<div id="player-pitcher"></div>
-				<div id="player-weather"></div>
-			</div>
-			<div id="player-opp"></div>
-			<div id="player-table">
-				<div id="log-chart"></div>
-			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -153,11 +75,8 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
-		let BOOK = URLParams.get("book");
-		let SPORT = URLParams.get("sport");
-		let PROP = URLParams.get("prop");
-		let MIN = URLParams.get("min");
-		let DEBUG = URLParams.get("debug");
+		let SPORT = "leaders";
+		let LEADERS = URLParams.get("leaders");
 		let MOBILE = window.innerWidth <= 600;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
@@ -184,9 +103,7 @@
 					{field:"prop", type:"=", value: prop.toLowerCase()}
 				]);
 			}
-			if (!DEBUG && window.location.protocol != "file:") {
-				TABLE.getRows("active")[0].getElement().click();
-			}
+			TABLE.getRows("active")[0].getElement().click();
 		});
 
 		document.querySelector("#player-props-select").addEventListener("change", function(event) {
@@ -303,92 +220,29 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
-		fetchUpdated();
 		fetchData();
-		//renderTable(TEST);
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
 				if (PROP) {
 					data = data.filter(r => r.prop == PROP);
 				}
-				if (MIN) {
-					data = data.filter(r => r.books.length >= MIN);
-				}
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
-					const rows = TABLE.getRows("active").filter(r => {
-						let data = r.getData();
-						return data.prop != "ml" && !data.prop.includes("total")
-					});
-					if (rows.length > 0 && !DEBUG) {
-						if (window.location.protocol != "file:") {
-							rows[0].getElement().click();
-						}
+
+					if (LEADERS == "300-ft") {
+						TABLE.setSort([{"column": "300-ft", "dir": "desc"}]);
+						TABLE.showColumn("300-ft");
 					}
-					hideCols();
-					TABLE.redraw();
 				}, 200);
 			}).catch(err => console.log(err));
-		}
-
-		function fetchUpdated() {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
-			fetch(url, {
-				headers: { "Accept": "application/vnd.github.v3.raw" }
-			}).then(response => response.json()).then(data => {
-				const [datePart, timePart] = data[SPORT].split(" ");
-				const formattedString = `${datePart}T${timePart.split(".")[0]}`;
-				const today = new Date();
-				const date = new Date(formattedString);
-				const isToday =
-					today.getFullYear() == date.getFullYear() &&
-					today.getMonth() == date.getMonth() &&
-					today.getDate() == date.getDate();
-
-				const optionsDay = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
-				const formattedTimeDay = date.toLocaleString('en-US', optionsDay);
-				const options = { hour: '2-digit', minute: '2-digit' };
-				const formattedTime = date.toLocaleString('en-US', options);
-				document.querySelector("#updated").innerText = 
-					isToday ? `Updated Today ${formattedTime}` : `Updated ${formattedTimeDay}`;
-			}).catch(err => console.log(err));
-		}
-
-		function hideCols() {
-			if (SPORT.includes("futures")) {
-				const cols = ["totalSplits", "totalOver", "total10Over"];
-				if (PROP == "hr") {
-					cols.push("prop");
-				}
-				cols.forEach(col => TABLE.hideColumn(col));
-			}
-
-			if (SPORT == "mlbfutures") {
-				TABLE.showColumn("bookOdds.bv");
-			}
-
-			if (SPORT == "mlb") {
-				["total10Over"].forEach(col => TABLE.hideColumn(col));
-				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
-			}
-
-			if (BOOK) {
-				TABLE.hideColumn("ev");
-				TABLE.hideColumn("fairVal");
-				TABLE.showColumn(`${BOOK}_ev`);
-				TABLE.showColumn(`${BOOK}_fairVal`);
-				TABLE.setSort([
-					{column: `${BOOK}_ev`, dir: "desc"}
-				]);
-			}
 		}
 
 		function showPlayerInfo(row) {
@@ -519,7 +373,7 @@
 			// Odds Display
 			const playerOdds = document.querySelector("#player-odds");
 			playerOdds.innerHTML = "";
-			const books = ["fd", "dk", "mgm", "365", "pn", "circa", "kambi", "cz", "espn"];
+			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
 			for (book of books) {
 				if (!data.bookOdds[book]) {
 					continue;
@@ -677,7 +531,7 @@
 				autoResize: true,
 				data: data,
 				initialSort: [
-					{column: "ev", dir: "desc"},
+					{column: "hitRate", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
@@ -696,89 +550,39 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{
-						title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0
-					},
-					{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter, visible: false},
-					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter},
-					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					//{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 130 : 180,
-						formatterParams:{ sport: SPORT },
+						width: MOBILE ? 110 : 140,
+						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
 						responsive: 0
 					},
-					/*
-					{
-						title: "Prop",
-						field: "prop",
-						formatter: propFormatter,
-						width: MOBILE ? 65 : 80,
-						headerFilter:"list",
-						headerFilterParams:{
-							values:["All", "Player Props", ...props]
-						},
-						headerFilterFunc: function(headerValue, rowValue) {
-							if (headerValue == "All") {
-								return true;
-							}
-							if (headerValue == "Player Props") {
-								return !rowValue.includes("total") && !rowValue.includes("spread") && !rowValue.includes("ml") && !rowValue.includes("rfi");
-							}
-							return rowValue.toUpperCase() === headerValue;
-						},
-						hozAlign: "left",
-						responsive: 0
-					},
-					*/
-					{
-						title: "EV Book",
-						field: "book",
-						vertAlign:"bottom",
-						width: MOBILE ? 65 : 80,
-						headerFilter:"list",
-						headerFilterParams:{
-							values:["All", ...books]
-						},
-						headerFilterFunc: function(headerValue, rowValue) {
-							if (headerValue == "All") {
-								return true;
-							}
-							return rowValue.toUpperCase() === headerValue;
-						},
-						formatter: evBookFormatter,
-						responsive: 0
-					},
-					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
-					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
-					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
-					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 5},
-					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
-					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
-					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 8},
-					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number", responsive: 9},
-					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
-					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
-					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
-					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},
-					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
+					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number"},
+					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					{title: "Opp<br>Rank", field: "oppRank", formatter: rankingFormatter, width: 50},
+					{title: "🏟<br>Rank", field: "stadiumRank", formatter: rankingFormatter, width: 50},
+					//{title: "Pitcher", field: "pitcher", formatter: titleFormatter, hozAlign: "left"},
+					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
 					{
 						title: "Game Logs",
-						field: "totalSplits",
+						field: "logs",
 						width:160,
 						formatter: chartFormatter,
 						formatterParams:{type:"bar"},
 						responsive: 3,
 						visible: MOBILE ? false : true
 					},
-					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
-					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
+					{title: "SZN", field: "hitRate",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
+					//{title: "L10", field: "hitRateL10",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
 					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
+					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
+					{title: "300ft", field: "300-ft", visible: true},
+					{title: "100mph", field: "100-evo", visible: false},
 				]
 			});
 
@@ -793,23 +597,29 @@
 			}
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
-			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.circa", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
 			if (MOBILE) {
 				cols.push("kelly");
 			}
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1425px";
-				document.querySelector("#updated-container").style["max-width"] = "1425px";
+				document.querySelector("#table").style["max-width"] = "1400px";
 				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				cols.forEach(col => TABLE.hideColumn(col));
 				document.querySelector("#table").style["max-width"] = "720px";
-				document.querySelector("#updated-container").style["max-width"] = "720px";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
+			}
+		}
+
+		function groupByGame() {
+			if (!TABLE.options.groupBy) {
+				TABLE.setGroupBy("game");
+			} else {
+				TABLE.setGroupBy();
 			}
 		}
 	</script>
