@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Daily EV</title>
+	<title>⚾ Stats</title>
 
 	<!--
 	<script type="text/javascript" src="test.js"></script>
@@ -16,6 +16,9 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<style>
+		h1 {
+			display: none;
+		}
 		#sub-header {
 			flex-direction: row;
 		}
@@ -24,7 +27,24 @@
 			justify-content: space-around;
 			align-items: center;
 		}
-
+		.player-cell .team-img {
+			margin-top: -2px;
+		}
+		.opp-cell .team-img {
+			margin-top: -1px;
+		}
+		.tabulator .tabulator-col[tabulator-field=stadiumRank] .tabulator-col-content {
+			padding-top: 0;
+		}
+		.tabulator .tabulator-col[tabulator-field=oppRank] .tabulator-col-content {
+			padding-top: 2px;
+		}
+		#table, #table-container {
+			width: auto;
+		}
+		#left-body {
+			height: 100%;
+		}
 		@media (max-width: 600px) {
 			#sport-select {
 				min-width: 100px;
@@ -37,6 +57,9 @@
 			}
 			#sub-header {
 				margin: 0.5rem 0;
+			}
+			#table {
+				height: 95%;
 			}
 		}
 	</style>
@@ -94,7 +117,6 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated">Updated: </div>
 			</div>
 			<div id="table"></div>
 		</div>
@@ -148,24 +170,33 @@
 			</div>
 		</div>
 	</div>
+	<div id="tooltip"></div>
 	<script type="text/javascript">
 		let TABLE = null;
 		let HISTORICAL = {};
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
-		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
-		let MIN = URLParams.get("min");
-		let DEBUG = URLParams.get("debug");
+		let LEADERS = URLParams.get("leaders");
+		let BVP = URLParams.get("bvp");
 		let MOBILE = window.innerWidth <= 600;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
+		if (!SPORT) {
+			SPORT = "mlb";
+		}
+		if (!PROP) {
+			PROP = "hr";
+		}
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
-			document.title = document.querySelector("#sport-select").selectedOptions[0].innerText;
+		}
+
+		if (LEADERS) {
+			document.querySelector("h1").innerText = "Distance Leaders";
 		}
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
@@ -186,9 +217,7 @@
 					{field:"prop", type:"=", value: prop.toLowerCase()}
 				]);
 			}
-			if (!DEBUG && window.location.protocol != "file:") {
-				TABLE.getRows("active")[0].getElement().click();
-			}
+			TABLE.getRows("active")[0].getElement().click();
 		});
 
 		document.querySelector("#player-props-select").addEventListener("change", function(event) {
@@ -247,15 +276,6 @@
 				fetch(url, {
 					headers: { "Accept": "application/vnd.github.v3.raw" }
 				}).then(response => response.json()).then(yearData => {
-					if (data.prop == "h+r+rbi") {
-						yearData[player][year][data.prop] = [];
-						for (i = 0; i < yearData[player][year]["date"].length; ++i) {
-							const h = yearData[player][year]["h"][i];
-							const r = yearData[player][year]["r"][i];
-							const rbi = yearData[player][year]["rbi"][i];
-							yearData[player][year][data.prop].push(h+r+rbi); 
-						}
-					}
 					HISTORICAL = yearData;
 					plotMap(data, yearData[player][year].date, yearData[player][year][data.prop]);
 				}).catch(err => console.log(err));
@@ -314,333 +334,40 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
-		fetchUpdated();
 		fetchData();
-		//renderTable(TEST);
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
 				if (PROP) {
 					data = data.filter(r => r.prop == PROP);
 				}
-				if (MIN) {
-					data = data.filter(r => r.books.length >= MIN);
+				if (LEADERS) {
+					data = data.filter(r => r.feed.evo.length > 20);
 				}
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
 						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 					}
-					const rows = TABLE.getRows("active").filter(r => {
-						let data = r.getData();
-						return data.prop != "ml" && !data.prop.includes("total")
-					});
-					if (rows.length > 0 && !DEBUG) {
-						if (window.location.protocol != "file:") {
-							rows[0].getElement().click();
-						}
-					}
 					hideCols();
 					TABLE.redraw();
+					hoverPitcher()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
 
 		function hideCols() {
-			if (SPORT.includes("futures")) {
-				const cols = ["totalSplits", "totalOver", "total10Over"];
-				if (PROP == "hr") {
-					cols.push("prop");
-				}
-				cols.forEach(col => TABLE.hideColumn(col));
-			}
-
-			if (SPORT == "mlbfutures") {
-				TABLE.showColumn("bookOdds.bv");
-			}
-
 			if (SPORT == "mlb") {
 				["total10Over"].forEach(col => TABLE.hideColumn(col));
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
-
-			if (BOOK) {
-				TABLE.hideColumn("ev");
-				TABLE.hideColumn("fairVal");
-				TABLE.showColumn(`${BOOK}_ev`);
-				TABLE.showColumn(`${BOOK}_fairVal`);
-				TABLE.setSort([
-					{column: `${BOOK}_ev`, dir: "desc"}
-				]);
-			}
-		}
-
-		function showPlayerInfo(row) {
-			//const lastYear = SPORT == "mlb";
-			const lastYear = false;
-			const cutoff = 0;
-			const data = row.getData();
-			const playerRows = TABLE.getRows()
-				.filter(r => r.getData().player == data.player)
-				.map(r => r.getData());
-			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
-
-			let playerRowsLines = playerRows.filter(r => r.prop == data.prop);
-			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
-			
-			const playerRowsOUs = playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap);
-			//console.log(playerRowsOUs)
-			const playerOUs = new Set(playerRowsOUs.map(r => r.under));
-			let dtSplits = lastYear ? data.dtSplits : data.dtSplits;
-			dtSplits = dtSplits.split(",").slice(cutoff);
-			dtSplits = dtSplits.map(dt => {
-				const d = new Date(dt+" 10:00");
-				return d.toLocaleDateString("en-US", {
-					month: "short", day: "numeric", year: "2-digit"
-				}).replace(", ", " '");
-			});
-
-			document.querySelector("#left-body").style.width = MOBILE ? "100%" : "50%";
-			document.querySelector("#right-body").style.display = "flex";
-			let player = title(data.player);
-			if (!player) {
-				player = data.team.toUpperCase(); 
-			}
-			document.querySelector("#player-header h2").innerHTML = `
-				<img src="logos/${SPORT}/${data.teamId || data.team}.png" width=32 height=32 style="vertical-align: middle;" alt="${data.team}" />
-				${player}
-			`;
-
-			let dec = data.line / 100;
-			if (data.line < 0) {
-				dec = 100 / data.line;
-			}
-			const kelly = parseFloat(data.ev) / Math.abs(dec) / 4;
-			let evStr = data.ev;
-			if (parseFloat(data.ev) > 0) {
-				evStr = "+"+evStr;
-			}
-			document.querySelector("#player-ev").innerHTML = `
-				<strong>EV:</strong> ${evStr}% | 
-				<strong>FV:</strong> ${addPlus(data.fairVal)} |
-				<strong><sup>&frac14;</sup> Kelly:</strong> ${kelly.toFixed(2)}u
-			`;
-
-			// Props Nav
-			let propsSelect = document.querySelector("#player-props-select");
-			propsSelect.innerHTML = "";
-			playerProps.sort((a, b) => a - b);
-			playerProps.forEach(p => {
-				const el = document.createElement("option");
-				el.value = p;
-				el.innerText = p.toUpperCase();
-				if (p == data.prop) {
-					el.selected = true;
-				}
-				propsSelect.appendChild(el);
-			});
-
-			// OU Nav
-			const playerOU = document.querySelector("#player-ou-select");
-			playerOU.innerHTML = "";
-			const overBtn = document.createElement("option");
-			overBtn.value = "over";
-			overBtn.innerText = "Over";
-			const underBtn = document.createElement("option");
-			underBtn.value = "under";
-			underBtn.innerText = "Under";
-			let ouBtn = null;
-			if (data.under) {
-				underBtn.selected = true;
-				ouBtn = overBtn;
-			} else {
-				overBtn.selected = true;
-				ouBtn = underBtn;
-			}
-			if (playerOUs.has(false)) {
-				playerOU.appendChild(overBtn);
-			}
-			if (playerOUs.has(true)) {
-				playerOU.appendChild(underBtn);
-			}
-
-
-			// Lines Nav
-			const lineSelect = document.querySelector("#player-lines-select");
-			lineSelect.innerHTML = "";
-			playerRowsLines = playerRowsLines.filter(r => r.under == data.under);
-
-			playerRowsLines.sort((a,b) => (a.playerHandicap || a.handicap) - (b.playerHandicap || b.handicap));
-			playerRowsLines.forEach(p => {
-				const line = p.playerHandicap || p.handicap;
-				const el = document.createElement("option");
-				if (line == (data.playerHandicap || data.handicap)) {
-					el.selected = true;
-				}
-				el.setAttribute("data-display", line);
-				//el.innerText = `${line} (${p.ev})`;
-				el.innerText = `${line}`;
-				el.value = line;
-				lineSelect.appendChild(el);
-			});
-
-			// Reset Venue Select
-			document.querySelector("#player-venue-select").value = "A+H";
-			
-			// Year Dropdown
-			const yearSelect = document.querySelector("#player-year-select");
-			yearSelect.value = YEAR;
-			yearSelect.innerHTML = ``;
-			if (data.playerYears) {
-				for (year of data.playerYears) {
-					const el = document.createElement("option");
-					el.value = year;
-					el.innerText = year;
-					yearSelect.appendChild(el);
-				}
-			}
-
-			// Odds Display
-			const playerOdds = document.querySelector("#player-odds");
-			playerOdds.innerHTML = "";
-			const books = ["fd", "dk", "mgm", "365", "pn", "circa", "kambi", "cz", "espn"];
-			for (book of books) {
-				if (!data.bookOdds[book]) {
-					continue;
-				}
-				let odds = data.bookOdds[book];
-				const div = document.createElement("div");
-				if (parseFloat(data.ev) > 0 && data.book == book) {
-					div.classList.add("active");
-				}
-				if (odds.includes("/")) {
-					odds = `<mfrac>
-						<mn>${odds.split("/")[0]}</mn>
-						<mn>${odds.split("/")[1]}</mn>
-					</mfrac>`;
-				} else {
-					odds = `<mn>${odds}</mn>`;
-				}
-				div.innerHTML = `
-					<img class='book-img' src='logos/${book.replace("kambi", "br")}.png' />
-					<math xmlns="http://www.w3.org/1998/Math/MathML">
-						${odds}
-					</math>
-					`;
-				playerOdds.appendChild(div);
-			}
-
-			// Pitcher
-			if (SPORT == "mlb") {
-				const pitcher = document.querySelector("#player-pitcher");
-				pitcher.innerHTML = `
-					<h4>vs ${data.pitcher}: </h4>
-					${data.bvp}
-				`;
-				const weather = document.querySelector("#player-weather");
-				weather.innerHTML = "Weather: "+getWindHTML(data);
-			}
-
-			// Plotly
-			const logs = lastYear ? data.logsLYR.split(",") : data.totalSplits.split(",");
-			const awaySplits = dtSplits.map((date, idx) => {
-				if (data.awayHomeSplits.split(",")[idx] == "A") {
-					return { date, total: logs[idx] };
-				}
-				return null;
-			}).filter(item => item != null);
-			const homeSplits = dtSplits.map((date, idx) => {
-				if (data.awayHomeSplits.split(",")[idx] == "H") {
-					return { date, total: logs[idx] };
-				}
-				return null;
-			}).filter(item => item != null);
-			const colors = logs.map(value => {
-				let cond = parseFloat(value) > parseFloat(data.playerHandicap || data.handicap);
-				if (data.under) {
-					cond = parseFloat(value) < parseFloat(data.playerHandicap || data.handicap);
-				}
-				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
-			});
-			const tableData = {
-				x: dtSplits,
-				y: logs.map(v => v != "0" ? v : 0.25),
-				type: "bar",
-				text: logs,
-				textposition: "inside",
-				marker: {
-					color: colors
-				}
-			};
-			const layout = {
-				title: "Game Logs",
-				autosize: true,
-				showlegend: false,
-				responsive: true,
-				plot_bgcolor: '#181a1b',
-				paper_bgcolor: "#181a1b",
-				font: {
-					color: "#e8e6e3"
-				},
-				width: '100%',
-				dragmode: 'pan',
-				margin: { l: 0, r: 0, t: 20, b: 20 },
-				xaxis: {
-					title: "Dates",
-					showgrid: false,
-					type: "category",
-					//tickmode: "array",
-					//tickvals: [dtSplits[0],dtSplits.at(-1)],
-					//ticktext: [dtSplits[0],dtSplits.at(-1)],
-					//range: [-0.5, parseFloat(dtSplits.length)+0.5],
-					rangeslider: {
-						visible: true
-					},
-					range: [dtSplits.length-15.6,dtSplits.length-0.5]
-				},
-				yaxis: {
-					showgrid: false,
-					tickmode: "linear",
-					dtick: 1,
-					fixedrange: true,
-					showticklabels: false,
-					title: {
-						text: data.prop.toUpperCase()
-					}
-				},
-				shapes: [
-					{
-						type: "line",
-						//x0: dtSplits[0], x1: dtSplits.at(-1),
-						x0: -0.25, x1: dtSplits.length,
-						y0: data.playerHandicap || data.handicap, y1: data.playerHandicap || data.handicap,
-						line: {
-							color: "#5A5A5A",
-							dash: "dash"
-						}
-					}
-				]
-			};
-
-			//Plotly.d3.json()
-			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
-			setTimeout(() => {
-				Plotly.Plots.resize("log-chart")
-			}, 100);
 		}
 
 		function renderTable(data) {
-			data = data.filter(r => 
-				!["fgs", "3-way"].includes(r.prop)
-			);
-			
-			data.sort((a,b) => {
-				return parseFloat(b.ev) || 0 - parseFloat(a.ev) || 0;
-			});
 			const idx = data.findIndex(item => parseFloat(item.ev) < 0);
 			if (idx != -1) {
 				//data.splice(idx, 0, {prop: "separator", ev: ""});
@@ -656,7 +383,6 @@
 				el.innerText = prop;
 				select.appendChild(el);
 			});
-
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -666,7 +392,8 @@
 				autoResize: true,
 				data: data,
 				initialSort: [
-					{column: "ev", dir: "desc"},
+					{"column": "bvpAvg", "dir": "desc"},
+					{"column": "bvpHR", "dir": "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
@@ -685,89 +412,27 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{
-						title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0
-					},
-					{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter, visible: false},
-					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter},
-					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					//{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 130 : 180,
-						formatterParams:{ sport: SPORT },
+						width: MOBILE ? 110 : 140,
+						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
 						responsive: 0
 					},
-					/*
-					{
-						title: "Prop",
-						field: "prop",
-						formatter: propFormatter,
-						width: MOBILE ? 65 : 80,
-						headerFilter:"list",
-						headerFilterParams:{
-							values:["All", "Player Props", ...props]
-						},
-						headerFilterFunc: function(headerValue, rowValue) {
-							if (headerValue == "All") {
-								return true;
-							}
-							if (headerValue == "Player Props") {
-								return !rowValue.includes("total") && !rowValue.includes("spread") && !rowValue.includes("ml") && !rowValue.includes("rfi");
-							}
-							return rowValue.toUpperCase() === headerValue;
-						},
-						hozAlign: "left",
-						responsive: 0
-					},
-					*/
-					{
-						title: "EV Book",
-						field: "book",
-						vertAlign:"bottom",
-						width: MOBILE ? 65 : 80,
-						headerFilter:"list",
-						headerFilterParams:{
-							values:["All", ...books]
-						},
-						headerFilterFunc: function(headerValue, rowValue) {
-							if (headerValue == "All") {
-								return true;
-							}
-							return rowValue.toUpperCase() === headerValue;
-						},
-						formatter: evBookFormatter,
-						responsive: 0
-					},
-					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
-					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
-					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
-					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 5},
-					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
-					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
-					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 8},
-					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number", responsive: 9},
-					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
-					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
-					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
-					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},
-					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
-					{
-						title: "Game Logs",
-						field: "totalSplits",
-						width:160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: MOBILE ? false : true
-					},
-					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
-					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
-					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
+					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
+					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					//{title: "Pitcher Summary", field: "pitcherSummary"},
+					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
+					
+					// hidden
+					{title: "", field: "bvpHR", sorter: "number", visible: false},
+					{title: "", field: "bvpAvg", sorter: "number", visible: false},
+					{title: "", field: "prop", visible: false},
 				]
 			});
 
@@ -782,23 +447,48 @@
 			}
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
-			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.circa", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
 			if (MOBILE) {
 				cols.push("kelly");
 			}
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1425px";
-				document.querySelector("#updated-container").style["max-width"] = "1425px";
+				document.querySelector("#table").style["max-width"] = "1400px";
 				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				cols.forEach(col => TABLE.hideColumn(col));
 				document.querySelector("#table").style["max-width"] = "720px";
-				document.querySelector("#updated-container").style["max-width"] = "720px";
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
 				row.select();
+			}
+		}
+
+		function groupByGame() {
+			if (!TABLE.options.groupBy) {
+				TABLE.setGroupBy("game");
+			} else {
+				TABLE.setGroupBy();
+			}
+		}
+
+		function hoverPitcher() {
+			const cells = document.querySelectorAll(".opp-cell");
+			const rows = TABLE.getRows();
+			for (cell of cells) {
+				const label = cell.getAttribute("aria-label");
+				cell.addEventListener("mousemove", function(event) {
+					const el = document.querySelector("#tooltip");
+					el.style.left = event.pageX + 10 + "px";
+					el.style.top = event.pageY + 10 + "px";
+					el.style.display = "block";
+					el.innerText = label;
+				});
+
+				cell.addEventListener("mouseleave", function() {
+					document.querySelector("#tooltip").style.display = "none";
+				})
 			}
 		}
 	</script>
