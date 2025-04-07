@@ -157,6 +157,10 @@
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
+		let OVER = URLParams.get("over");
+		if (PROP) {
+			PROP = PROP.replace("hrr", "h+r+rbi");
+		}
 		let MIN = URLParams.get("min");
 		let DEBUG = URLParams.get("debug");
 		let MOBILE = window.innerWidth <= 600;
@@ -329,6 +333,9 @@
 				}
 				if (MIN) {
 					data = data.filter(r => r.books.length >= MIN);
+				}
+				if (OVER == "true") {
+					data = data.filter(r => r.under == false);
 				}
 				renderTable(data);
 				setTimeout(function() {
