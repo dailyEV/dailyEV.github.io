@@ -190,7 +190,6 @@
 		});
 
 		fetchUpdated();
-		fetchData();
 
 		function fetchData() {
 			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/dailyev/evArr.json`;
@@ -293,13 +292,13 @@
 						responsive: 0
 					},
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
-					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
-					{title: "Bet365", field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
-					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
-					{title: "MGM", field: "bookOdds.mgm",  width: 70, sorter: "number"},
-					{title: "ESPN*", field: "bookOdds.espn",  width: 70, sorter: "number"},
-					{title: "CZ", field: "bookOdds.cz",  width: 70, sorter: "number"},
-					{title: "PN", field: "bookOdds.pn",  width: 70, sorter: "number"},
+					{title: `FD<br>${timeAgo(UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},
+					{title: `B365<br>${timeAgo(UPDATED["dingers"]["b365"], short=true)}`, field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number"},
+					{title: `DK<br>${timeAgo(UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 70, sorter: "number", responsive: 6},
+					{title: `MGM<br>${timeAgo(UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number"},
+					{title: `ESPN*<br>${timeAgo(UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number"},
+					{title: `CZ<br>${timeAgo(UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 70, sorter: "number"},
+					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number"},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number"},

@@ -3,17 +3,27 @@ if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
 
-function timeAgo(timestamp) {
+function timeAgo(timestamp, short=false) {
 	const now = new Date();
 	const past = new Date(timestamp);
 	const diff = Math.floor((now - past) / 1000);
 
-	if (diff < 60) return `${diff} second${diff === 1 ? "" : "s"} ago`;
+	if (diff < 60) {
+		if (short) return `${diff}s ago`;
+		return `${diff} second${diff === 1 ? "" : "s"} ago`;
+	}
     let minutes = Math.floor(diff / 60);
-    if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    if (minutes < 60) {
+    	if (short) return `${minutes}m ago`;
+    	return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    }
     let hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    if (hours < 24) {
+    	if (short) return `${hours}h ago`;
+    	return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    }
     let days = Math.floor(hours / 24);
+    if (short) return `${days}d ago`;
     return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
@@ -526,13 +536,20 @@ function plotMap(data, newX, newY) {
 	}, 100);
 }
 
+let UPDATED = {};
+
 function fetchUpdated() {
 	const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
 	fetch(url, {
 		headers: { "Accept": "application/vnd.github.v3.raw" }
 	}).then(response => response.json()).then(data => {
-		const [datePart, timePart] = data[SPORT].split(" ");
-		const formattedString = `${datePart}T${timePart.split(".")[0]}`;
-		document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;
+		UPDATED = data;
+		if (SPORT != "dingers") {
+			const [datePart, timePart] = data[SPORT].split(" ");
+			const formattedString = `${datePart}T${timePart.split(".")[0]}`;
+			document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;
+		} else {
+			fetchData();
+		}
 	}).catch(err => console.log(err));
 }
