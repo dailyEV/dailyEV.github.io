@@ -3,6 +3,20 @@ if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
 
+function timeAgo(timestamp) {
+	const now = new Date();
+	const past = new Date(timestamp);
+	const diff = Math.floor((now - past) / 1000);
+
+	if (diff < 60) return `${diff} second${diff === 1 ? "" : "s"} ago`;
+    let minutes = Math.floor(diff / 60);
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    let hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    let days = Math.floor(hours / 24);
+    return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
 function groupByGame() {
 	if (!TABLE.options.groupBy) {
 		TABLE.setGroupBy("game");
@@ -510,4 +524,15 @@ function plotMap(data, newX, newY) {
 	setTimeout(() => {
 		Plotly.Plots.resize("log-chart")
 	}, 100);
+}
+
+function fetchUpdated() {
+	const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
+	fetch(url, {
+		headers: { "Accept": "application/vnd.github.v3.raw" }
+	}).then(response => response.json()).then(data => {
+		const [datePart, timePart] = data[SPORT].split(" ");
+		const formattedString = `${datePart}T${timePart.split(".")[0]}`;
+		document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;
+	}).catch(err => console.log(err));
 }

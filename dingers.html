@@ -217,29 +217,6 @@
 			}).catch(err => console.log(err));
 		}
 
-		function fetchUpdated() {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
-			fetch(url, {
-				headers: { "Accept": "application/vnd.github.v3.raw" }
-			}).then(response => response.json()).then(data => {
-				const [datePart, timePart] = data[SPORT].split(" ");
-				const formattedString = `${datePart}T${timePart.split(".")[0]}`;
-				const today = new Date();
-				const date = new Date(formattedString);
-				const isToday =
-					today.getFullYear() == date.getFullYear() &&
-					today.getMonth() == date.getMonth() &&
-					today.getDate() == date.getDate();
-
-				const optionsDay = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
-				const formattedTimeDay = date.toLocaleString('en-US', optionsDay);
-				const options = { hour: '2-digit', minute: '2-digit' };
-				const formattedTime = date.toLocaleString('en-US', options);
-				document.querySelector("#updated").innerText = 
-					isToday ? `Updated Today ${formattedTime}` : `Updated ${formattedTimeDay}`;
-			}).catch(err => console.log(err));
-		}
-
 		function hideCols() {
 			if (SPORT == "mlb" || SPORT.includes("futures")) {
 				const cols = ["totalSplits", "totalOver", "total10Over"];
