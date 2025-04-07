@@ -231,6 +231,7 @@
 				const data = TABLE.getSelectedRows()[0].getData();
 				let logs = data.totalSplits.split(",");
 				let dtSplits = data.dtSplits.split(",");
+				document.querySelector("#player-venue-select").value = "A+H";
 
 				if (event.target.value == YEAR) {
 					logs = data.totalSplits.split(",");
@@ -252,12 +253,14 @@
 					headers: { "Accept": "application/vnd.github.v3.raw" }
 				}).then(response => response.json()).then(yearData => {
 					if (data.prop == "h+r+rbi") {
-						yearData[player][year][data.prop] = [];
-						for (i = 0; i < yearData[player][year]["date"].length; ++i) {
-							const h = yearData[player][year]["h"][i];
-							const r = yearData[player][year]["r"][i];
-							const rbi = yearData[player][year]["rbi"][i];
-							yearData[player][year][data.prop].push(h+r+rbi); 
+						for (y of Object.keys(yearData[player])) {
+							yearData[player][y][data.prop] = [];
+							for (i = 0; i < yearData[player][y]["date"].length; ++i) {
+								const h = yearData[player][y]["h"][i];
+								const r = yearData[player][y]["r"][i];
+								const rbi = yearData[player][y]["rbi"][i];
+								yearData[player][y][data.prop].push(h+r+rbi); 
+							}
 						}
 					}
 					HISTORICAL = yearData;
@@ -275,9 +278,9 @@
 			let year = document.querySelector("#player-year-select").value;
 
 			if (year != "2025") {
-				dtSplits = HISTORICAL[player][year].date;
-				logs = HISTORICAL[player][year][data.prop];
-				awayHome = HISTORICAL[player][year].awayHome;
+				dtSplits = HISTORICAL[data.player][year].date;
+				logs = HISTORICAL[data.player][year][data.prop];
+				awayHome = HISTORICAL[data.player][year].awayHome;
 			}
 
 			let newX = [], newY = [];
@@ -501,7 +504,7 @@
 			// Year Dropdown
 			const yearSelect = document.querySelector("#player-year-select");
 			yearSelect.value = YEAR;
-			yearSelect.innerHTML = ``;
+			yearSelect.innerHTML = `<option value='${YEAR}'>${YEAR}</option>`;
 			if (data.playerYears) {
 				for (year of data.playerYears) {
 					const el = document.createElement("option");
