@@ -36,6 +36,9 @@
 		.tabulator .tabulator-col[tabulator-field=stadiumRank] .tabulator-col-content {
 			padding-top: 0;
 		}
+		.tabulator .tabulator-col[tabulator-field=oppRank] .tabulator-col-content {
+			padding-top: 2px;
+		}
 		#table, #table-container {
 			width: auto;
 		}
@@ -166,6 +169,7 @@
 			</div>
 		</div>
 	</div>
+	<div id="tooltip"></div>
 	<script type="text/javascript">
 		let TABLE = null;
 		let HISTORICAL = {};
@@ -363,6 +367,8 @@
 							{"column": "bvpHR", "dir": "desc"},
 						])
 					}
+
+					hoverPitcher()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -693,6 +699,7 @@
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
 					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
 					{title: "Opp<br>Rank", field: "oppRank", formatter: rankingFormatter, width: 50},
 					{title: "🏟<br>Rank", field: "stadiumRank", formatter: rankingFormatter, width: 50},
@@ -771,6 +778,25 @@
 				TABLE.setGroupBy("game");
 			} else {
 				TABLE.setGroupBy();
+			}
+		}
+
+		function hoverPitcher() {
+			const cells = document.querySelectorAll(".opp-cell");
+			const rows = TABLE.getRows();
+			for (cell of cells) {
+				const label = cell.getAttribute("aria-label");
+				cell.addEventListener("mousemove", function(event) {
+					const el = document.querySelector("#tooltip");
+					el.style.left = event.pageX + 10 + "px";
+					el.style.top = event.pageY + 10 + "px";
+					el.style.display = "block";
+					el.innerText = label;
+				});
+
+				cell.addEventListener("mouseleave", function() {
+					document.querySelector("#tooltip").style.display = "none";
+				})
 			}
 		}
 	</script>

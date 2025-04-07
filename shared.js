@@ -42,7 +42,7 @@ const oppFormatter = function(cell) {
 		return "";
 	}
 	return `
-		<div class="opp-cell">
+		<div class="opp-cell" aria-label="${data.pitcherSummary}">
 			<span style="width: 12px;text-align:center;">
 				${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
 			</span>

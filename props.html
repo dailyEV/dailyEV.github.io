@@ -63,9 +63,9 @@
 					<select id="sport-select">
 						<option value="feed">⚾ Feed</option>
 						<option value="dingers">⚾ Dingers</option>
-						<option value="mlb">⚾ MLB</option>
+						<option value="mlb">⚾ Props</option>
 						<option value="stats">⚾ Stats</option>
-						<option value="nhl">🏒 NHL</option>
+						<option value="nhl">🏒 Props</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
 					</select>
@@ -165,6 +165,7 @@
 
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
+			document.title = document.querySelector("#sport-select").selectedOptions[0].innerText;
 		}
 
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
@@ -648,7 +649,7 @@
 
 		function renderTable(data) {
 			data = data.filter(r => 
-				!["fgs", "3-way", "1p_spread", "spread"].includes(r.prop)
+				!["fgs", "3-way"].includes(r.prop)
 			);
 			
 			data.sort((a,b) => {

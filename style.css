@@ -36,6 +36,18 @@ input, textarea, select {
 	border-width: 1px;
 	color: #e8e6e3;
 }
+#tooltip {
+	position: absolute;
+	background-color: black;
+	padding: 5px 10px;
+	border-radius: 5px;
+	display: none;
+	font-size: 14px;
+	pointer-events: none;
+}
+.opp-cell:hover {
+
+}
 .tabulator {
 	background-color: #5b6367;
 	border-top-color: #4d5356;
