@@ -333,7 +333,7 @@
 			const h2 = document.querySelector("#all h2");
 			const allData = data["all"];
 			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			const hrPerG = parseInt(allData.hr) / allData.liveGames;
+			const hrPerG = parseInt(allData.hr) / (allData.liveGames || allData.totGames);
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
 			document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Call HRs Today`;
 			document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
