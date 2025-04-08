@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>⚾ Stats</title>
+	<title>⚾ BvP</title>
 
 	<!--
 	<script type="text/javascript" src="test.js"></script>
@@ -188,9 +188,6 @@
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
-		if (!PROP) {
-			PROP = "hr";
-		}
 		if (SPORT) {
 			document.querySelector("#sport-select").value = SPORT;
 		}
@@ -350,28 +347,13 @@
 				}
 				renderTable(data);
 				setTimeout(function() {
-					if (PROP) {
-						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
-					}
-					hideCols();
 					TABLE.redraw();
 					hoverPitcher()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
 
-		function hideCols() {
-			if (SPORT == "mlb") {
-				["total10Over"].forEach(col => TABLE.hideColumn(col));
-				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
-			}
-		}
-
 		function renderTable(data) {
-			const idx = data.findIndex(item => parseFloat(item.ev) < 0);
-			if (idx != -1) {
-				//data.splice(idx, 0, {prop: "separator", ev: ""});
-			}
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			const select = document.querySelector("#prop-select");
 			select.innerHTML = `
@@ -423,11 +405,11 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
-					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
+					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
-					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
+					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
+					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
 					
 					// hidden
 					{title: "", field: "bvpHR", sorter: "number", visible: false},

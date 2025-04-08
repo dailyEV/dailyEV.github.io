@@ -303,7 +303,10 @@ h1 {
 .wind, .weather {
 	height: 28px; width: 28px;
 }
-.team-img, .tabulator .wind, .tabulator .weather {
+.team-img {
+	height: 24px; width: 24px;
+}
+.tabulator .team-img, .tabulator .wind, .tabulator .weather {
 	height: 18px; width: 18px;
 }
 .tabulator .book-img {
@@ -346,7 +349,8 @@ nav {
 
 #player-pitcher {
 	display: flex;
-	gap: 10px;
+	align-items: center;
+	gap: 5px;
 }
 #player-pitcher h4 {
 	margin: 0;
@@ -414,12 +418,14 @@ nav {
 	min-width: 105px;
 }
 #prop-select {
-	max-width: 100px;
+}
+#prop-dropdown {
+	min-width: 100px;
 }
 #table-dropdown {
 	width: calc(100% + 24px);
 }
-#table-select {
+#table-select, #prop-select {
 	width: 100%;
 }
 #log-chart {
