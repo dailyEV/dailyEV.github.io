@@ -15,6 +15,7 @@
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.3.0/math.min.js"></script>
 	<style>
 		h1 {
 			display: none;
@@ -194,7 +195,7 @@
 			SPORT = "mlb";
 		}
 		if (!PROP) {
-			PROP = "h+r+rbi";
+			//PROP = "h+r+rbi";
 		}
 		document.querySelector("#sport-select").value = "stats";
 
@@ -559,7 +560,7 @@
 				}
 				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
 			});
-			const tableData = {
+			let tableData = {
 				x: dtSplits,
 				y: logs.map(v => v != "0" ? v : 0.25),
 				type: "bar",
@@ -569,7 +570,7 @@
 					color: colors
 				}
 			};
-			const layout = {
+			let layout = {
 				title: "Game Logs",
 				autosize: true,
 				showlegend: false,
@@ -620,10 +621,112 @@
 			};
 
 			//Plotly.d3.json()
+			/*
 			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
 			setTimeout(() => {
 				Plotly.Plots.resize("log-chart")
 			}, 100);
+			*/
+
+			let x = [];
+			let xIdx = [];
+			let y = [];
+			for ([i, val] of data.feed.evo.entries()) {
+				if (parseInt(val || "0") > 50) {
+					x.push(data.feed.keys[i]);
+					xIdx.push(i);
+					y.push(val);
+				}
+			}
+
+			const evoTrend = {
+				x: x,
+				y: linearRegression(xIdx, y),
+				name: "evo-reg",
+				mode: "lines",
+				line: {
+					color: "#00c8ff"
+				}
+			}
+			const trace = {
+				x: x,
+				y: y,
+				mode: "markers",
+				type: "scatter",
+				name: "Evo",
+				marker: {
+					color: "#00c8ff"
+				}
+			};
+
+			x = [];
+			xIdx = [];
+			y = [];
+			for ([i, val] of data.feed.dist.entries()) {
+				if (parseInt(val || "0") > 50) {
+					x.push(data.feed.keys[i]);
+					xIdx.push(i);
+					y.push(val);
+				}
+			}
+			const trace2 = {
+				x: x,
+				y: y,
+				//y: data.feed.evo,
+				mode: "markers",
+				type: "scatter",
+				yaxis: "y2",
+				name: "Dist",
+				marker: {
+					color: "#ff9500"
+				}
+			};
+			const distTrend = {
+				x: x,
+				y: linearRegression(xIdx, y),
+				name: "dist-reg",
+				mode: "lines",
+				yaxis: "y2",
+				line: {
+					color: "#ff9500"
+				}
+			}
+			layout = {
+				plot_bgcolor: '#181a1b',
+				paper_bgcolor: "#181a1b",
+				font: {
+					color: "#e8e6e3"
+				},
+				margin: { l: 40, r: 0, t: 20, b: 50 },
+				yaxis: {
+					showgrid: false,
+					side: "left",
+					title: {
+						text: "Evo"
+					}
+				},
+				yaxis2: {
+					overlaying: "y",
+					side: "right",
+					title: {
+						text: "Dist"
+					}
+				}
+			};
+			Plotly.newPlot("log-chart", [trace, trace2, evoTrend, distTrend], layout);
+		}
+
+		function linearRegression(x, y) {
+			let n = x.length;
+      let sumX = math.sum(x);
+      let sumY = math.sum(y);
+      let sumXY = math.sum(x.map((xi, i) => xi * y[i]));
+      let sumXX = math.sum(x.map(xi => xi * xi));
+
+      let slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+      let intercept = (sumY - slope * sumX) / n;
+
+      return x.map(xi => slope * xi + intercept);
 		}
 
 		function renderTable(data) {
