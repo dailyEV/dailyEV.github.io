@@ -196,18 +196,22 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
-		fetchUpdated(repo="lines");
-		//let intervalId = setInterval(() => fetchUpdated(repo="lines", render=false), 10 * 1000);
+		//fetchUpdated(repo="lines");
+		fetchData();
+		let intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
 
-		function fetchData(render=true) {
+		async function fetchData(render=true) {
 			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
+				UPDATED["dingers"] = data["updated"];
+				data = data["data"];
 				if (render) {
 					renderTable(data);
 				} else {
-					TABLE.replaceData(data);
+					//TABLE.replaceData(data);
+					TABLE.updateOrAddData(data);
 					updateHeaders();
 				}
 				setTimeout(function() {
