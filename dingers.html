@@ -194,10 +194,10 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
-		fetchUpdated();
+		fetchUpdated(repo="lines");
 
 		function fetchData() {
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/dailyev/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {

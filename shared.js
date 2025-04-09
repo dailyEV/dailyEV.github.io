@@ -146,7 +146,7 @@ const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 
-	if (params.book && !params.book.includes("vs-circa")) {
+	if (params.book && !params.book.includes("vs-")) {
 		const book = params.book.split("-")[0];
 		let line = data.bookOdds[book] || "0";
 		if (line.includes("/")) {
@@ -538,11 +538,14 @@ function plotMap(data, newX, newY) {
 
 let UPDATED = {};
 
-function fetchUpdated() {
-	const url = `https://api.github.com/repos/zhecht/playerprops/contents/updated.json`;
+function fetchUpdated(repo="playerprops") {
+	const url = `https://api.github.com/repos/zhecht/${repo}/contents/updated.json`;
 	fetch(url, {
 		headers: { "Accept": "application/vnd.github.v3.raw" }
 	}).then(response => response.json()).then(data => {
+		if (repo == "lines") {
+			data["dingers"] = data;
+		}
 		UPDATED = data;
 		if (SPORT != "dingers") {
 			const [datePart, timePart] = data[SPORT].split(" ");
