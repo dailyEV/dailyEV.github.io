@@ -197,6 +197,7 @@
 			document.querySelector("h1").innerText = "Distance Leaders";
 		}
 
+		document.querySelector("#sport-select").value = "bvp";
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const sport = event.target.value;
 			if (["dingers", "feed", "leaders", "stats", "bvp"].includes(sport)) {

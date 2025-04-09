@@ -197,7 +197,7 @@
 		});
 
 		fetchUpdated(repo="lines");
-		let intervalId = setInterval(() => fetchUpdated(repo="lines", render=false), 10 * 1000);
+		//let intervalId = setInterval(() => fetchUpdated(repo="lines", render=false), 10 * 1000);
 
 		function fetchData(render=true) {
 			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
