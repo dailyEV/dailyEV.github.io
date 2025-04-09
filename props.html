@@ -65,6 +65,7 @@
 						<option value="dingers">⚾ Dingers</option>
 						<option value="mlb">⚾ Props</option>
 						<option value="stats">⚾ Stats</option>
+						<option value="bvp">⚾ BvP</option>
 						<option value="nhl">🏒 Props</option>
 						<option value="nba">🏀 NBA</option>
 						<option value="ncaab">🏀 NCAAB</option>
@@ -702,6 +703,12 @@
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter},
 					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "espn_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "mgm-20_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "mgm-20-vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "mgm-20-vs-circa_fairVal",  width: MOBILE ? 40 : 60, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{
 						title: "Player",
 						field: "player",
@@ -751,6 +758,7 @@
 							return rowValue.toUpperCase() === headerValue;
 						},
 						formatter: evBookFormatter,
+						formatterParams:{book:BOOK},
 						responsive: 0
 					},
 					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
@@ -761,7 +769,7 @@
 					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
 					{title: "ESPN", field: "bookOdds.espn",  width: 85, sorter: "number", responsive: 8},
 					{title: "Bet365", field: "bookOdds.365",  width: 85, sorter: "number", responsive: 9},
-					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11},
+					{title: "Kambi", field: "bookOdds.kambi",  width: 85, sorter: "number", responsive: 11, visible: false},
 					{title: "CZ", field: "bookOdds.cz",  width: 85, sorter: "number", responsive: 12},
 					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
 					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},

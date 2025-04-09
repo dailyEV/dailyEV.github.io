@@ -146,7 +146,7 @@ const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 
-	if (params.book && !params.book.includes("vs-")) {
+	if (params.book && !params.book.includes("vs-circa")) {
 		const book = params.book.split("-")[0];
 		let line = data.bookOdds[book] || "0";
 		if (line.includes("/")) {
