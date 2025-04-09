@@ -197,13 +197,19 @@
 		});
 
 		fetchUpdated(repo="lines");
+		let intervalId = setInterval(() => fetchUpdated(repo="lines", render=false), 10 * 1000);
 
-		function fetchData() {
+		function fetchData(render=true) {
 			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
-				renderTable(data);
+				if (render) {
+					renderTable(data);
+				} else {
+					TABLE.replaceData(data);
+					updateHeaders();
+				}
 				setTimeout(function() {
 					const rows = TABLE.getRows("active").filter(r => r.getData().prop != "ml");
 					if (rows.length > 0) {
@@ -221,6 +227,17 @@
 					}
 				}, 200);
 			}).catch(err => console.log(err));
+		}
+
+		function updateHeaders() {
+			for (book in UPDATED["dingers"]) {
+				if (book == "dingers" || !UPDATED["dingers"][book]) {
+					continue;
+				}
+				TABLE.updateColumnDefinition(`bookOdds.${book.replace("b365", "365")}`, {
+					title: `${book.toUpperCase()}<br>${timeAgo(UPDATED["dingers"][book], short=true)}`
+				})
+			}
 		}
 
 		function hideCols() {

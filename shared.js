@@ -538,7 +538,7 @@ function plotMap(data, newX, newY) {
 
 let UPDATED = {};
 
-function fetchUpdated(repo="playerprops") {
+function fetchUpdated(repo="playerprops", render=true) {
 	const url = `https://api.github.com/repos/zhecht/${repo}/contents/updated.json`;
 	fetch(url, {
 		headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -552,7 +552,8 @@ function fetchUpdated(repo="playerprops") {
 			const formattedString = `${datePart}T${timePart.split(".")[0]}`;
 			document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;
 		} else {
-			fetchData();
+			// Dingers
+			fetchData(render);
 		}
 	}).catch(err => console.log(err));
 }
