@@ -366,7 +366,7 @@
 		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
 		let intervalId = 0;
-		if (!DEBUG && !PLAYER) {
+		if (!DEBUG && !PLAYER && !DATE) {
 			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
 		}
 
@@ -377,7 +377,11 @@
 			const hrPerG = parseInt(allData.hr) / (allData.liveGames || allData.totGames);
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
 			document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Call HRs Today`;
-			document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
+			if (DATE) {
+				document.querySelector("#updated").innerText = `Updated: ${timeAgo(DATE)}`;
+			} else {
+				document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
+			}
 		}
 
 		function scatterPlot(data) {
