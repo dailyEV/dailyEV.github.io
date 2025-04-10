@@ -385,6 +385,14 @@
 			let xIdx = [];
 			let y = [];
 			let i = 0;
+			data.sort((a, b) => {
+				let dateA = a.id.split("-").slice(0, 3).join("-");
+				let paA = a.id.split("-")[3];
+				let dateB = b.id.split("-").slice(0, 3).join("-");
+				let paB = parseInt(b.id.split("-")[3]);
+
+				return dateA.localeCompare(dateB) || paA - paB;
+			});
 			for (row of data) {
 				if (parseFloat(row.evo || "0") > 10) {
 					x.push(row["id"]);
