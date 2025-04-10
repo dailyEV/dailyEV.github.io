@@ -353,7 +353,7 @@
 		fetchFeed(render=true);
 		let intervalId = 0;
 		if (!DEBUG) {
-			//intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
 		}
 
 		function updateAllInfo(data) {
