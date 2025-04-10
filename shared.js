@@ -1,4 +1,5 @@
 let HTML = "";
+let TEAM = "";
 if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
@@ -65,13 +66,14 @@ const oppFormatter = function(cell) {
 	if (!data.game) {
 		return "";
 	}
+	const pitcher = MOBILE ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
 	return `
 		<div class="opp-cell" aria-label="${data.pitcherSummary}">
 			<span style="width: 12px;text-align:center;">
 				${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
 			</span>
 			${getTeamImg(SPORT, cell.getValue())}
-			${title(data.pitcher)}
+			${pitcher}
 		</div>
 	`;
 }
@@ -117,6 +119,9 @@ const plusMinusFormatter = function(cell) {
 
 const inningFormatter = function(cell) {
 	const data = cell.getRow().getData();
+	if (!data.game) {
+		return "";
+	}
 	const icon = data.game.split(" @ ")[0] == data.team ? "▲" : "▼";
 	return `
 		<div style='display: flex;justify-content:center;align-items:center;gap:1px'>
@@ -252,7 +257,7 @@ const dtFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	if (!cell.getValue()) return "";
-	const d = new Date(cell.getValue()+" 10:00");
+	let d = new Date(cell.getValue()+" 10:00");
 	return d.toLocaleDateString("en-US", {
 		month: "short", day: "numeric", year: "2-digit"
 	}).replace(", ", " '");
@@ -299,6 +304,9 @@ const playerFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 	const sport = params.sport;
 	let player = title(data.player);
+	if (PLAYER) {
+		player = title(PLAYER);
+	}
 	if (MOBILE && cell.getTable().element.id == "table") {
 		player = player.split(" ");
 		player = player[player.length-1];
@@ -341,6 +349,9 @@ const playerFormatter = function(cell, params, rendered) {
 	if (["feed", "dingers"].includes(sport) || isPlayerProp) {
 		let s = ["feed", "dingers"].includes(sport) ? "mlb" : sport;
 		let t = sport == "ncaab" ? data.teamId : data.team;
+		if (TEAM) {
+			t = TEAM;
+		}
 		gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
 	} else {
 		gameContainer = getGameImgs(data, params).join("");

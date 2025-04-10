@@ -79,6 +79,7 @@
 						<option value="" selected>All Books</option>
 						<option value="mgm-20">MGM 20% HR</option>
 						<option value="fd-50">FD 50%</option>
+						<option value="espn-50">ESPN 50%</option>
 						<option value="dk-sweat">DK Sweat</option>
 						<option value="fd">FD</option>
 						<option value="dk">DK</option>
@@ -152,6 +153,7 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
 		let MOBILE = window.innerWidth <= 600;
+		let PLAYER = URLParams.get("player");
 		let BOOK = URLParams.get("book");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
 
@@ -301,6 +303,8 @@
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "espn-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "espn-50-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
@@ -311,6 +315,8 @@
 					{title: "EV", field: "vs-sharp_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "espn-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "espn-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "vs-pn_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "vs-sharp_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},

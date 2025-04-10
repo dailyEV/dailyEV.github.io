@@ -181,6 +181,7 @@
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let LEADERS = URLParams.get("leaders");
+		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
 		let MOBILE = window.innerWidth <= 600;
 		let YEAR = new Date();
@@ -402,13 +403,13 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 110 : 140,
+						width: MOBILE ? 90 : 140,
 						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
 						responsive: 0
 					},
 					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
-					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 90 : 150},
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},

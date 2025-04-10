@@ -158,6 +158,7 @@
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
+		let PLAYER = URLParams.get("player");
 		let OVER = URLParams.get("over");
 		if (PROP) {
 			PROP = PROP.replace("hrr", "h+r+rbi");
@@ -800,7 +801,7 @@
 			}
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
-			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.circa", "bookOdds.kambi", "bookOdds.cz", "bookOdds.espn"];
+			const cols = ["bookOdds.fd", "bookOdds.dk", "bookOdds.mgm", "bookOdds.365", "bookOdds.pn", "bookOdds.circa", "bookOdds.cz", "bookOdds.espn"];
 			if (MOBILE) {
 				cols.push("kelly");
 			}
