@@ -258,9 +258,15 @@ const dtFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 	if (!cell.getValue()) return "";
 	let d = new Date(cell.getValue()+" 10:00");
-	return d.toLocaleDateString("en-US", {
-		month: "short", day: "numeric", year: "2-digit"
-	}).replace(", ", " '");
+	if (PLAYER) {
+		return d.toLocaleDateString("en-US", {
+			month: "short", day: "numeric"
+		}).replace(", ", " '");
+	} else {
+		return d.toLocaleDateString("en-US", {
+			month: "short", day: "numeric", year: "2-digit"
+		}).replace(", ", " '");
+	}
 }
 
 function getWindHTML(data) {
@@ -545,6 +551,19 @@ function plotMap(data, newX, newY) {
 	setTimeout(() => {
 		Plotly.Plots.resize("log-chart")
 	}, 100);
+}
+
+function linearRegression(x, y) {
+	let n = x.length;
+	let sumX = math.sum(x);
+	let sumY = math.sum(y);
+	let sumXY = math.sum(x.map((xi, i) => xi * y[i]));
+	let sumXX = math.sum(x.map(xi => xi * xi));
+
+	let slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+	let intercept = (sumY - slope * sumX) / n;
+
+	return x.map(xi => slope * xi + intercept);
 }
 
 let UPDATED = {};

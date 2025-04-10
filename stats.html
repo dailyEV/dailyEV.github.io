@@ -15,7 +15,7 @@
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.3.0/math.min.js"></script>
+	<script src="math.min.js"></script>
 	<style>
 		h1 {
 			display: none;
@@ -715,19 +715,6 @@
 				}
 			};
 			Plotly.newPlot("log-chart", [trace, trace2, evoTrend, distTrend], layout);
-		}
-
-		function linearRegression(x, y) {
-			let n = x.length;
-      let sumX = math.sum(x);
-      let sumY = math.sum(y);
-      let sumXY = math.sum(x.map((xi, i) => xi * y[i]));
-      let sumXX = math.sum(x.map(xi => xi * xi));
-
-      let slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-      let intercept = (sumY - slope * sumX) / n;
-
-      return x.map(xi => slope * xi + intercept);
 		}
 
 		function renderTable(data) {
