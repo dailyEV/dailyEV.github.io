@@ -352,6 +352,7 @@
 				setTimeout(function() {
 					TABLE.redraw();
 					hoverPitcher()
+					print()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -474,6 +475,28 @@
 				cell.addEventListener("mouseleave", function() {
 					document.querySelector("#tooltip").style.display = "none";
 				})
+			}
+		}
+
+		function print() {
+			const rows = TABLE.getRows("active").map(r => r.getData()).filter(r => !r.bvp.includes("0 HR"));
+			let out = {};
+			for (row of rows) {
+				let tot = row.bvp.split(" HR")[0].split(" ");
+				tot = tot[tot.length - 1];
+				if (!tot) {
+					continue;
+				}
+				if (!out[tot]) {
+					out[tot] = [];
+				}
+				out[tot].push(title(row.player.split(" ")[1]));
+			}
+			for (hr of Object.keys(out)) {
+				let emoji = "🔥".repeat(parseInt(hr));
+				if (out[hr]) {
+					console.log(`${hr} HR ${emoji}: ${out[hr].join(", ")}`)
+				}
 			}
 		}
 	</script>
