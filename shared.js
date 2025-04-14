@@ -133,23 +133,24 @@ const inningFormatter = function(cell) {
 
 const evFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
-	if (data.prop == "separator") return "";
 	let ev = cell.getValue();
+	if (!ev || data.prop == "separator") return "";
 	if (parseFloat(ev) > 0) {
 		ev = "+"+ev;
 	}
 
+	let ou = data.ou || data.daily.ou;
 	return `
 		<div class='ev-cell'>
 			<span class='ev'>${ev}%</span>
-			<span class='ou'>${data.ou}</span>
+			<span class='ou'>${ou}</span>
 		</div>
 	`;
 }
 
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
-	if (data.prop == "separator") return "";
+	if (data.prop == "separator" || !cell.getValue()) return "";
 
 	if (params.book && !params.book.includes("vs-")) {
 		const book = params.book.split("-")[0];
@@ -175,6 +176,9 @@ const evBookFormatter = function(cell, params, rendered) {
 
 	const book = cell.getValue().replace("kambi", "br").replace("-50%", "");
 	let line = data.line === undefined ? "-" : data.line;
+	if (window.location.href.includes("stats")) {
+		line = data.daily.odds;
+	}
 	let lineInt = parseInt(line);
 	let implied = -lineInt / (-lineInt + 100);
 	if (lineInt > 0) {
@@ -466,7 +470,7 @@ const chartFormatter = function(cell, params, rendered) {
 		options.stroke = "#50fa7b";
 	} else {
 		options.fill = function(value) {
-			let line = data.playerHandicap || data.handicap || 0;
+			let line = data.playerHandicap || data.handicap || data.daily.line || 0;
 			if (cell.getField() == "feed.evo") {
 				line = 100.0;
 			} else if (cell.getField() == "feed.dist") {

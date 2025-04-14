@@ -107,7 +107,8 @@
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 				</div>
-				<button onclick="groupByGame();">Game Filter</button>
+				<button onclick="groupByGameStats();">Game Filter</button>
+				<button onclick="filterConfirmed();">Confirmed Filter</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -183,6 +184,7 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let LEADERS = URLParams.get("leaders");
@@ -496,12 +498,12 @@
 			playerOdds.innerHTML = "";
 			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
 			for (book of books) {
-				if (!data.bookOdds[book]) {
+				if (!data.daily.bookOdds[book]) {
 					continue;
 				}
-				let odds = data.bookOdds[book];
+				let odds = data.daily.bookOdds[book];
 				const div = document.createElement("div");
-				if (parseFloat(data.ev) > 0 && data.book == book) {
+				if (parseFloat(data.daily.ev) > 0 && data.daily.book == book) {
 					div.classList.add("active");
 				}
 				if (odds.includes("/")) {
@@ -642,7 +644,7 @@
 
 			const evoTrend = {
 				x: x,
-				y: linearRegression(xIdx, y),
+				y: linearRegression(xIdx, y).predictedY,
 				name: "evo-reg",
 				mode: "lines",
 				line: {
@@ -684,7 +686,7 @@
 			};
 			const distTrend = {
 				x: x,
-				y: linearRegression(xIdx, y),
+				y: linearRegression(xIdx, y).predictedY,
 				name: "dist-reg",
 				mode: "lines",
 				yaxis: "y2",
@@ -757,7 +759,7 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					//{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
+					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
 					{
 						title: "Player",
 						field: "player",
@@ -768,8 +770,10 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
-					{title: "BA", field: "ba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
+					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
+					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
+					{title: "EV Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
+					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
@@ -842,12 +846,16 @@
 			}
 		}
 
-		function groupByGame() {
+		function groupByGameStats() {
 			if (!TABLE.options.groupBy) {
 				TABLE.setGroupBy("game");
 			} else {
 				TABLE.setGroupBy();
 			}
+		}
+
+		function filterConfirmed() {
+			TABLE.setFilter("order", "!=", "-");
 		}
 
 		function hoverPitcher() {

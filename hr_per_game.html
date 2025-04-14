@@ -210,7 +210,7 @@
 			}
 		}
 		async function fetchFeed(render=false) {
-			let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/feed_xy.json`;
+			let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/month_xy.json`;
 			fetch(url, {
 				headers: {
 					"Accept": "application/vnd.github.v3.raw"
@@ -218,21 +218,49 @@
 			}).then(
 				response => response.json()
 			).then(res => {
-				console.log(res["2025"]["dt"].map(r => r.substring(5)))
-				const trace = {
-					x: res["2025"]["dt"].map(r => "2025-"+r.substring(5)),
-					y: res["2025"]["hr/g"],
-					text: res["2025"]["dt"],
-					mode: "lines",
-					name: "2025"
-				};
-				const trace2 = {
-					x: res["2024"]["dt"].map(r => "2025-"+r.substring(5)),
-					y: res["2024"]["hr/g"],
-					text: res["2024"]["dt"],
-					mode: "lines",
-					name: "2024"
-				};
+				const traces = [];
+				const colors = [
+				"#ff9500",  // Warm orange
+				"#1db954",  // Vibrant green
+				"#ff2d55",  // Bold red-pink
+				"#007aff",  // Bright blue
+				"#8e44ad",  // Deep purple
+				"#ffcc00",  // Gold
+				"#34c759",  // Fresh green
+				"#ff3b30",  // Strong red
+				"#5856d6",  // Rich blue-violet
+				"#0a84ff"   // Electric blue
+				];
+				Object.keys(res).forEach((year, yearIdx) => {
+					Object.keys(res[year]).forEach(month => {
+						if (month != "04") {
+							return;
+						}
+						const data = res[year][month];
+						const trace = {
+							x: data["dt"].map(r => "2025-"+r.substring(5)),
+							y: data["hr/g"],
+							text: data["dt"],
+							mode: "lines",
+							name: year,
+							line: {
+								color: colors[yearIdx],
+							}
+						};
+						const reg = {
+							x: data["dt"].map(r => "2025-"+r.substring(5)),
+							y: linearRegression(data["dt"].map((_, i) => i), data["hr/g"]).predictedY,
+							name: year,
+							mode: "lines",
+							line: {
+								color: colors[yearIdx],
+								dash: "dash"
+							}
+						};
+						//traces.push(trace);
+						traces.push(reg);
+					});
+				});
 				let layout = {
 					plot_bgcolor: '#181a1b',
 					paper_bgcolor: "#181a1b",
@@ -246,10 +274,66 @@
 						showgrid: false,
 					}
 				};
-				Plotly.newPlot("table", [trace, trace2], layout);
+				Plotly.newPlot("table", traces, layout);
+				/*
+				const trace = {
+					x: res["2025"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: res["2025"]["hr/g"],
+					text: res["2025"]["dt"],
+					mode: "lines",
+					name: "2025",
+					line: {
+						color: "#00c8ff"
+					}
+				};
+				const trace2 = {
+					x: res["2024"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: res["2024"]["hr/g"],
+					text: res["2024"]["dt"],
+					mode: "lines",
+					name: "2024",
+					line: {
+						color: "#ff9500"
+					}
+				};
+				const reg = {
+					x: res["2025"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: linearRegression(res["2025"]["dt"].map((_, i) => i), res["2025"]["hr/g"]).predictedY,
+					mode: "lines",
+					line: {
+						color: "#00c8ff",
+						dash: "dash"
+					}
+				};
+				const reg2 = {
+					x: res["2024"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: linearRegression(res["2024"]["dt"].map((_, i) => i), res["2024"]["hr/g"]).predictedY,
+					mode: "lines",
+					line: {
+						color: "#ff9500",
+						dash: "dash"
+					}
+				};
+				*/
+				/*
+				let layout = {
+					plot_bgcolor: '#181a1b',
+					paper_bgcolor: "#181a1b",
+					font: {
+						color: "#e8e6e3"
+					},
+					xaxis: {
+						showgrid: false,
+					},
+					yaxis: {
+						showgrid: false,
+					}
+				};
+				Plotly.newPlot("table", [reg, reg2, trace, trace2], layout);
 				setTimeout(() => {
 					Plotly.Plots.resize("table")
 				}, 100);
+				*/
 			}).catch(err => console.log(err));
 		}
 		fetchFeed(render=true);
