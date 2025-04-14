@@ -352,7 +352,7 @@
 				setTimeout(function() {
 					TABLE.redraw();
 					hoverPitcher()
-					print()
+					print_()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -478,7 +478,18 @@
 			}
 		}
 
-		function print() {
+		function nickname(player) {
+			let last = player.split(" ")[1];
+			if (player == "enrique hernandez") {
+				return "K. Hernandez";
+			}
+			if (["hernandez", "taylor"].includes(last)) {
+				return player.split(" ")[0].toUpperCase().at(0)+". "+title(last);
+			}
+			return title(last);
+		}
+
+		function print_() {
 			const rows = TABLE.getRows("active").map(r => r.getData()).filter(r => !r.bvp.includes("0 HR"));
 			let out = {};
 			for (row of rows) {
@@ -490,14 +501,24 @@
 				if (!out[tot]) {
 					out[tot] = [];
 				}
-				out[tot].push(title(row.player.split(" ")[1]));
+				out[tot].push(nickname(row.player));
 			}
-			for (hr of Object.keys(out)) {
+			let o ="";
+			let dt = new Date();
+			dt.setDate(dt.getDate() + 1);
+			let formattedDt = dt.toLocaleDateString("en-US", {month: "short", day: "numeric"});
+			const day = dt.getDate();
+			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
+			o = `${formattedDt}${suffix} BvP\n\ndailyev.github.io/bvp\n\n`;
+			let keys = Object.keys(out).sort().reverse();
+			for (hr of keys) {
 				let emoji = "🔥".repeat(parseInt(hr));
 				if (out[hr]) {
-					console.log(`${hr} HR ${emoji}: ${out[hr].join(", ")}`)
+					o += `${hr} HR ${emoji}: ${out[hr].join(", ")}\n`;
 				}
+				o += "\n";
 			}
+			console.log(o);
 		}
 	</script>
 </body>
