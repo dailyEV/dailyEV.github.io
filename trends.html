@@ -215,7 +215,7 @@
 				
 				const container = document.querySelector("#graph-container");
 				const traces = [];
-				res.slice(0, 20).forEach((row, idx) => {
+				res.slice(0, 50).forEach((row, idx) => {
 					const graphDiv = document.createElement("div");
 					graphDiv.id = `graph-${idx}`;
 					graphDiv.className = "graph";
