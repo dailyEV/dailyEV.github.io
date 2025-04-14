@@ -225,16 +225,32 @@
 						x: Array.from({length: row.y.length}, (_, i) => i+1),
 						y: row.y,
 						mode: "markers", type: "scatter",
-						name: "Dist", marker: { color: "#ff9500"}
-					}
+						name: "Dist", marker: { color: "#ff9500"},
+						yaxis: "y2",
+					};
+					const evo_scatter = {
+						x: Array.from({length: row.evoY.length}, (_, i) => i+1),
+						y: row.evoY,
+						mode: "markers", type: "scatter",
+						name: "Evo", marker: { color: "#00c8ff"}
+					};
 					const trend = {
 						x: Array.from({length: row.predictedY.length}, (_, i) => i+1),
 						y: row.predictedY,
 						mode: "lines",
 						//name: `${row.player} Dist`,
 						showlegend: false,
-						line: { color: "#ff9500", dash: "dash" }
-					}
+						line: { color: "#ff9500", dash: "dash" },
+						yaxis: "y2",
+					};
+					const evoTrend = {
+						x: Array.from({length: row.evoPredictedY.length}, (_, i) => i+1),
+						y: row.evoPredictedY,
+						mode: "lines",
+						//name: `${row.player} Dist`,
+						showlegend: false,
+						line: { color: "#00c8ff", dash: "dash" }
+					};
 					let layout = {
 						plot_bgcolor: '#181a1b',
 						paper_bgcolor: "#181a1b",
@@ -253,6 +269,12 @@
 						},
 						yaxis: {
 							showgrid: false,
+							side: "left"
+						},
+						yaxis2: {
+							overlaying: "y",
+							showgrid: false,
+							side: "right"
 						},
 						title: {
 							text: `${title(row.player)}`,
@@ -261,7 +283,7 @@
 							}
 						}
 					};
-					Plotly.newPlot(graphDiv.id, [scatter, trend], layout);
+					Plotly.newPlot(graphDiv.id, [scatter, evo_scatter, trend, evoTrend], layout);
 				});
 			}).catch(err => console.log(err));
 		}
