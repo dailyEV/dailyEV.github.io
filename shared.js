@@ -279,6 +279,8 @@ function getWindHTML(data) {
 	let cond = data.weather["conditions"].toLowerCase().replaceAll(" ", "_");
 	if (cond == "breezy_and_mostly_cloudy") {
 		cond = "breezy";
+	} else if (cond == "possible_drizzle_and_breezy") {
+		cond = "possible_drizzle";
 	}
 	return `
 		<img class='weather' src='logos/weather/${cond}.png' alt='${data.weather["conditions"]}' title='${data.weather["conditions"]}'/>
