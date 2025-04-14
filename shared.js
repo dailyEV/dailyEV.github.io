@@ -565,7 +565,7 @@ function linearRegression(x, y) {
 	let slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
 	let intercept = (sumY - slope * sumX) / n;
 
-	return x.map(xi => slope * xi + intercept);
+	return { slope, intercept, predictedY: x.map(xi => slope * xi + intercept) };
 }
 
 let UPDATED = {};

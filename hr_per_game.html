@@ -33,7 +33,9 @@
 		position: relative;
 	}
 	#left-body {
-		width: 50%;
+		width: 100%;
+	}
+	#table {
 	}
 	#right-body {
 		display: flex;
@@ -57,7 +59,7 @@
 		padding: 0;
 	}
 	#table, #updated-container {
-		max-width: 515px;
+		
 	}
 	#hrtable {
 		width: max-content;
@@ -151,26 +153,8 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated">Updated: </div>
 			</div>
 			<div id="table"></div>
-		</div>
-	</div>
-	<div id="right-body" class="body">
-		<div id="all">
-			<h2></h2>
-			<div>
-				<div id="table-dropdown" class="dropdown">
-					<select id="table-select">
-						<option value="homers">Homers</option>
-						<option value="close">Close</option>
-					</select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-			</div>
-			<div id="yby"></div>
-			<div id="hrtable"></div>
-			<div id="scatter"></div>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -216,37 +200,6 @@
 			}
 		});
 
-		const tableSelect = document.querySelector("#table-select");
-		tableSelect.value = "homers";
-		tableSelect.addEventListener("change", (event) => {
-			let result = event.target.value == "homers" ? "Home Run" : "";
-			let rows = [];
-			let sort = [];
-			if (result) {
-				rows = HRROWS;
-				sort = [{column: "dt", dir: "desc"}];
-			} else {
-				rows = ALMOST;
-				sort = [
-					{column: "dist", dir: "desc"},
-					{column: "hr/park", dir: "desc"}
-				];
-			}
-			renderHRTable(rows);
-			setTimeout(() => {
-				HRTABLE.setSort(sort);
-				if (result == "Home Run") {
-					HRTABLE.hideColumn("result");
-					if (!PLAYER) {
-						HRTABLE.showColumn("in");
-					}
-				} else {
-					HRTABLE.showColumn("result");
-					HRTABLE.hideColumn("in");
-				}
-			}, 200);
-		});
-
 		function filterHR() {
 			if (TABLE.getFilters().length > 0) {
 				TABLE.clearFilter();
@@ -256,45 +209,8 @@
 				]);
 			}
 		}
-		function updateYBY(res) {
-			var hrAB = {
-				x: [], y: [],
-				type: 'scatter'
-			};
-
-			for (row of res) {
-				hrAB.x.push(row.year);
-				hrAB.y.push(parseInt(row.hr) / parseInt(row.ab));
-				if (hrAB.x.length == 20) {
-					break;
-				}
-			}
-
-			const layout = {
-				title: {
-					text: "Year by Year HR/AB"
-				},
-				plot_bgcolor: '#181a1b',
-				paper_bgcolor: "#181a1b",
-				font: {
-					color: "#e8e6e3"
-				},
-				yaxis: {
-					title: { 
-						text: "HR/AB"
-					}
-				}
-			}
-			Plotly.newPlot("yby", [hrAB], layout);
-		}
 		async function fetchFeed(render=false) {
-			let url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
-			if (DATE) {
-				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${DATE}.json`;
-			}
-			if (PLAYER) {
-				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${TEAM}.json`;
-			}
+			let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/feed_xy.json`;
 			fetch(url, {
 				headers: {
 					"Accept": "application/vnd.github.v3.raw"
@@ -302,224 +218,41 @@
 			}).then(
 				response => response.json()
 			).then(res => {
-				const data = [];
-				ALMOST = [];
-				let oldHR = HRROWS;
-				HRROWS = [];
-				let allRow = null;
-
-				if (PLAYER) {
-					for (dt of Object.keys(res[PLAYER])) {
-						let row = res[PLAYER][dt];
-						let [y,m,d,p] = dt.split("-");
-						row["id"] = dt;
-						row["dt"] = `${y}-${m}-${d}`;
-						data.push(row);
-						if (row["result"] == "Home Run") {
-							HRROWS.push(row);
-						} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0" || parseInt(row["dist"]) >= 350)) {
-							ALMOST.push(row);
-						}
+				console.log(res["2025"]["dt"].map(r => r.substring(5)))
+				const trace = {
+					x: res["2025"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: res["2025"]["hr/g"],
+					text: res["2025"]["dt"],
+					mode: "lines",
+					name: "2025"
+				};
+				const trace2 = {
+					x: res["2024"]["dt"].map(r => "2025-"+r.substring(5)),
+					y: res["2024"]["hr/g"],
+					text: res["2024"]["dt"],
+					mode: "lines",
+					name: "2024"
+				};
+				let layout = {
+					plot_bgcolor: '#181a1b',
+					paper_bgcolor: "#181a1b",
+					font: {
+						color: "#e8e6e3"
+					},
+					xaxis: {
+						showgrid: false,
+					},
+					yaxis: {
+						showgrid: false,
 					}
-					document.querySelector("#table-select option[value=homers]").innerText = `${HRROWS.length} HRs`;
-					document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Calls`;
-				} else {
-					for (game of Object.keys(res)) {
-						if (game == "all") {
-							allRow = res;
-							if (res["all"]["liveGames"] == 0) {
-								clearInterval(intervalId);
-							}
-							continue;
-						}
-						for (row of res[game]) {
-							row["id"] = `${game}-${row["pa"]}`;
-							data.push(row);
-							if (row["result"] == "Home Run") {
-								HRROWS.push(row);
-							} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0" || parseInt(row["dist"]) >= 350)) {
-								ALMOST.push(row);
-							}
-						}
-					}
-				}
-
-				if (allRow) {
-					updateAllInfo(allRow);
-				}
-
-				if (render) {
-					renderTable(data);
-					renderHRTable(HRROWS);
-					checkParams();
-				} else {
-					//TABLE.replaceData(data);
-					TABLE.updateOrAddData(data);
-					if (HRROWS.length != oldHR.length) {
-						HRTABLE.replaceData(HRROWS);
-					}
-					//TABLE.redraw();
-					//HRTABLE.redraw();
-				}
-
-				if (PLAYER) {
-					scatterPlot(data)
-				}
+				};
+				Plotly.newPlot("table", [trace, trace2], layout);
+				setTimeout(() => {
+					Plotly.Plots.resize("table")
+				}, 100);
 			}).catch(err => console.log(err));
 		}
-		//fetchFile("mlb/year_by_year.json", updateYBY);
 		fetchFeed(render=true);
-		let intervalId = 0;
-		if (!DEBUG && !PLAYER && !DATE) {
-			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
-		}
-
-		function updateAllInfo(data) {
-			const h2 = document.querySelector("#all h2");
-			const allData = data["all"];
-			const hrPerAB = parseInt(allData.hr) / parseInt(allData.ab);
-			const hrPerG = parseInt(allData.hr) / (allData.liveGames || allData.totGames);
-			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
-			document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Call HRs Today`;
-			if (DATE) {
-				document.querySelector("#updated").innerText = `Updated: ${timeAgo(DATE)}`;
-			} else {
-				document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
-			}
-		}
-
-		function scatterPlot(data) {
-			let x = [];
-			let xIdx = [];
-			let y = [];
-			let i = 0;
-			data.sort((a, b) => {
-				let dateA = a.id.split("-").slice(0, 3).join("-");
-				let paA = a.id.split("-")[3];
-				let dateB = b.id.split("-").slice(0, 3).join("-");
-				let paB = parseInt(b.id.split("-")[3]);
-
-				return dateA.localeCompare(dateB) || paA - paB;
-			});
-			for (row of data) {
-				if (parseFloat(row.evo || "0") > 10) {
-					x.push(row["id"]);
-					xIdx.push(i);
-					y.push(row.evo);
-					i += 1;
-				}
-			}
-			const evoTrend = {
-				x: x,
-				y: linearRegression(xIdx, y).predictedY,
-				name: "evo-reg",
-				mode: "lines",
-				line: {
-					color: "#00c8ff"
-				}
-			};
-			let trendY = linearRegression(x.slice(-8).map((_, i) => i), y.slice(-8));
-			const evoTrendL8 = {
-				x: x.slice(-8), y: trendY.predictedY,
-				name: "evo-reg-L8", mode: "lines",
-				yaxis: "y",
-				line: {
-					color: "#00c8ff",
-					dash: "dash"
-				}
-			};
-			const trace = {
-				x: x,
-				y: y,
-				mode: "markers",
-				type: "scatter",
-				name: "Evo",
-				marker: {
-					color: "#00c8ff"
-				}
-			};
-
-			x = [];
-			xIdx = [];
-			y = [];
-			i = 0;
-			for (row of data) {
-				if (parseInt(row.dist || "0") > 10) {
-					x.push(row["id"]);
-					xIdx.push(i);
-					y.push(row.dist);
-					i += 1;
-				}
-			}
-			const trace2 = {
-				x: x,
-				y: y,
-				//y: data.feed.evo,
-				mode: "markers",
-				type: "scatter",
-				yaxis: "y2",
-				name: "Dist",
-				marker: {
-					color: "#ff9500"
-				}
-			};
-			const distTrend = {
-				x: x, y: linearRegression(xIdx, y).predictedY,
-				name: "dist-reg", mode: "lines",
-				yaxis: "y2",
-				line: {
-					color: "#ff9500"
-				}
-			};
-			trendY = linearRegression(x.slice(-8).map((_, i) => i), y.slice(-8));
-			const distTrendL8 = {
-				x: x.slice(-8), y: trendY.predictedY,
-				name: "dist-reg-L8", mode: "lines",
-				yaxis: "y2",
-				line: {
-					color: "#ff9500",
-					dash: "dash"
-				}
-			};
-			layout = {
-				plot_bgcolor: '#181a1b',
-				paper_bgcolor: "#181a1b",
-				legend: {
-					orientation: "h",
-					y: 1,
-					bgcolor: "rgba(0,0,0,0.1)"
-				},
-				font: {
-					color: "#e8e6e3"
-				},
-				margin: { l: 40, r: 40, t: 20, b: 10 },
-				xaxis: {
-					showgrid: false,
-					title: {
-						text: "PA"
-					}
-				},
-				yaxis: {
-					showgrid: false,
-					side: "left",
-					title: {
-						text: "Evo (mph)"
-					}
-				},
-				yaxis2: {
-					overlaying: "y",
-					showgrid: false,
-					side: "right",
-					title: {
-						text: "Dist (ft)"
-					}
-				}
-			};
-			Plotly.newPlot("scatter", [trace, trace2, evoTrend, evoTrendL8, distTrend, distTrendL8], layout);
-			setTimeout(() => {
-				Plotly.Plots.resize("scatter")
-			}, 100);
-		}
 
 		function renderTable(data) {
 			let results = [...new Set(data.map(row => row.result))];
