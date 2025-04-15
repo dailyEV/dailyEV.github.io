@@ -4,6 +4,14 @@ if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
 
+function changePage(page) {
+	if (["dingers", "feed", "leaders", "stats", "bvp", "trends"].includes(page)) {
+		window.location.href = `./${page}${HTML}`;
+	} else {
+		window.location.href = `./props${HTML}?sport=${page}`;
+	}
+}
+
 function timeAgo(timestamp, short=false) {
 	const now = new Date();
 	const past = new Date(timestamp);
