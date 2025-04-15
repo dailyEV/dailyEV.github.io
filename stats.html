@@ -109,7 +109,7 @@
 					</div>
 				</div>
 				<button onclick="groupByGameStats();">Game Filter</button>
-				<button onclick="filterConfirmed();">Confirmed Filter</button>
+				<!-- <button onclick="filterConfirmed();">Confirmed Filter</button> -->
 			</div>
 		</div>
 		<div id="table-container">
@@ -854,7 +854,8 @@
 		}
 
 		function filterConfirmed() {
-			TABLE.setFilter("order", "!=", "-");
+			//TABLE.setFilter("order", "!=", "-");
+			TABLE.setFilter("daily.book", "!=", undefined);
 		}
 
 		function hoverPitcher() {
