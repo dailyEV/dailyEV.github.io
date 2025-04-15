@@ -209,6 +209,10 @@
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
+
+		if (!PROP) {
+			window.location.href = `./stats${HTML}?prop=hrr`;
+		}
 		if (PROP) {
 			PROP = PROP.replace("hrr", "h+r+rbi");
 		}
@@ -353,7 +357,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_${PROP}.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
