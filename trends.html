@@ -148,7 +148,7 @@
 				</div>
 				<div class="dropdown">
 					<select id="graph-select">
-						<option value="3d">03-day HR/G Trend (Apr+May)</option>
+						<option value="3d">23-day HR/G Trend (Apr+May)</option>
 						<option value="5d">5-day HR/G Trend (Apr+May)</option>
 						<option value="reg">Regression HR/G (Apr+May)</option>
 						<option value="1d">daily HR/G (Apr+May)</option>
@@ -279,7 +279,7 @@
 				let alerts = "";
 				for (d of xVals) {
 					try {
-						new Date(`${currentYear} ${d}`).toISOString().split("T")[0]
+						new Date(`${d}, ${currentYear}`).toISOString().split("T")[0]
 					} catch (err) {
 						alerts += `${currentYear} ${d}\n`;
 					}
