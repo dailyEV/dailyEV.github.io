@@ -35,7 +35,7 @@
 		position: relative;
 	}
 	#left-body {
-		width: 100%;
+		width: 100%; height: 100%;
 	}
 	#table {
 	}
@@ -59,6 +59,9 @@
 	}
 	.team-cell {
 		padding: 0;
+	}
+	#table-container, #table {
+		height: inherit;
 	}
 	#updated-container {
 		justify-content: center;
@@ -87,6 +90,11 @@
 		h1 {
 			display: none;
 		}
+		#left-body {
+			height: 100%;
+		}
+		#table {
+		}
 		#all {
 			justify-content: normal;
 		}
@@ -94,14 +102,14 @@
 			margin-top: 0.75rem;
 		}
 		#table, #updated-container {
-			max-width: 320px;
+			
 		}
 		#left-body {
 			width: 100%;
 		}
 		#sub-header {
 			width: auto;
-			flex-direction: row;
+			flex-direction: column;
 		}
 		#header {
 			margin: 0.5rem 0;
@@ -111,9 +119,6 @@
 		}
 		#header #donate {
 			position: relative;
-		}
-		#table-container {
-			height: initial;
 		}
 		.game-container {
 			min-width: auto;
@@ -150,7 +155,6 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="groupByGameFeed();">Game Filter</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -363,7 +367,15 @@
 				annotations: annotations,
 				hovermode: "x unified"
 			};
+			if (MOBILE) {
+				layout["margin"] = {
+					l: 30, r: 10, t: 0, b: 40
+				}
+			}
 			Plotly.newPlot("table", traces, layout);
+			setTimeout(() => {
+				Plotly.Plots.resize("table")
+			}, 100);
 		}
 
 		async function fetchFeed(render=false) {
