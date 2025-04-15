@@ -114,7 +114,11 @@
 				<div>
 					<div id="prop-dropdown" class="dropdown">
 						<!-- <button onclick="toggleFilterProp()">All Props</button> -->
-						<select id="prop-select"></select>
+						<select id="prop-select">
+							<option value="h+r+rbi">H+R+RBI</option>
+							<option value="hr">HR</option>
+							<option value="h">Hit</option>
+						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 				</div>
@@ -211,10 +215,10 @@
 		}
 
 		if (!PROP) {
-			window.location.href = `./stats${HTML}?prop=hrr`;
+			window.location.href = `./stats${HTML}?prop=h-r-rbi`;
 		}
 		if (PROP) {
-			PROP = PROP.replace("hrr", "h+r+rbi");
+			PROP = PROP.replaceAll("-", "+");
 		}
 		document.querySelector("#sport-select").value = "stats";
 
@@ -229,13 +233,7 @@
 
 		document.querySelector("#prop-select").addEventListener("change", function(event) {
 			const prop = event.target.value;
-			if (prop == "all") {
-				TABLE.clearFilter();
-			} else {
-				TABLE.setFilter([
-					{field:"prop", type:"=", value: prop.toLowerCase()}
-				]);
-			}
+			window.location.href = `./stats${HTML}?prop=${prop.replaceAll("+","-")}`;
 			//TABLE.getRows("active")[0].getElement().click();
 		});
 
@@ -736,6 +734,7 @@
 
 		function renderTable(data) {
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
+			/*
 			const select = document.querySelector("#prop-select");
 			select.innerHTML = `
 				<option value="all" selected>All Props</option>
@@ -746,6 +745,7 @@
 				el.innerText = prop;
 				select.appendChild(el);
 			});
+			*/
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
