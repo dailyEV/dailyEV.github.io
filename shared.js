@@ -572,6 +572,14 @@ function linearRegression(x, y) {
 	return { slope, intercept, predictedY: x.map(xi => slope * xi + intercept) };
 }
 
+function movingAverage(arr, windowSize) {
+	return arr.map((val, idx, fullArr) => {
+		let start = Math.max(0, idx-windowSize + 1);
+		let subset = fullArr.slice(start, idx + 1);
+		return subset.reduce((a,b) => a+b, 0) / subset.length;
+	});
+}
+
 let UPDATED = {};
 
 function fetchUpdated(repo="playerprops", render=true) {
