@@ -74,7 +74,7 @@ const pitcherSummaryFormatter = function(cell) {
 	if (!data.game) {
 		return "";
 	}
-	return `${data.pitcherSummary}`;
+	return `Pitcher Summary`;
 }
 
 const eraFormatter = function(cell) {

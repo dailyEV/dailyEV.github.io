@@ -381,6 +381,7 @@
 				columnDefaults: {
 					vertAlign: "middle",
 					hozAlign: "center",
+					resizable: false
 				},
 				rowFormatter: function(row) {
 					if (row.getData().prop == "separator") {
@@ -479,8 +480,10 @@
 			let last = player.split(" ")[1];
 			if (player == "enrique hernandez") {
 				return "K. Hernandez";
+			} else if (player.split(" ")[1] == "contreras") {
+				return (player.split(" ")[0] == "william" ? "Wi." : "Ws.") + " Contreras";
 			}
-			if (["hernandez", "taylor"].includes(last)) {
+			if (["hernandez", "taylor", "garcia"].includes(last)) {
 				return player.split(" ")[0].toUpperCase().at(0)+". "+title(last);
 			}
 			return title(last);

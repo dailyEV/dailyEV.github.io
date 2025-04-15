@@ -775,7 +775,7 @@
 					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
-					{title: "Pitcher Summary", columns: [
+					{title: "Pitcher Summary", formatter: pitcherSummaryFormatter, columns: [
 						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter },
 						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter },
 						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter },
