@@ -277,6 +277,8 @@
 					return;
 				}
 
+				alert(year);
+
 				xVals = xVals.map(d => new Date(`${currentYear} ${d}`).toISOString().split("T")[0]);
 				//console.log(year, xVals, yVals);
 				const trace = {
