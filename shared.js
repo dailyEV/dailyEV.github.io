@@ -69,6 +69,74 @@ const avgFormatter= function(cell) {
 	return parseFloat(cell.getValue()).toFixed(3).replace(/^0/, '');
 }
 
+const pitcherSummaryFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	if (!data.game) {
+		return "";
+	}
+	return `${data.pitcherSummary}`;
+}
+
+const eraFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let v = parseFloat(cell.getValue());
+	if (!v) {
+		return "";
+	}
+	let cls = "";
+	if (v <= 3.50) {
+		cls = "negative";
+	} else if (v >= 4.50) {
+		cls = "positive";
+	}
+	return `<div class="${cls}">${cell.getValue()}</div>`;
+}
+
+const baFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let v = parseFloat(cell.getValue());
+	if (!v) {
+		return "";
+	}
+	let cls = "";
+	if (v < .250) {
+		cls = "negative";
+	} else if (v >= .300) {
+		cls = "positive";
+	}
+	return `<div class="${cls}">${cell.getValue()}</div>`;
+}
+
+const xwobaFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let v = parseFloat(cell.getValue());
+	if (!v) {
+		return "";
+	}
+	let cls = "";
+	if (v < .310) {
+		cls = "negative";
+	} else if (v >= .370) {
+		cls = "positive";
+	}
+	return `<div class="${cls}">${cell.getValue()}</div>`;
+}
+
+const hhFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let v = parseInt(cell.getValue());
+	if (!v) {
+		return "";
+	}
+	let cls = "";
+	if (v < 30) {
+		cls = "negative";
+	} else if (v >= 40) {
+		cls = "positive";
+	}
+	return `<div class="${cls}">${parseInt(cell.getValue())}%</div>`;
+}
+
 const oppFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	if (!data.game) {

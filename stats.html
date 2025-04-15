@@ -759,6 +759,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
+					{title: "EV Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
@@ -771,13 +772,20 @@
 					},
 					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
 					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
-					{title: "EV Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
-					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
-					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
-					{title: "Opp<br>Rank", field: "oppRank", formatter: rankingFormatter, width: 50},
-					{title: "🏟<br>Rank", field: "stadiumRank", formatter: rankingFormatter, width: 50},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					{title: "Pitcher Summary", columns: [
+						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter },
+						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter },
+						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter },
+						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: hhFormatter },
+					]},
+					//{title: "Pitcher Summary", field: "pitcherSummary"},
+					{title: "Rankings", columns: [
+						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
+						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50},
+					]},
 					{
 						title: "Game Logs",
 						field: "logs",
