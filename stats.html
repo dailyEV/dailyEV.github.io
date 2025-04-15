@@ -50,6 +50,16 @@
 			display: none;
 			justify-content: space;
 		}
+		.switch {
+			background-color: #007BFF; /* Nice blue color */
+			color: #fff; /* White text */
+			border: none; /* Remove border */
+			border-radius: 5px; /* Rounded corners */
+			padding: 5px 10px; /* Adjust padding for a smaller size */
+			font-size: 12px; /* Smaller font size */
+			cursor: pointer; /* Pointer cursor */
+			transition: background-color 0.3s ease; /* Smooth hover effect */
+		}
 		@media (max-width: 600px) {
 			#sport-select {
 				min-width: 100px;
@@ -73,11 +83,11 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-  gtag('config', 'G-FX06BZ5MRL');
+	gtag('config', 'G-FX06BZ5MRL');
 </script>
 
 <body>
@@ -109,6 +119,7 @@
 					</div>
 				</div>
 				<button onclick="groupByGameStats();">Game Filter</button>
+				<!-- <button onclick="toggleSummary();">Batter Summary</button> -->
 				<!-- <button onclick="filterConfirmed();">Confirmed Filter</button> -->
 			</div>
 		</div>
@@ -760,6 +771,7 @@
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
 					{title: "EV Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
+					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
 					{
 						title: "Player",
 						field: "player",
@@ -770,17 +782,24 @@
 						hozAlign: "left",
 						responsive: 0
 					},
-					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
-					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
-					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
-					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
-					{title: "Pitcher Summary", formatter: pitcherSummaryFormatter, columns: [
+					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
+					
+					//{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
+					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
+					
+					{title: "Batter Summary", columns: [
+						{title: "xBA", field: "savant.est_ba", width: 45, formatter: summaryFormatter },
+						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter },
+						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: hhFormatter },
+					]},
+					{title: "Pitcher Summary", columns: [
 						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter },
 						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter },
 						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter },
 						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: hhFormatter },
 					]},
+					
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Rankings", columns: [
 						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
@@ -859,6 +878,10 @@
 			} else {
 				TABLE.setGroupBy();
 			}
+		}
+
+		function toggleSummary() {
+
 		}
 
 		function filterConfirmed() {

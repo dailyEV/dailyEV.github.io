@@ -21,19 +21,19 @@ function timeAgo(timestamp, short=false) {
 		if (short) return `${diff}s ago`;
 		return `${diff} second${diff === 1 ? "" : "s"} ago`;
 	}
-    let minutes = Math.floor(diff / 60);
-    if (minutes < 60) {
-    	if (short) return `${minutes}m ago`;
-    	return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
-    }
-    let hours = Math.floor(minutes / 60);
-    if (hours < 24) {
-    	if (short) return `${hours}h ago`;
-    	return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-    }
-    let days = Math.floor(hours / 24);
-    if (short) return `${days}d ago`;
-    return `${days} day${days === 1 ? "" : "s"} ago`;
+	let minutes = Math.floor(diff / 60);
+	if (minutes < 60) {
+		if (short) return `${minutes}m ago`;
+		return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+	}
+	let hours = Math.floor(minutes / 60);
+	if (hours < 24) {
+		if (short) return `${hours}h ago`;
+		return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+	}
+	let days = Math.floor(hours / 24);
+	if (short) return `${days}d ago`;
+	return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
 function groupByGame() {
@@ -69,14 +69,6 @@ const avgFormatter= function(cell) {
 	return parseFloat(cell.getValue()).toFixed(3).replace(/^0/, '');
 }
 
-const pitcherSummaryFormatter = function(cell) {
-	const data = cell.getRow().getData();
-	if (!data.game) {
-		return "";
-	}
-	return `Pitcher Summary`;
-}
-
 const eraFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	let v = parseFloat(cell.getValue());
@@ -87,6 +79,21 @@ const eraFormatter = function(cell) {
 	if (v <= 3.50) {
 		cls = "negative";
 	} else if (v >= 4.50) {
+		cls = "positive";
+	}
+	return `<div class="${cls}">${cell.getValue()}</div>`;
+}
+
+const summaryFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	let v = parseFloat(cell.getValue());
+	if (!v) {
+		return "";
+	}
+	let cls = "";
+	if (v <= params.low) {
+		cls = "negative";
+	} else if (v >= params.high) {
 		cls = "positive";
 	}
 	return `<div class="${cls}">${cell.getValue()}</div>`;
