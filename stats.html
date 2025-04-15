@@ -209,8 +209,8 @@
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
-		if (!PROP) {
-			//PROP = "h+r+rbi";
+		if (PROP) {
+			PROP = PROP.replace("hrr", "h+r+rbi");
 		}
 		document.querySelector("#sport-select").value = "stats";
 
@@ -223,7 +223,6 @@
 			changePage(page);
 		});
 
-		document.querySelector("#prop-select").value = PROP;
 		document.querySelector("#prop-select").addEventListener("change", function(event) {
 			const prop = event.target.value;
 			if (prop == "all") {
@@ -358,16 +357,19 @@
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
+				/*
 				if (PROP) {
 					data = data.filter(r => r.prop == PROP);
 				}
+				*/
 				if (LEADERS) {
 					data = data.filter(r => r.feed.evo.length > 20);
 				}
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
-						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
+						//TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
+						document.querySelector("#prop-select").value = PROP;
 					}
 					hideCols();
 					TABLE.redraw();
@@ -736,7 +738,7 @@
 			`;
 			props.map(prop => {
 				const el = document.createElement("option");
-				el.value = prop;
+				el.value = prop.toLowerCase();
 				el.innerText = prop;
 				select.appendChild(el);
 			});
@@ -789,7 +791,7 @@
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
 					
 					{title: "Batter Summary", columns: [
-						{title: "xBA", field: "savant.est_ba", width: 45, formatter: summaryFormatter },
+						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter },
 						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: hhFormatter },
 					]},

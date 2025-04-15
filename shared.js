@@ -111,7 +111,7 @@ const baFormatter = function(cell) {
 	} else if (v >= .300) {
 		cls = "positive";
 	}
-	return `<div class="${cls}">${cell.getValue()}</div>`;
+	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
 }
 
 const xwobaFormatter = function(cell) {
@@ -126,7 +126,7 @@ const xwobaFormatter = function(cell) {
 	} else if (v >= .370) {
 		cls = "positive";
 	}
-	return `<div class="${cls}">${cell.getValue()}</div>`;
+	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
 }
 
 const hhFormatter = function(cell) {
