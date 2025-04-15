@@ -266,11 +266,11 @@
 						xVals.push(...data.dt.map(r => new Date("2025-"+r+" 10:00").toLocaleDateString("en-US", {
 							month: "short", day: "numeric"
 						}).replace(", ", " '")));
+						yValsMA.push(...movingAverage(data[graph], movingAvg));
+						yVals.push(...data[graph]);
 					} catch (err) {
-						alert(data.dt);
+						alert(year, data.dt);
 					}
-					yValsMA.push(...movingAverage(data[graph], movingAvg));
-					yVals.push(...data[graph]);
 				});
 
 				if (xVals.length == 0) {
