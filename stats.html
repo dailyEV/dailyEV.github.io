@@ -756,6 +756,7 @@
 				columnDefaults: {
 					vertAlign: "middle",
 					hozAlign: "center",
+					resizable: false
 				},
 				rowFormatter: function(row) {
 					if (row.getData().prop == "separator") {
@@ -779,12 +780,12 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 110 : 140,
+						width: MOBILE ? 100 : 140,
 						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
 						responsive: 0
 					},
-					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left"},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 100 : 140},
 					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
 					
 					//{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
