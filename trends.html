@@ -272,22 +272,7 @@
 					return;
 				}
 
-				if (year == "2016") {
-					alert(currentYear);
-				}
-
-				let alerts = "";
-				for (d of xVals) {
-					try {
-						new Date(`${d}, ${currentYear}`).toISOString().split("T")[0]
-					} catch (err) {
-						alerts += `${currentYear} ${d}\n`;
-					}
-				}
-				if (alerts) {
-					alert(alerts);
-				}
-				xVals = xVals.map(d => new Date(`${currentYear} ${d}`).toISOString().split("T")[0]);
+				xVals = xVals.map(d => new Date(`${d}, ${currentYear}`).toISOString().split("T")[0]);
 				//console.log(year, xVals, yVals);
 				const trace = {
 					x: xVals,
