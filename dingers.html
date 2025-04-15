@@ -335,7 +335,8 @@
 							sport: SPORT
 						},
 						hozAlign: "left",
-						responsive: 0
+						responsive: 0,
+						frozen: MOBILE ? true : false
 					},
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: `FD<br>${timeAgo(UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 70, sorter: "number"},

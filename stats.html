@@ -787,7 +787,8 @@
 						width: MOBILE ? 100 : 140,
 						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
-						responsive: 0
+						responsive: 0,
+						frozen: MOBILE ? true : false
 					},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 100 : 140},
 					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
