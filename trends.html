@@ -325,7 +325,6 @@
 					y: lastY,
 					text: year,
 					showarrow: false,
-					
 					xshift: 20
 				});
 				/*
@@ -384,10 +383,10 @@
 			}).then(
 				response => response.json()
 			).then(res => {
-				alert(Object.keys(res));
 				plotGraph(res);
+				alert(Object.keys(res));
 				RES = res;
-			}).catch(err => console.log(err));
+			}).catch(err => alert(err));
 		}
 		fetchFeed(render=true);
 
