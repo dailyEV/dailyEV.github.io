@@ -277,7 +277,9 @@
 					return;
 				}
 
-				alert(year);
+				if (year == "2016") {
+					alert(xVals);
+				}
 
 				xVals = xVals.map(d => new Date(`${currentYear} ${d}`).toISOString().split("T")[0]);
 				//console.log(year, xVals, yVals);
