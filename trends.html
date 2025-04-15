@@ -261,16 +261,11 @@
 						return;
 					}
 					const data = res[year][month];
-
-					try {
-						xVals.push(...data.dt.map(r => new Date("2025-"+r+" 10:00").toLocaleDateString("en-US", {
-							month: "short", day: "numeric"
-						}).replace(", ", " '")));
-						yValsMA.push(...movingAverage(data[graph], movingAvg));
-						yVals.push(...data[graph]);
-					} catch (err) {
-						alert(year, data.dt);
-					}
+					xVals.push(...data.dt.map(r => new Date("2025-"+r+" 10:00").toLocaleDateString("en-US", {
+						month: "short", day: "numeric"
+					}).replace(", ", " '")));
+					yValsMA.push(...movingAverage(data[graph], movingAvg));
+					yVals.push(...data[graph]);
 				});
 
 				if (xVals.length == 0) {
@@ -278,10 +273,14 @@
 				}
 
 				if (year == "2016") {
-					alert(xVals);
+					alert(currentYear);
 				}
 
-				xVals = xVals.map(d => new Date(`${currentYear} ${d}`).toISOString().split("T")[0]);
+				try {
+					xVals = xVals.map(d => new Date(`${currentYear} ${d}`).toISOString().split("T")[0]);
+				} catch (err) {
+					alert("HERE");
+				}
 				//console.log(year, xVals, yVals);
 				const trace = {
 					x: xVals,
