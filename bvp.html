@@ -405,12 +405,24 @@
 						width: MOBILE ? 90 : 140,
 						formatterParams:{ sport: SPORT, noProp: true },
 						hozAlign: "left",
-						responsive: 0
+						responsive: 0,
+						frozen: MOBILE ? true : false
 					},
-					{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 90 : 150},
+
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
+					{title: "Batter Summary", columns: [
+						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter },
+						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter },
+						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: hhFormatter },
+					]},
+					{title: "Pitcher Summary", columns: [
+						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter },
+						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter },
+						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter },
+						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: hhFormatter },
+					]},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
 					
 					// hidden
