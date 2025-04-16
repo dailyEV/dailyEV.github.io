@@ -167,6 +167,7 @@
 		let MOBILE = window.innerWidth <= 600;
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let GRAPH = URLParams.get("graph") || "3d";
 		let DEBUG = URLParams.get("debug");
 		let DATE = URLParams.get("date");
 		let CLOSE = URLParams.get("close");
@@ -203,7 +204,7 @@
 			changePage(page);
 		});
 
-		document.querySelector("#graph-select").value = "3d";
+		document.querySelector("#graph-select").value = GRAPH;
 		document.querySelector("#graph-select").addEventListener("change", (event) => {
 			const g = event.target.value;
 			if (g == "5d") {
@@ -384,7 +385,11 @@
 			}).then(
 				response => response.json()
 			).then(res => {
-				plotGraph(res);
+				if (GRAPH == "1d") {
+					plotGraph(res, movingAvg=1);
+				} else {
+					plotGraph(res);
+				}
 				RES = res;
 			}).catch(err => console.log(err));
 		}
