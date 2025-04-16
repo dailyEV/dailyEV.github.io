@@ -779,9 +779,6 @@
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
 					{title: "Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
-					{title: "Game Lines", columns: [
-						{title: "ML", field: "gameLines.ml",  width: 60, sorter: "number"}
-					]},
 					{
 						title: "Player",
 						field: "player",
@@ -810,12 +807,17 @@
 						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter },
 						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: hhFormatter },
 					]},
-					
-					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Rankings", columns: [
 						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50},
 					]},
+					{title: "Game Lines", columns: [
+						{title: "ML", field: "gameLines.ml",  width: 40, sorter: "number", formatter: plusMinusFormatter},
+						{title: "Total", field: "gameLines.total",  width: 40, sorter: "number"},
+						{title: "TT", field: "gameLines.tt",  width: 40, sorter: "number"},
+					]},
+					//{title: "Pitcher Summary", field: "pitcherSummary"},
+					
 					{
 						title: "Game Logs",
 						field: "logs",
@@ -897,7 +899,7 @@
 
 		function filterConfirmed() {
 			//TABLE.setFilter("order", "!=", "-");
-			TABLE.setFilter("daily.book", "!=", undefined);
+			//TABLE.setFilter("daily.book", "!=", undefined);
 		}
 
 		function hoverPitcher() {
