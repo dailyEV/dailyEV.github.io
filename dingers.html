@@ -159,6 +159,7 @@
 		let SPORT = "dingers";
 		let MOBILE = window.innerWidth <= 600;
 		let PLAYER = URLParams.get("player");
+		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
 
@@ -299,6 +300,7 @@
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
 				},
 				groupToggleElement: "header",
+				groupBy: FILTER != undefined ? "game" : "",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0},
@@ -373,6 +375,19 @@
 			} else {
 				TABLE.setGroupBy();
 				TABLE.getRows().forEach(r => r.getElement().style.display = "");
+			}
+		}
+
+		function groupByGame() {
+			let q = window.location.search;
+			console.log()
+			if (!TABLE.options.groupBy) {
+				if (q) {
+					q += "&filter=";
+				}
+				window.location.href = `./dingers${HTML}${q}`;
+			} else {
+				window.location.href = `./dingers${HTML}${q.replace("filter=", "")}`;
 			}
 		}
 	</script>
