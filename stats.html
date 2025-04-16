@@ -140,6 +140,7 @@
 						</a>
 					</div>
 				</div>
+				<div id="updated">Updated: </div>
 			</div>
 			<div id="table"></div>
 		</div>
@@ -351,6 +352,7 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
+		fetchUpdated();
 		fetchData();
 
 		function fetchData() {
