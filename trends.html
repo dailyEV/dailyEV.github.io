@@ -370,7 +370,7 @@
 					l: 30, r: 10, t: 0, b: 40
 				}
 			}
-			Plotly.newPlot("table", traces, layout);
+			Plotly.newPlot("table", traces, layout, {displayModeBar: false});
 			setTimeout(() => {
 				Plotly.Plots.resize("table")
 			}, 100);
