@@ -335,7 +335,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_hr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {

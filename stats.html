@@ -779,6 +779,9 @@
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
 					{title: "Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "Line", field: "daily.line",  width: MOBILE ? 40 : 40, sorter: "number"},
+					{title: "Game Lines", columns: [
+						{title: "ML", field: "gameLines.ml",  width: 60, sorter: "number"}
+					]},
 					{
 						title: "Player",
 						field: "player",
