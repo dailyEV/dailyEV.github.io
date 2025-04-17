@@ -391,6 +391,7 @@
 					plotGraph(res);
 				}
 				RES = res;
+				recap()
 			}).catch(err => console.log(err));
 		}
 		fetchFeed(render=true);
@@ -482,6 +483,29 @@
 				TABLE.setGroupBy();
 			}
 		}
+
+		function recap() {
+			//document.querySelector("#graph-select").value = "1d";
+			//plotGraph(RES, movingAvg=1);
+			const td = new Date().toISOString().split('T')[0];
+			const [y,m,d] = td.split("-");
+			const dt = new Date(y+" "+RES[y][m]["dt"].at(-1)+" 10:00");
+			const mo = dt.toString().split(" ")[1];
+			const day = parseInt(dt.toString().split(" ")[2]);
+			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
+			const vals = RES[y][m]["hr/g"];
+			const reg = linearRegression(vals.map((_, i) => i), vals).predictedY.at(-1);
+			const hrG = RES[y][m]["hr/g"].at(-1);
+			const trend = hrG > reg ? "📈" : "📉";
+			const sep = "||";
+			console.log(`${mo} ${day}${suffix} Homer Recap
+
+${RES[y][m]["hr"].at(-1)} Hit ${sep} ${hrG} per game ${trend} ${sep} ${reg.toFixed(2)} '${y.substring(2)} Trend
+
+Longest: 
+			`);
+		}
+
 	</script>
 </body>
 </html>
