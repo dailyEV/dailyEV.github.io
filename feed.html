@@ -185,6 +185,7 @@
 		let PLAYER = URLParams.get("player");
 		TEAM = URLParams.get("team");
 		let TABLE = null;
+		let HIST = null;
 		let HRTABLE = null;
 		let HRROWS = [];
 		let ALMOST = [];
@@ -331,6 +332,9 @@
 						}
 						for (row of res[game]) {
 							row["id"] = `${game}-${row["pa"]}`;
+							if (DATE && HIST) {
+								row["dt"] = HIST[game][row["pa"]];
+							}
 							data.push(row);
 							if (row["result"] == "Home Run") {
 								HRROWS.push(row);
@@ -364,11 +368,25 @@
 				}
 			}).catch(err => console.log(err));
 		}
-		//fetchFile("mlb/year_by_year.json", updateYBY);
-		fetchFeed(render=true);
 		let intervalId = 0;
 		if (!DEBUG && !PLAYER && !DATE) {
 			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+		} else if (DATE) {
+			fetchHistorical();
+		}
+
+		if (!DATE) {
+			fetchFeed(render=true);
+		}
+
+		function fetchHistorical() {
+			const url = "https://api.github.com/repos/zhecht/feed/contents/feed_times_historical.json";
+			fetch(url, {
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(res => {
+				HIST = res[DATE];
+				fetchFeed(render=true);
+			}).catch(err => console.log(err));
 		}
 
 		function updateAllInfo(data) {
@@ -607,6 +625,11 @@
 			} else {
 				TABLE.setGroupBy();
 			}
+		}
+
+		recap()
+		function recap() {
+			document.querySelector("#hrtable").style["max-height"] = "";
 		}
 	</script>
 </body>

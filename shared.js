@@ -84,6 +84,15 @@ const eraFormatter = function(cell) {
 	return `<div class="${cls}">${cell.getValue()}</div>`;
 }
 
+const thresholds = {
+	"exit_velocity_avg": [87.6, 90.8],
+	"hard_hit_percent": [35.5, 45.5],
+	"barrel_batted_rate": [5,10.5],
+	"barrels_per_bip": [5,10.5],
+	"sweet_spot_percent": [28.3, 37.5],
+	"flyballs_percent": [21, 32],
+};
+
 const summaryFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	let v = parseFloat(cell.getValue());
@@ -91,11 +100,13 @@ const summaryFormatter = function(cell, params, rendered) {
 		return "";
 	}
 	let cls = "";
-	if (v <= params.low) {
+	let field = cell.getField().split(".")[1];
+	if (v <= thresholds[field][0]) {
 		cls = "negative";
-	} else if (v >= params.high) {
+	} else if (v >= thresholds[field][1]) {
 		cls = "positive";
 	}
+	const p = (field.includes("rate") || field.includes("percent") || field.includes("barrel")) ? "%" : "";
 	return `<div class="${cls}">${cell.getValue()}</div>`;
 }
 
@@ -127,21 +138,6 @@ const xwobaFormatter = function(cell) {
 		cls = "positive";
 	}
 	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
-}
-
-const hhFormatter = function(cell) {
-	const data = cell.getRow().getData();
-	let v = parseInt(cell.getValue());
-	if (!v) {
-		return "";
-	}
-	let cls = "";
-	if (v < 30) {
-		cls = "negative";
-	} else if (v >= 40) {
-		cls = "positive";
-	}
-	return `<div class="${cls}">${parseInt(cell.getValue())}%</div>`;
 }
 
 const oppFormatter = function(cell) {
