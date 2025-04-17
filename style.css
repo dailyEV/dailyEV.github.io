@@ -223,6 +223,9 @@ h1 {
 	height: 95%;
 	min-height: 200px;
 }
+#hrtable {
+	min-height: 200px;
+}
 #player-table {
 	width: 90%;
 	margin-top: auto;

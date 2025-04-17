@@ -169,7 +169,7 @@ function addSuffix(num) {
 const rankingFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	const field = cell.getField();
-	if (!data.game) {
+	if (!data.game || !cell.getValue()) {
 		return "";
 	}
 	if (field == "oppRank") {
