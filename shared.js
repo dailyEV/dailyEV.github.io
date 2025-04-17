@@ -86,6 +86,8 @@ const eraFormatter = function(cell) {
 
 const thresholds = {
 	"exit_velocity_avg": [87.6, 90.8],
+	"evo": [0, 95],
+	"dist": [0, 300],
 	"hard_hit_percent": [35.5, 45.5],
 	"barrel_batted_rate": [5,10.5],
 	"barrels_per_bip": [5,10.5],
@@ -100,14 +102,18 @@ const summaryFormatter = function(cell, params, rendered) {
 		return "";
 	}
 	let cls = "";
-	let field = cell.getField().split(".")[1];
-	if (v <= thresholds[field][0]) {
+	let field = cell.getField();
+	if (field.includes(".")) {
+		field = field.split(".")[1];
+	}
+	if (thresholds[field][0] && v <= thresholds[field][0]) {
 		cls = "negative";
 	} else if (v >= thresholds[field][1]) {
 		cls = "positive";
 	}
 	const p = (field.includes("rate") || field.includes("percent") || field.includes("barrel")) ? "%" : "";
-	return `<div class="${cls}">${cell.getValue()}</div>`;
+	const suffix = field == "dist" ? " ft" : "";
+	return `<div class="${cls}">${cell.getValue()}${suffix}</div>`;
 }
 
 const baFormatter = function(cell) {

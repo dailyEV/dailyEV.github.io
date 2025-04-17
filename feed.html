@@ -75,6 +75,9 @@
 		color: white;
 		background: rgb(56, 142, 60);
 	}
+	.homer .positive {
+		color: white;
+	}
 	.player-cell .team-img {
 		margin-top: -2px;
 	}
@@ -576,9 +579,9 @@
 							return rowValue === headerValue;
 						}
 					},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
+					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
 					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
-					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
+					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: summaryFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number", width: 65},
 				],
 				rowFormatter: function(row) {
