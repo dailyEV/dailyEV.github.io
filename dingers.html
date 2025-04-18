@@ -166,6 +166,7 @@
 		let SPORT = "dingers";
 		let MOBILE = window.innerWidth <= 600;
 		let PLAYER = URLParams.get("player");
+		let REFRESH = URLParams.get("refresh");
 		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
@@ -209,9 +210,13 @@
 
 		//fetchUpdated(repo="lines");
 		fetchData();
-		setTimeout(() => {
-			window.location.href = window.location.href;
-		}, 30 * 1000)
+		console.log(REFRESH, !REFRESH)
+		if (REFRESH != "false") {
+			console.log("HERE")
+			setTimeout(() => {
+				window.location.href = window.location.href;
+			}, 30 * 1000)
+		}
 		//let intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
 
 		async function fetchData(render=true) {
