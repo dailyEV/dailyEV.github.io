@@ -17,6 +17,10 @@ function timeAgo(timestamp, short=false) {
 	const past = new Date(timestamp);
 	const diff = Math.floor((now - past) / 1000);
 
+	if (diff < 0) {
+		return "";
+	}
+
 	if (diff < 60) {
 		if (short) return `${diff}s ago`;
 		return `${diff} second${diff === 1 ? "" : "s"} ago`;

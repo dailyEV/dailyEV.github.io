@@ -225,7 +225,7 @@
 		}
 
 		if (!PROP) {
-			window.location.href = `./stats${HTML}?prop=h-r-rbi`;
+			window.location.href = `./stats${HTML}?prop=hr`;
 		}
 		if (PROP) {
 			PROP = PROP.replaceAll("-", "+");
@@ -418,7 +418,7 @@
 			if (PROP == "hr") {
 				["savant.est_ba", "savant.est_woba", "savant.sweet_spot_percent", "pitcherData.flyballs_percent", "pitcherData.p_era", "pitcherData.xwoba", "pitcherData.xba", "daily.line"].map(x => TABLE.hideColumn(x));
 				["savant.hard_hit_percent", "pitcherData.hard_hit_percent"].map(x => TABLE.showColumn(x));
-			} else if (PROP == "h") {
+			} else if (["h", "h+r+rbi"].includes(PROP)) {
 				["savant.exit_velocity_avg", "pitcherData.exit_velocity_avg"].map(x => TABLE.hideColumn(x));
 				["pitcherData.xba", "pitcherData.xwoba"].map(x => TABLE.showColumn(x));
 			}
@@ -797,7 +797,7 @@
 						//row.getElement().innerHTML = "";
 					}
 				},
-				groupBy: "game",
+				groupBy: PROP == "hr" ? "" : "game",
 				groupHeader: function(value, count, data, group){
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
 				},
