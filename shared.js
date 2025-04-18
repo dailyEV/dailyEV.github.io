@@ -112,11 +112,12 @@ const summaryFormatter = function(cell, params, rendered) {
 	if (field.includes(".")) {
 		field = field.split(".")[1];
 	}
+	let switched = ["oz_contact_percent"].includes(field);
 	if (thresholds[field]) {
 		if (thresholds[field][0] && v <= thresholds[field][0]) {
-			cls = "negative";
+			cls = switched ? "positive" : "negative";
 		} else if (v >= thresholds[field][1]) {
-			cls = "positive";
+			cls = switched ? "negative" : "positive";
 		}
 	}
 	const p = (field.includes("rate") || field.includes("percent") || field.includes("barrel")) ? "%" : "";
