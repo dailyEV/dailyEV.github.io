@@ -106,10 +106,12 @@ const summaryFormatter = function(cell, params, rendered) {
 	if (field.includes(".")) {
 		field = field.split(".")[1];
 	}
-	if (thresholds[field][0] && v <= thresholds[field][0]) {
-		cls = "negative";
-	} else if (v >= thresholds[field][1]) {
-		cls = "positive";
+	if (thresholds[field]) {
+		if (thresholds[field][0] && v <= thresholds[field][0]) {
+			cls = "negative";
+		} else if (v >= thresholds[field][1]) {
+			cls = "positive";
+		}
 	}
 	const p = (field.includes("rate") || field.includes("percent") || field.includes("barrel")) ? "%" : "";
 	const suffix = field == "dist" ? " ft" : "";
@@ -146,17 +148,26 @@ const xwobaFormatter = function(cell) {
 	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
 }
 
-const oppFormatter = function(cell) {
+const oppFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (!data.game) {
 		return "";
 	}
+
+	const ah = `<span style="width: 12px;text-align:center;">
+		${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
+	</span>`;
+	if (params.prop == "k") {
+		return `<div class="opp-cell">
+			${ah}
+			${getTeamImg(SPORT, cell.getValue())}
+			${cell.getValue().toUpperCase()}
+		</div>`;
+	}
 	const pitcher = MOBILE ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
 	return `
 		<div class="opp-cell" aria-label="${data.pitcherSummary}">
-			<span style="width: 12px;text-align:center;">
-				${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
-			</span>
+			${ah}
 			${getTeamImg(SPORT, cell.getValue())}
 			${pitcher}
 		</div>
@@ -665,6 +676,7 @@ function movingAverage(arr, windowSize) {
 	});
 }
 
+let PAGE = "";
 let UPDATED = {};
 
 function fetchUpdated(repo="playerprops", render=true) {
@@ -677,7 +689,7 @@ function fetchUpdated(repo="playerprops", render=true) {
 		}
 		UPDATED = data;
 		if (SPORT != "dingers") {
-			const [datePart, timePart] = data[SPORT].split(" ");
+			const [datePart, timePart] = (data[PAGE] || data[SPORT]).split(" ");
 			const formattedString = `${datePart}T${timePart.split(".")[0]}`;
 			document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;
 		} else {

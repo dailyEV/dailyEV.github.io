@@ -118,6 +118,7 @@
 							<option value="h+r+rbi">H+R+RBI</option>
 							<option value="hr">HR</option>
 							<option value="h">Hit</option>
+							<option value="k">Strikeouts</option>
 						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
@@ -196,6 +197,7 @@
 	</div>
 	<div id="tooltip"></div>
 	<script type="text/javascript">
+		PAGE = "stats";
 		let TABLE = null;
 		let HISTORICAL = {};
 		let url = "";
@@ -208,11 +210,16 @@
 		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
 		let MOBILE = window.innerWidth <= 600;
+		let IS_PITCHER = false;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
 		if (!SPORT) {
 			SPORT = "mlb";
+		}
+
+		if (["k"].includes(PROP)) {
+			IS_PITCHER = true;
 		}
 
 		if (!PROP) {
@@ -383,6 +390,18 @@
 						TABLE.showColumn(LEADERS);
 						TABLE.showColumn("feed.evo");
 						["logs", "weather", "stadiumRank", "oppRank", "ba", "order", "hitRate", "hitRateLYR"].map(x => TABLE.hideColumn(x));
+					}
+					if (IS_PITCHER) {
+						["pitcherData.whiff_percent"].map(x => TABLE.hideColumn(x));
+						["pitcherData.p_era", "order", "weather", "bvp", "rankings", "oppRank", "stadiumRank"].map(x => TABLE.hideColumn(x));
+						for (col of TABLE.getColumns()) {
+							if (col.getField().includes("savant")) {
+								col.hide();
+							}
+							if (col.getField().includes("z")) {
+								col.show();
+							}
+						}
 					}
 
 					hoverPitcher()
@@ -753,7 +772,7 @@
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
-				responsiveLayout: MOBILE ? "" : "",
+				responsiveLayout: MOBILE ? "" : "hide",
 				autoResize: true,
 				data: data,
 				initialSort: [
@@ -792,13 +811,11 @@
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 100 : 140},
+					{title: IS_PITCHER ? "Opp" : "Opp – Pitcher", field: "opp", formatter: oppFormatter, formatterParams: {prop: PROP}, hozAlign: "left", width: MOBILE ? 100 : (IS_PITCHER ? 80 : 140)},
 					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
 					
 					//{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
-					
-					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: true },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: true },
@@ -809,6 +826,15 @@
 					]},
 					{title: "Pitcher Summary", columns: [
 						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter, visible: true },
+						// PITCHER K (whiff_percent, oz_swing_miss_percent, in_zone_swing_miss, z_swing_miss_percent, oz_contact_percent)
+						// swings and misses
+						{title: "K%", field: "pitcherData.k_percent", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "Whiff%", field: "pitcherData.whiff_percent", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "OZ Miss %", field: "pitcherData.oz_swing_miss_percent", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "IZ Miss %", field: "pitcherData.in_zone_swing_miss", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "Z Miss %", field: "pitcherData.z_swing_miss_percent", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "OZ Contact %", field: "pitcherData.oz_contact_percent", width: 45, formatter: summaryFormatter, visible: false },
+
 						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter, visible: true },
 						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter, visible: false },
 						{title: "Fly%", field: "pitcherData.flyballs_percent", width: 45, formatter: summaryFormatter, visible: false },
@@ -830,7 +856,7 @@
 					
 					{
 						title: "Game Logs",
-						field: "logs",
+						field: IS_PITCHER ? "longLogs" : "logs",
 						width:160,
 						formatter: chartFormatter,
 						formatterParams:{type:"bar"},
