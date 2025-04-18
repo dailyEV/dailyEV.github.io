@@ -93,6 +93,12 @@ const thresholds = {
 	"barrels_per_bip": [5,10.5],
 	"sweet_spot_percent": [28.3, 37.5],
 	"flyballs_percent": [21, 32],
+	// strikeout
+	"k_percent": [18.5, 26.3],
+	"whiff_percent": [22.2, 29],
+	"oz_swing_miss_percent": [38.5, 51.6],
+	"z_swing_miss_percent": [13.5, 21],
+	"oz_contact_percent": [48, 60.6]
 };
 
 const summaryFormatter = function(cell, params, rendered) {
@@ -114,7 +120,10 @@ const summaryFormatter = function(cell, params, rendered) {
 		}
 	}
 	const p = (field.includes("rate") || field.includes("percent") || field.includes("barrel")) ? "%" : "";
-	const suffix = field == "dist" ? " ft" : "";
+	let suffix = field == "dist" ? " ft" : "";
+	if (field.includes("rate") || field.includes("percent") || field.includes("barrel")) {
+		suffix = "%";
+	}
 	return `<div class="${cls}">${cell.getValue()}${suffix}</div>`;
 }
 
@@ -190,7 +199,7 @@ const rankingFormatter = function(cell) {
 		return "";
 	}
 	if (field == "oppRank") {
-		return `<div class='${data.oppRankClass}'>${data.oppRank}</div>`;
+		return `<div class='${data.oppRankClass}'>${cell.getValue()}</div>`;
 	} else {
 		if (data.team == "ath") {
 			return "";

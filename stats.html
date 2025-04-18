@@ -385,25 +385,6 @@
 					hideCols();
 					TABLE.redraw();
 
-					if (LEADERS) {
-						TABLE.setSort([{"column": LEADERS, "dir": "desc"}]);
-						TABLE.showColumn(LEADERS);
-						TABLE.showColumn("feed.evo");
-						["logs", "weather", "stadiumRank", "oppRank", "ba", "order", "hitRate", "hitRateLYR"].map(x => TABLE.hideColumn(x));
-					}
-					if (IS_PITCHER) {
-						["pitcherData.whiff_percent"].map(x => TABLE.hideColumn(x));
-						["pitcherData.p_era", "order", "weather", "bvp", "rankings", "oppRank", "stadiumRank"].map(x => TABLE.hideColumn(x));
-						for (col of TABLE.getColumns()) {
-							if (col.getField().includes("savant")) {
-								col.hide();
-							}
-							if (col.getField().includes("z")) {
-								col.show();
-							}
-						}
-					}
-
 					hoverPitcher()
 					filterConfirmed()
 				}, 200);
@@ -412,8 +393,32 @@
 
 		function hideCols() {
 			if (SPORT == "mlb") {
-				["total10Over"].forEach(col => TABLE.hideColumn(col));
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
+			}
+			if (LEADERS) {
+				TABLE.setSort([{"column": LEADERS, "dir": "desc"}]);
+				TABLE.showColumn(LEADERS);
+				TABLE.showColumn("feed.evo");
+				["logs", "weather", "stadiumRank", "oppRank", "ba", "order", "hitRate", "hitRateLYR"].map(x => TABLE.hideColumn(x));
+			}
+			if (IS_PITCHER) {
+				["pitcherData.k_percent", "pitcherData.whiff_percent"].map(x => TABLE.showColumn(x));
+				["pitcherData.p_era", "order", "weather", "bvp", "rankings", "stadiumRank"].map(x => TABLE.hideColumn(x));
+				for (col of TABLE.getColumns()) {
+					if (col.getField().includes("savant")) {
+						col.hide();
+					}
+					if (col.getField().includes("z")) {
+						col.show();
+					}
+				}
+			}
+			if (PROP == "hr") {
+				["savant.est_ba", "savant.est_woba", "savant.sweet_spot_percent", "pitcherData.flyballs_percent", "pitcherData.p_era", "pitcherData.xwoba", "pitcherData.xba", "daily.line"].map(x => TABLE.hideColumn(x));
+				["savant.hard_hit_percent", "pitcherData.hard_hit_percent"].map(x => TABLE.showColumn(x));
+			} else if (PROP == "h") {
+				["savant.exit_velocity_avg", "pitcherData.exit_velocity_avg"].map(x => TABLE.hideColumn(x));
+				["pitcherData.xba", "pitcherData.xwoba"].map(x => TABLE.showColumn(x));
 			}
 		}
 
@@ -819,32 +824,33 @@
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: true },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: true },
+						{title: "BRL%", field: "savant.barrels_per_bip", width: 45, formatter: summaryFormatter },
 						{title: "SwSp%", field: "savant.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
 						{title: "EVelo", field: "savant.exit_velocity_avg", width: 45, formatter: summaryFormatter },
 						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "BRL%", field: "savant.barrels_per_bip", width: 45, formatter: summaryFormatter },
 					]},
 					{title: "Pitcher Summary", columns: [
 						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter, visible: true },
 						// PITCHER K (whiff_percent, oz_swing_miss_percent, in_zone_swing_miss, z_swing_miss_percent, oz_contact_percent)
 						// swings and misses
 						{title: "K%", field: "pitcherData.k_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "Whiff%", field: "pitcherData.whiff_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "OZ Miss %", field: "pitcherData.oz_swing_miss_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "IZ Miss %", field: "pitcherData.in_zone_swing_miss", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "Z Miss %", field: "pitcherData.z_swing_miss_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "OZ Contact %", field: "pitcherData.oz_contact_percent", width: 45, formatter: summaryFormatter, visible: false },
+						{title: "Whiff%", field: "pitcherData.whiff_percent", width: 50, formatter: summaryFormatter, visible: false },
+						{title: "OZ_M%", headerTooltip: "Out-of-Zone Swing Miss %", field: "pitcherData.oz_swing_miss_percent", width: 50, formatter: summaryFormatter, visible: false },
+						//{title: "IZ_M%", headerTooltip: "In-Zone Swing Miss %", field: "pitcherData.in_zone_swing_miss", width: 50, formatter: summaryFormatter, visible: false },
+						{title: "Z Miss %", headerTooltip: "Zone Swing Miss %", field: "pitcherData.z_swing_miss_percent", width: 50, formatter: summaryFormatter, visible: false },
+						{title: "OZ Contact %", headerTooltip: "Out-of-Zone Contact %", field: "pitcherData.oz_contact_percent", width: 50, formatter: summaryFormatter, visible: false },
 
-						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter, visible: true },
+						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter, visible: IS_PITCHER ? false : true },
 						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter, visible: false },
+						{title: "BRL%", field: "pitcherData.barrel_batted_rate", width: 45, formatter: summaryFormatter, visible: IS_PITCHER ? false : true },
 						{title: "Fly%", field: "pitcherData.flyballs_percent", width: 45, formatter: summaryFormatter, visible: false },
 						{title: "SwSp%", field: "pitcherData.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "EVelo", field: "pitcherData.exit_velocity_avg", width: 45, formatter: summaryFormatter },
+						{title: "EVelo", field: "pitcherData.exit_velocity_avg", width: 45, formatter: summaryFormatter, visible: IS_PITCHER ? false : true },
 						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "BRL%", field: "pitcherData.barrel_batted_rate", width: 45, formatter: summaryFormatter },
 					]},
 					{title: "Rankings", columns: [
 						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
+						{title: "K/6", field: "oppRankPer6", width: 50, visible: IS_PITCHER ? true : false},
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50},
 					]},
 					{title: "Game Lines", columns: [
@@ -902,6 +908,9 @@
 
 		function rowClick(row) {
 			if (SPORT.includes("futures")) {
+				return;
+			}
+			if (PROP == "k") {
 				return;
 			}
 			const sel = TABLE.getSelectedRows();

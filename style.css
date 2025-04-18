@@ -77,6 +77,10 @@ input, textarea, select {
 	color: #b2aca2;
 	outline-color: currentcolor;
 }
+.tabulator .tabulator-header .tabulator-header-tooltip {
+	background-color: #26292b;
+	color: #b2aca2;
+}
 .tabulator .tabulator-header .tabulator-col {
 	background-color: #26292b;
 	border-right-color: #484e51;
