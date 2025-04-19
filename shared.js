@@ -258,6 +258,17 @@ const evFormatter = function(cell, params, rendered) {
 	`;
 }
 
+const bvpFormatter = function(cell) {
+	const data = cell.getRow().getData();
+
+	return `
+		<div class="bvp-cell">
+			<div class="bvp-pitcher">${title(data.pitcher).split(" ")[1]}</div>
+			<div class="bvp-value">${cell.getValue()}</div>
+		</div>
+	`;
+}
+
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator" || !cell.getValue()) return "";

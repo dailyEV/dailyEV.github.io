@@ -283,6 +283,14 @@ h1 {
 		display: none;
 	}
 }
+.bvp-cell:hover {
+	.bvp-pitcher {
+		display: initial;
+	}
+	.bvp-value {
+		display: none;
+	}
+}
 /*
 .kelly-cell:hover {
 	.kelly { display: none; }
@@ -292,7 +300,7 @@ h1 {
 .field-cell {
 	position: relative;
 }
-.evbook-implied, .ev-cell .ou, .kelly-wager {
+.evbook-implied, .ev-cell .ou, .kelly-wager, .bvp-pitcher {
 	display: none;
 }
 .sport-img {
