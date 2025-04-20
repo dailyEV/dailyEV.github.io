@@ -217,7 +217,72 @@
 		fetchData(render=true);
 
 		function plotBigGraph(res) {
-			
+			const traces = [];
+
+			let layout = {
+				plot_bgcolor: '#181a1b',
+				paper_bgcolor: "#181a1b",
+				legend: {
+					orientation: "h",
+					//y: 1.15,
+					//y: 0,
+					x: 0,
+					bgcolor: "rgba(0,0,0,0.1)"
+				},
+				margin: { l: 0, r: 0, t: MOBILE ? 70 : 45, b: 0 },
+				font: {
+					color: "#e8e6e3"
+				},
+				xaxis: {
+					showgrid: false,
+					showticklabels: false
+				},
+				yaxis: {
+					showgrid: false,
+					side: "left"
+				},
+				yaxis2: {
+					overlaying: "y",
+					showgrid: false,
+					side: "right"
+				},
+				title: {
+					text: "",
+					font: {
+						size: 14
+					}
+				},
+				hovermode: "x unified"
+			};
+
+			const lineStyles = [
+				{ color: "#ff9500", dash: "solid" },
+				{ color: "#0a84ff", dash: "solid" },
+				{ color: "#1db954", dash: "solid" },
+				{ color: "#ff3b30", dash: "solid" },
+				{ color: "#8e44ad", dash: "solid" },
+				{ color: "#ffcc00", dash: "dash" },
+				{ color: "#34caff", dash: "dot" },
+				{ color: "#5eff72", dash: "longdash" },
+				{ color: "#ff5e84", dash: "dashdot" },
+				{ color: "#c388ff", dash: "longdash" },
+				{ color: "#c388ff", dash: "longdash" }
+			];
+			res.slice(0, 20).forEach((row, idx) => {
+				traces.push({
+					x: Array.from({length: row.predictedY.length}, (_, i) => i+1),
+					y: row.predictedY,
+					mode: "lines",
+					name: `${row.player}-Dist`,
+					showlegend: false,
+					line: {
+						color: lineStyles[idx % 10].color,
+						dash: lineStyles[idx % 10].dash,
+					},
+				});
+			});
+
+			Plotly.newPlot("graph-container", traces, layout, {displayModeBar: false});
 		}
 
 		function plotMiniGraphs(res) {
