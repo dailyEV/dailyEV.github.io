@@ -369,19 +369,19 @@
 					//{title: "Pinch Hits", field: "ph"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", formatter: bvpFormatter, width: 75},
 					{title: "Historical FD", columns: [
-						{title: "Med", field: "analysis.fd_median", width: 45},
-						{title: "Avg", field: "analysis.fd_avg", width: 45, formatter: plusMinusFormatter},
-						{title: "SD", field: "analysis.fd_std_dev", width: 45},
-						{title: "Z", field: "analysis.fd_z_score", width: 45},
+						{title: "Med", field: "analysis.fd_median", width: 45, visible: false},
+						{title: "Avg", field: "analysis.fd_avg", width: 45, formatter: plusMinusFormatter, visible: false},
+						{title: "SD", field: "analysis.fd_std_dev", width: 45, visible: false},
+						{title: "Z", field: "analysis.fd_z_score", width: 45, visible: false},
 					]},
 					{title: "Historical PN", columns: [
-						{title: "Med", field: "analysis.pn_median", width: 60},
-						{title: "Avg", field: "analysis.pn_avg", width: 60},
-						{title: "SD", field: "analysis.pn_std_dev", width: 60},
+						{title: "Med", field: "analysis.pn_median", width: 60, visible: false},
+						{title: "Avg", field: "analysis.pn_avg", width: 60, visible: false},
+						{title: "SD", field: "analysis.pn_std_dev", width: 60, visible: false},
 					]},
 					{title: "Historical Circa", columns: [
-						{title: "Med", field: "analysis.circa_median", width: 65},
-						{title: "Avg", field: "analysis.circa_avg", width: 60},
+						{title: "Med", field: "analysis.circa_median", width: 65, visible: false},
+						{title: "Avg", field: "analysis.circa_avg", width: 60, visible: false},
 					]},
 					
 					{title: "Batter Summary", columns: [
