@@ -154,6 +154,13 @@
 				<h2></h2>
 				<div class="player-dropdowns" style="gap: 5px;">
 					<div class="dropdown">
+						<select id="player-graph-select" style="">
+							<option value="logs">Logs</option>
+							<option value="dist-evo">Dist & Evo</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown">
 						<select id="player-year-select" style=""></select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
@@ -202,6 +209,7 @@
 		PAGE = "stats";
 		let TABLE = null;
 		let HISTORICAL = {};
+		let RES = null;
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
@@ -309,6 +317,16 @@
 			}
 		}
 
+		document.querySelector("#player-graph-select").addEventListener("change", function(event) {
+			const data = TABLE.getSelectedRows()[0].getData();
+			const graph = event.target.value;
+			if (graph == "dist-evo") {
+				plotDistEvo();
+			} else {
+				plotLogs(RES);
+			}
+		});
+
 		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
 			const data = TABLE.getSelectedRows()[0].getData();
 			const venue = event.target.value.toLowerCase();
@@ -378,6 +396,7 @@
 				if (LEADERS) {
 					data = data.filter(r => r.feed.evo.length > 20);
 				}
+				RES = data;
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
@@ -518,6 +537,9 @@
 				lineSelect.appendChild(el);
 			});
 
+			// Reset graph to logs
+			document.querySelector("#player-graph-select").value = "logs";
+
 			// Reset Venue Select
 			document.querySelector("#player-venue-select").value = "A+H";
 			
@@ -583,8 +605,14 @@
 				weather.innerHTML = "Weather: "+getWindHTML(data);
 			}
 
+			plotLogs();
+		}
+
+		function plotLogs() {
 			// Plotly
-			const logs = lastYear ? data.logsLYR : data.logs;
+			const data = TABLE.getSelectedRows()[0].getData();
+			const logs = data.logs;
+			const dtSplits = data.dtSplits;
 			const awaySplits = dtSplits.map((date, idx) => {
 				if (data.awayHomeSplits[idx] == "A") {
 					return { date, total: logs[idx] };
@@ -671,10 +699,11 @@
 			}, 100);
 		}
 
-		function plotDist() {
+		function plotDistEvo() {
 			let x = [];
 			let xIdx = [];
 			let y = [];
+			const data = TABLE.getSelectedRows()[0].getData();
 			for ([i, val] of data.feed.evo.entries()) {
 				if (parseInt(val || "0") > 50) {
 					x.push(data.feed.keys[i]);
@@ -931,9 +960,9 @@
 			} else {
 				//cols.forEach(col => TABLE.hideColumn(col));
 				document.querySelector("#table").style["max-width"] = "720px";
+				row.select();
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
-				row.select();
 			}
 		}
 
