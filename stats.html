@@ -237,6 +237,10 @@
 		}
 		if (PROP) {
 			PROP = PROP.replaceAll("-", "+");
+			if (PROP == "k") {
+				document.querySelector("#table").style.width = "auto";
+				document.querySelector("#updated-container").style.maxWidth = "1130px";
+			}
 		}
 		document.querySelector("#sport-select").value = "stats";
 
@@ -425,7 +429,7 @@
 			}
 			if (IS_PITCHER) {
 				["pitcherData.k_percent", "pitcherData.whiff_percent"].map(x => TABLE.showColumn(x));
-				["pitcherData.p_era", "order", "weather", "bvp", "rankings", "stadiumRank"].map(x => TABLE.hideColumn(x));
+				["pitcherData.p_era", "order", "weather", "bvp", "stadiumRank"].map(x => TABLE.hideColumn(x));
 				for (col of TABLE.getColumns()) {
 					if (col.getField().includes("savant")) {
 						col.hide();
@@ -706,6 +710,8 @@
 			let x = [];
 			let xIdx = [];
 			let y = [];
+			document.querySelector("#player-venue-select").value = "A+H";
+			document.querySelector("#player-year-select").value = YEAR;
 			const data = TABLE.getSelectedRows()[0].getData();
 			for ([i, val] of data.feed.evo.entries()) {
 				if (parseInt(val || "0") > 50) {
