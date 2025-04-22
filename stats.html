@@ -323,15 +323,16 @@
 			if (graph == "dist-evo") {
 				plotDistEvo();
 			} else {
-				plotLogs(RES);
+				plotLogs();
 			}
 		});
 
 		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
 			const data = TABLE.getSelectedRows()[0].getData();
+			const player = data.player;
 			const venue = event.target.value.toLowerCase();
 			let dtSplits = data.dtSplits;
-			let logs = data.totalSplits;
+			let logs = data.logs;
 			let awayHome = data.awayHomeSplits;
 			let year = document.querySelector("#player-year-select").value;
 
@@ -610,6 +611,8 @@
 
 		function plotLogs() {
 			// Plotly
+			document.querySelector("#player-venue-select").value = "A+H";
+			document.querySelector("#player-year-select").value = YEAR;
 			const data = TABLE.getSelectedRows()[0].getData();
 			const logs = data.logs;
 			const dtSplits = data.dtSplits;
@@ -955,11 +958,11 @@
 			if (sel.length > 0 && sel[0] == row && !MOBILE) {
 				//cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1400px";
+				//document.querySelector("#table").style["max-width"] = "1400px";
 				document.querySelector("#left-body").style.width = "100%";
 			} else {
 				//cols.forEach(col => TABLE.hideColumn(col));
-				document.querySelector("#table").style["max-width"] = "720px";
+				//document.querySelector("#table").style["max-width"] = "720px";
 				row.select();
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
