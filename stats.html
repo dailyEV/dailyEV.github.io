@@ -696,7 +696,7 @@
 			};
 
 			//Plotly.d3.json()
-			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
+			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true, displayModeBar: false});
 			setTimeout(() => {
 				Plotly.Plots.resize("log-chart")
 			}, 100);
@@ -773,6 +773,12 @@
 				font: {
 					color: "#e8e6e3"
 				},
+				legend: {
+					orientation: "h",
+					//x: 0.5,
+					y: 1.05,
+					bgcolor: "rgba(0,0,0,0.1)"
+				},
 				margin: { l: 40, r: 0, t: 20, b: 50 },
 				yaxis: {
 					showgrid: false,
@@ -789,7 +795,7 @@
 					}
 				}
 			};
-			Plotly.newPlot("log-chart", [trace, trace2, evoTrend, distTrend], layout);
+			Plotly.newPlot("log-chart", [trace, trace2, evoTrend, distTrend], layout, {displayModeBar: false});
 		}
 
 		function renderTable(data) {
@@ -955,17 +961,23 @@
 			const sel = TABLE.getSelectedRows();
 			TABLE.deselectRow();
 			const cols = ["logs", "weather", "opp", "bvp"];
-			if (sel.length > 0 && sel[0] == row && !MOBILE) {
+			if (sel.length > 0 && sel[0] == row) {
 				//cols.forEach(col => TABLE.showColumn(col));
 				document.querySelector("#right-body").style.display = "none";
 				//document.querySelector("#table").style["max-width"] = "1400px";
 				document.querySelector("#left-body").style.width = "100%";
+				if (MOBILE) {
+					document.querySelector("#table").style.height = "initial";
+				}
 			} else {
 				//cols.forEach(col => TABLE.hideColumn(col));
 				//document.querySelector("#table").style["max-width"] = "720px";
 				row.select();
 				showPlayerInfo(row);
 				TABLE.scrollToRow(row, "center");
+				if (MOBILE) {
+					document.querySelector("#table").style.height = "200px";
+				}
 			}
 		}
 
