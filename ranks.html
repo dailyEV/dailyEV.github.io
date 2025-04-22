@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>⚾ Stats</title>
+	<title>⚾ Ranks</title>
 
 	<!--
 	<script type="text/javascript" src="test.js"></script>
@@ -41,7 +41,7 @@
 			padding-top: 2px;
 		}
 		#table, #table-container {
-			
+			width: auto;
 		}
 		#left-body {
 			height: 100%;
@@ -104,6 +104,7 @@
 						<option value="bvp">⚾ BvP</option>
 						<option value="stats">⚾ Stats</option>
 						<option value="trends">⚾ Trends</option>
+						<option value="ranks">⚾ Ranks</option>
 						<option value="mlb">⚾ Props</option>
 						<option value="nhl">🏒 Props</option>
 						<option value="nba">🏀 NBA</option>
@@ -199,7 +200,7 @@
 	</div>
 	<div id="tooltip"></div>
 	<script type="text/javascript">
-		PAGE = "stats";
+		PAGE = "ranks";
 		let TABLE = null;
 		let HISTORICAL = {};
 		let url = "";
@@ -207,12 +208,10 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
-		let PROP = URLParams.get("prop");
-		let LEADERS = URLParams.get("leaders");
-		let PLAYER = URLParams.get("player");
-		let BVP = URLParams.get("bvp");
 		let MOBILE = window.innerWidth <= 600;
-		let IS_PITCHER = false;
+		let IS_PITCHER = true;
+		let PROP = null;
+		let PLAYER = null;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
@@ -220,22 +219,7 @@
 			SPORT = "mlb";
 		}
 
-		if (["k"].includes(PROP)) {
-			IS_PITCHER = true;
-		}
-
-		if (!PROP) {
-			window.location.href = `./stats${HTML}?prop=hr`;
-		}
-		if (PROP) {
-			PROP = PROP.replaceAll("-", "+");
-		}
-		document.querySelector("#sport-select").value = "stats";
-
-		if (LEADERS) {
-			document.querySelector("h1").innerText = "Distance Leaders";
-		}
-
+		document.querySelector("#sport-select").value = PAGE;
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const page = event.target.value;
 			changePage(page);
@@ -245,110 +229,6 @@
 			const prop = event.target.value;
 			window.location.href = `./stats${HTML}?prop=${prop.replaceAll("+","-")}`;
 			//TABLE.getRows("active")[0].getElement().click();
-		});
-
-		document.querySelector("#player-props-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const prop = event.target.value;
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == prop && d.player == rowData.player && d.under == false;
-			});
-			rowClick(rows[0]);
-		});
-
-		document.querySelector("#player-lines-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == rowData.prop && d.player == rowData.player && d.under == false && d.playerHandicap == event.target.value;
-			});
-			rowClick(rows[0]);
-		});
-
-		document.querySelector("#player-ou-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == rowData.prop && d.player == rowData.player && d.under == (event.target.value == "under") && d.playerHandicap == rowData.playerHandicap;
-			});
-			rowClick(rows[0]);
-		});
-
-		if (SPORT == "mlb") {
-			const yearSelect = document.querySelector("#player-year-select");
-			yearSelect.value = YEAR;
-			yearSelect.style.display = "flex";
-			yearSelect.addEventListener("change", function(event) {
-				const data = TABLE.getSelectedRows()[0].getData();
-				let logs = data.logs;
-				let dtSplits = data.dtSplits;
-
-				if (event.target.value == YEAR) {
-					logs = data.logs;
-					dtSplits = data.dtSplits;
-					plotMap(data, dtSplits, logs);
-				} else {
-					getYearLogs(data, event.target.value);
-				}
-			});
-		}
-
-		function getYearLogs(data, year) {
-			const player = data.player;
-			if (player in HISTORICAL) {
-				plotMap(data, HISTORICAL[player][year].date, HISTORICAL[player][year][data.prop]);
-			} else {
-				const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
-				fetch(url, {
-					headers: { "Accept": "application/vnd.github.v3.raw" }
-				}).then(response => response.json()).then(yearData => {
-					HISTORICAL = yearData;
-					plotMap(data, yearData[player][year].date, yearData[player][year][data.prop]);
-				}).catch(err => console.log(err));
-			}
-		}
-
-		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
-			const data = TABLE.getSelectedRows()[0].getData();
-			const venue = event.target.value.toLowerCase();
-			let dtSplits = data.dtSplits;
-			let logs = data.totalSplits;
-			let awayHome = data.awayHomeSplits;
-			let year = document.querySelector("#player-year-select").value;
-
-			if (year != "2025") {
-				dtSplits = HISTORICAL[player][year].date;
-				logs = HISTORICAL[player][year][data.prop];
-				awayHome = HISTORICAL[player][year].awayHome;
-			}
-
-			let newX = [], newY = [];
-			if (venue == "away") {
-				const awaySplits = dtSplits.map((date, idx) => {
-					if (awayHome[idx] == "A") {
-						return { date, total: logs[idx] };
-					}
-					return null;
-				}).filter(item => item != null);
-				newX = awaySplits.map(r => r.date);
-				newY = awaySplits.map(r => r.total);
-			} else if (venue == "home") {
-				const homeSplits = dtSplits.map((date, idx) => {
-					if (awayHome[idx] == "H") {
-						return { date, total: logs[idx] };
-					}
-					return null;
-				}).filter(item => item != null);
-				newX = homeSplits.map(r => r.date);
-				newY = homeSplits.map(r => r.total);
-			} else {
-				newX = dtSplits;
-				newY = logs;
-			}
-
-			plotMap(data, newX, newY);
-			//Plotly.update("log-chart", { x: [newX], y: [newY] }, {}, [0]);
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -366,62 +246,19 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_${PROP}.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/fantasyRanks.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
-				/*
-				if (PROP) {
-					data = data.filter(r => r.prop == PROP);
-				}
-				*/
-				if (LEADERS) {
-					data = data.filter(r => r.feed.evo.length > 20);
-				}
 				renderTable(data);
 				setTimeout(function() {
-					if (PROP) {
-						//TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
-						document.querySelector("#prop-select").value = PROP;
-					}
 					hideCols();
 					TABLE.redraw();
-
-					hoverPitcher()
-					filterConfirmed()
 				}, 200);
 			}).catch(err => console.log(err));
 		}
 
 		function hideCols() {
-			if (SPORT == "mlb") {
-				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
-			}
-			if (LEADERS) {
-				TABLE.setSort([{"column": LEADERS, "dir": "desc"}]);
-				TABLE.showColumn(LEADERS);
-				TABLE.showColumn("feed.evo");
-				["logs", "weather", "stadiumRank", "oppRank", "ba", "order", "hitRate", "hitRateLYR"].map(x => TABLE.hideColumn(x));
-			}
-			if (IS_PITCHER) {
-				["pitcherData.k_percent", "pitcherData.whiff_percent"].map(x => TABLE.showColumn(x));
-				["pitcherData.p_era", "order", "weather", "bvp", "rankings", "stadiumRank"].map(x => TABLE.hideColumn(x));
-				for (col of TABLE.getColumns()) {
-					if (col.getField().includes("savant")) {
-						col.hide();
-					}
-					if (col.getField().includes("z")) {
-						col.show();
-					}
-				}
-			}
-			if (PROP == "hr") {
-				["savant.est_ba", "savant.est_woba", "savant.sweet_spot_percent", "pitcherData.flyballs_percent", "pitcherData.p_era", "pitcherData.xwoba", "pitcherData.xba", "daily.line"].map(x => TABLE.hideColumn(x));
-				["savant.hard_hit_percent", "pitcherData.hard_hit_percent"].map(x => TABLE.showColumn(x));
-			} else if (["h", "h+r+rbi"].includes(PROP)) {
-				["savant.exit_velocity_avg", "pitcherData.exit_velocity_avg"].map(x => TABLE.hideColumn(x));
-				["pitcherData.xba", "pitcherData.xwoba"].map(x => TABLE.showColumn(x));
-			}
 		}
 
 		function showPlayerInfo(row) {
@@ -539,7 +376,7 @@
 			playerOdds.innerHTML = "";
 			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
 			for (book of books) {
-				if (!data.daily.bookOdds || !data.daily.bookOdds[book]) {
+				if (!data.daily.bookOdds[book]) {
 					continue;
 				}
 				let odds = data.daily.bookOdds[book];
@@ -665,13 +502,13 @@
 			};
 
 			//Plotly.d3.json()
+			/*
 			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
 			setTimeout(() => {
 				Plotly.Plots.resize("log-chart")
 			}, 100);
-		}
+			*/
 
-		function plotDist() {
 			let x = [];
 			let xIdx = [];
 			let y = [];
@@ -762,29 +599,14 @@
 
 		function renderTable(data) {
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
-			/*
-			const select = document.querySelector("#prop-select");
-			select.innerHTML = `
-				<option value="all" selected>All Props</option>
-			`;
-			props.map(prop => {
-				const el = document.createElement("option");
-				el.value = prop.toLowerCase();
-				el.innerText = prop;
-				select.appendChild(el);
-			});
-			*/
-			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "hide",
 				autoResize: true,
 				data: data,
 				initialSort: [
-					{column: "hitRate", dir: "desc"},
-					{column: "hitRateL10", dir: "desc"},
+					{column: "pts", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
@@ -798,15 +620,12 @@
 						//row.getElement().innerHTML = "";
 					}
 				},
-				groupBy: PROP == "hr" ? "" : "game",
+				groupBy: "",
 				groupHeader: function(value, count, data, group){
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
 				},
 				groupToggleElement: "header",
 				columns: [
-					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: MOBILE ? false : true},
-					{title: "Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
@@ -815,97 +634,31 @@
 						width: MOBILE ? 100 : undefined,
 						formatterParams: {
 							sport: SPORT,
-							noProp: PROP == "hr" ? true : false
+							noProp: true
 						},
 						hozAlign: "left",
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					{title: IS_PITCHER ? "Opp" : "Opp – Pitcher", field: "opp", formatter: oppFormatter, formatterParams: {prop: PROP}, hozAlign: "left", width: MOBILE ? 100 : (IS_PITCHER ? 80 : 140)},
-					//{title: "EV", field: "daily.ev",  width: MOBILE ? 40 : 40, sorter: "number", formatter: evFormatter},
-					
-					//{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
-					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
-					{title: "Batter Summary", columns: [
-						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: true },
-						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: true },
-						{title: "BRL%", field: "savant.barrels_per_bip", width: 45, formatter: summaryFormatter },
-						{title: "SwSp%", field: "savant.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "EVelo", field: "savant.exit_velocity_avg", width: 45, formatter: summaryFormatter },
-						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
-					]},
-					{title: "Pitcher Summary", columns: [
-						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter, visible: true },
-						// PITCHER K (whiff_percent, oz_swing_miss_percent, in_zone_swing_miss, z_swing_miss_percent, oz_contact_percent)
-						// swings and misses
-						{title: "K%", field: "pitcherData.k_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "Whiff%", field: "pitcherData.whiff_percent", width: 50, formatter: summaryFormatter, visible: false },
-						{title: "OZ_M%", headerTooltip: "Out-of-Zone Swing Miss %", field: "pitcherData.oz_swing_miss_percent", width: 50, formatter: summaryFormatter, visible: false },
-						//{title: "IZ_M%", headerTooltip: "In-Zone Swing Miss %", field: "pitcherData.in_zone_swing_miss", width: 50, formatter: summaryFormatter, visible: false },
-						{title: "Z Miss %", headerTooltip: "Zone Swing Miss %", field: "pitcherData.z_swing_miss_percent", width: 50, formatter: summaryFormatter, visible: false },
-						{title: "OZ Contact %", headerTooltip: "Out-of-Zone Contact %", field: "pitcherData.oz_contact_percent", width: 50, formatter: summaryFormatter, visible: false },
+					{title: IS_PITCHER ? "Opp" : "Opp – Pitcher", field: "opp", formatter: oppFormatter, formatterParams: {is_pitcher: IS_PITCHER}, hozAlign: "left", width: MOBILE ? 100 : (IS_PITCHER ? 80 : 140)},
+					//{title: "Points", field: "pts"},
+					{title: "Ks", field: "propPts.k"},
+					{title: "0", field: "propLines.k.0", formatter: impliedFormatter},
+					{title: "1", field: "propLines.k.1", formatter: impliedFormatter},
+					{title: "2", field: "propLines.k.2", formatter: impliedFormatter},
+					{title: "3", field: "propLines.k.3", formatter: impliedFormatter},
+					{title: "4", field: "propLines.k.4", formatter: impliedFormatter},
+					{title: "5", field: "propLines.k.5", formatter: impliedFormatter},
+					{title: "6", field: "propLines.k.6", formatter: impliedFormatter},
+					{title: "7", field: "propLines.k.7", formatter: impliedFormatter},
+					{title: "8", field: "propLines.k.8", formatter: impliedFormatter},
+					{title: "9", field: "propLines.k.9", formatter: impliedFormatter},
 
-						{title: "xBA", field: "pitcherData.xba", width: 45, formatter: baFormatter, visible: IS_PITCHER ? false : true },
-						{title: "xwOBA", field: "pitcherData.xwoba", width: 45, formatter: xwobaFormatter, visible: false },
-						{title: "BRL%", field: "pitcherData.barrel_batted_rate", width: 45, formatter: summaryFormatter, visible: IS_PITCHER ? false : true },
-						{title: "Fly%", field: "pitcherData.flyballs_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "SwSp%", field: "pitcherData.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
-						{title: "EVelo", field: "pitcherData.exit_velocity_avg", width: 45, formatter: summaryFormatter, visible: IS_PITCHER ? false : true },
-						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
-					]},
-					{title: "Rankings", columns: [
-						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
-						{title: "K/6", field: "oppRankPer6", width: 50, visible: IS_PITCHER ? true : false},
-						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50},
-					]},
-					{title: "Game Lines", columns: [
-						{title: "ML", field: "gameLines.ml",  width: 40, sorter: "number", formatter: plusMinusFormatter},
-						{title: "Total", field: "gameLines.total",  width: 40, sorter: "number"},
-						{title: "TT", field: "gameLines.tt",  width: 40, sorter: "number"},
-					]},
-					//{title: "Pitcher Summary", field: "pitcherSummary"},
-					
-					{
-						title: "Game Logs",
-						field: IS_PITCHER ? "longLogs" : "logs",
-						width:160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: MOBILE ? false : true
-					},
-					{title: "SZN", field: "hitRate",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
-					{title: "L10", field: "hitRateL10",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
-					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
-					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
-					{title: "100mph", field: "100-evo", sorter: "number", visible: false, formatter: percentFormatter, width: 65},
-					{
-						title: "Exit Velo Logs<br>>100mph",
-						field: "feed.evo",
-						width: 160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: false
-					},
-					{title: "300ft", field: "300-ft", sorter: "number", visible: false, formatter: percentFormatter, width: 65},
-					{
-						title: "Distance Logs<br>>300ft",
-						field: "feed.dist",
-						width: 160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: false
-					},
-					
-					// hidden
-					{title: "", field: "bvpHR", sorter: "number", visible: false},
-					{title: "", field: "bvpAvg", sorter: "number", visible: false},
+					{title: "", field: "pts", visible: false},
 					{title: "", field: "prop", visible: false},
+
 				]
 			});
-
 			TABLE.on("rowClick", function(e, row) {
 				rowClick(row);
 			});
@@ -913,28 +666,9 @@
 
 		let hiddenCols = [];
 		function rowClick(row) {
-			if (SPORT.includes("futures")) {
-				return;
-			}
-			if (PROP == "k") {
-				return;
-			}
-
-			const sel = TABLE.getSelectedRows();
-			TABLE.deselectRow();
-			const cols = ["logs", "weather", "opp", "bvp"];
-			if (sel.length > 0 && sel[0] == row && !MOBILE) {
-				//cols.forEach(col => TABLE.showColumn(col));
-				document.querySelector("#right-body").style.display = "none";
-				document.querySelector("#table").style["max-width"] = "1400px";
-				document.querySelector("#left-body").style.width = "100%";
-			} else {
-				//cols.forEach(col => TABLE.hideColumn(col));
-				document.querySelector("#table").style["max-width"] = "720px";
-				showPlayerInfo(row);
-				TABLE.scrollToRow(row, "center");
-				row.select();
-			}
+			showPlayerInfo(row);
+			TABLE.scrollToRow(row, "center");
+			row.select();
 		}
 
 		function groupByGameStats() {
@@ -945,34 +679,11 @@
 			}
 		}
 
-		function toggleSummary() {
-
-		}
-
 		function filterConfirmed() {
 			//TABLE.setFilter("order", "!=", "-");
 			TABLE.setFilter("daily.book", "!=", undefined);
 			if (TABLE.getRows("active").length == 0) {
 				TABLE.setFilter("daily.book", "==", undefined);
-			}
-		}
-
-		function hoverPitcher() {
-			const cells = document.querySelectorAll(".opp-cell");
-			const rows = TABLE.getRows();
-			for (cell of cells) {
-				const label = cell.getAttribute("aria-label");
-				cell.addEventListener("mousemove", function(event) {
-					const el = document.querySelector("#tooltip");
-					el.style.left = event.pageX + 10 + "px";
-					el.style.top = event.pageY + 10 + "px";
-					el.style.display = "block";
-					el.innerText = label;
-				});
-
-				cell.addEventListener("mouseleave", function() {
-					document.querySelector("#tooltip").style.display = "none";
-				})
 			}
 		}
 
@@ -982,8 +693,7 @@
 					col.hide()
 				}
 			});
-			//["oppRank", "oppRankPer6", "gameLines.tt", "gameLines.total", "gameLines.ml"].forEach(col => TABLE.hideColumn(col));
-			["order", "book", "oppRankPer6", "gameLines.tt", "gameLines.total", "gameLines.ml"].forEach(col => TABLE.hideColumn(col));
+			["oppRank", "oppRankPer6", "gameLines.tt", "gameLines.total", "gameLines.ml"].forEach(col => TABLE.hideColumn(col));
 		}
 	</script>
 </body>

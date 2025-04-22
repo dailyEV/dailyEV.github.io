@@ -162,6 +162,19 @@ const xwobaFormatter = function(cell) {
 	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
 }
 
+const impliedFormatter = function(cell, params, rendered) {
+	const data = cell.getRow().getData();
+	if (!cell.getValue()) {
+		return "";
+	}
+	const cls = data.mostLikely == cell.getField().split(".").at(-1) ? "positive" : "";
+	return `
+		<div class="${cls}">
+			${(parseFloat(cell.getValue()) * 100).toFixed(1)}%
+		</div>
+	`;
+}
+
 const oppFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (!data.game) {
@@ -171,7 +184,7 @@ const oppFormatter = function(cell, params, rendered) {
 	const ah = `<span style="width: 12px;text-align:center;">
 		${data.game.split(" @ ")[0] != cell.getValue() ? "@" : "v"}
 	</span>`;
-	if (params.prop == "k") {
+	if (params.prop == "k" || params.is_pitcher) {
 		return `<div class="opp-cell">
 			${ah}
 			${getTeamImg(SPORT, cell.getValue())}
@@ -203,7 +216,7 @@ const rankingFormatter = function(cell) {
 	if (!data.game || !cell.getValue()) {
 		return "";
 	}
-	if (field == "oppRank") {
+	if (field == "oppRank" || ["nba"].includes(SPORT)) {
 		return `<div class='${data.oppRankClass}'>${cell.getValue()}</div>`;
 	} else {
 		if (data.team == "ath") {

@@ -378,6 +378,16 @@
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
 
+			if (["nhl"].includes(SPORT)) {
+				["oppRank", "oppRankPos"].forEach(col => TABLE.hideColumn(col));
+			}
+
+			if (SPORT == "nba") {
+				TABLE.showColumn("oppRankPos");
+			} else if (SPORT == "mlb") {
+				TABLE.showColumn("stadiumRank");
+			}
+
 			if (BOOK) {
 				TABLE.hideColumn("ev");
 				TABLE.hideColumn("fairVal");
@@ -775,6 +785,11 @@
 					{title: "PN", field: "bookOdds.pn",  width: 85, sorter: "number", responsive: 10},
 					{title: "BV", field: "bookOdds.bv",  width: 85, sorter: "number", responsive: 13, visible: false},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 85, sorter: "number", responsive: 9},
+					{title: "Rankings", columns: [
+						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
+						{title: "Opp Pos", field: "oppRankPos", formatter: rankingFormatter, width: 50, visible: false},
+						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50, visible: false},
+					]},
 					{
 						title: "Game Logs",
 						field: "totalSplits",

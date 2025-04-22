@@ -542,6 +542,11 @@
 			}
 			console.log(o);
 		}
+
+		function pretty_() {
+			TABLE.getColumns().map(col => col.hide());
+			["player", "opp", "bvp", "weather"].forEach(col => TABLE.showColumn(col));
+		}
 	</script>
 </body>
 </html>
