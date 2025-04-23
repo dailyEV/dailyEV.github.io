@@ -43,8 +43,17 @@
 		#table, #table-container {
 			width: auto;
 		}
+		#player-tables, #player-header {
+			justify-content: center;
+		}
+		#player-odds-table {
+			width: max-content;
+		}
 		#left-body {
 			height: 100%;
+		}
+		#right-body {
+			width: 50%;
 		}
 		#player-controls {
 			display: none;
@@ -153,48 +162,13 @@
 		<div id="player-tables">
 			<div id="player-header">
 				<h2></h2>
-				<div class="player-dropdowns" style="gap: 5px;">
-					<div class="dropdown">
-						<select id="player-year-select" style=""></select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-					<div class="dropdown">
-						<select id="player-venue-select" style="">
-							<option selected>A+H</option>
-							<option>Away</option>
-							<option>Home</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-				</div>
-				<div id="player-controls">
-					<div class="player-dropdowns">
-						<div class="dropdown">
-							<select id="player-ou-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown" style="margin: 0 0.5rem;">
-							<select id="player-lines-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-						<div class="dropdown">
-							<select id="player-props-select"></select>
-							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="player-row">
-				<div id="player-ev"></div>
-				<div id="player-odds"></div>
-			</div>
-			<div class="player-row">
-				<div id="player-pitcher"></div>
-				<div id="player-weather"></div>
+				
 			</div>
 			<div id="player-opp"></div>
-			<div id="player-table">
-				<div id="log-chart"></div>
+			<div style="display: flex; justify-content: center;">
+				<div id="player-odds-table">
+					
+				</div>
 			</div>
 		</div>
 	</div>
@@ -254,6 +228,7 @@
 				setTimeout(function() {
 					hideCols();
 					TABLE.redraw();
+					TABLE.getRows("active")[0].getElement().click();
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -262,339 +237,58 @@
 		}
 
 		function showPlayerInfo(row) {
-			//const lastYear = SPORT == "mlb";
-			const lastYear = false;
-			const cutoff = 0;
 			const data = row.getData();
-			const playerRows = TABLE.getRows()
-				.filter(r => r.getData().player == data.player)
-				.map(r => r.getData());
-			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
-
-			let playerRowsLines = playerRows.filter(r => r.prop == data.prop);
-			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
-			
-			const playerRowsOUs = playerRows.filter(r => r.prop == data.prop && r.playerHandicap == data.playerHandicap);
-			//console.log(playerRowsOUs)
-			const playerOUs = new Set(playerRowsOUs.map(r => r.under));
-			let dtSplits = lastYear ? data.dtSplits : data.dtSplits;
-			dtSplits = dtSplits.slice(cutoff);
-			dtSplits = dtSplits.map(dt => {
-				const d = new Date(dt+" 10:00");
-				return d.toLocaleDateString("en-US", {
-					month: "short", day: "numeric", year: "2-digit"
-				}).replace(", ", " '");
-			});
-
 			document.querySelector("#left-body").style.width = MOBILE ? "100%" : "50%";
 			document.querySelector("#right-body").style.display = "flex";
-			let player = title(data.player);
-			if (!player) {
-				player = data.team.toUpperCase(); 
-			}
+
 			document.querySelector("#player-header h2").innerHTML = `
 				<img src="logos/${SPORT}/${data.teamId || data.team}.png" width=32 height=32 style="vertical-align: middle;" alt="${data.team}" />
-				${player}
+				${title(data.player)}
 			`;
 
-			// Props Nav
-			let propsSelect = document.querySelector("#player-props-select");
-			propsSelect.innerHTML = "";
-			playerProps.sort((a, b) => a - b);
-			playerProps.forEach(p => {
-				const el = document.createElement("option");
-				el.value = p;
-				el.innerText = p.toUpperCase();
-				if (p == data.prop) {
-					el.selected = true;
+			let tableData = [];
+			for (line of Object.keys(data.lineOdds.k)) {
+				let j = { ...data };
+				j["line"] = parseFloat(line) - 0.5;
+				j["exact"] = (j["propLines"]["k"][line] * 100).toFixed(1);
+				for (oddData of data.lineOdds.k[line]) {
+					let o = oddData[0];
+					let b = oddData[1];
+					j[b] = o;
 				}
-				propsSelect.appendChild(el);
-			});
-
-			// OU Nav
-			const playerOU = document.querySelector("#player-ou-select");
-			playerOU.innerHTML = "";
-			const overBtn = document.createElement("option");
-			overBtn.value = "over";
-			overBtn.innerText = "Over";
-			const underBtn = document.createElement("option");
-			underBtn.value = "under";
-			underBtn.innerText = "Under";
-			let ouBtn = null;
-			if (data.under) {
-				underBtn.selected = true;
-				ouBtn = overBtn;
-			} else {
-				overBtn.selected = true;
-				ouBtn = underBtn;
+				tableData.push(j);
 			}
-			if (playerOUs.has(false)) {
-				playerOU.appendChild(overBtn);
-			}
-			if (playerOUs.has(true)) {
-				playerOU.appendChild(underBtn);
-			}
+			renderOddsTable(tableData);
+		}
 
-
-			// Lines Nav
-			const lineSelect = document.querySelector("#player-lines-select");
-			lineSelect.innerHTML = "";
-			playerRowsLines = playerRowsLines.filter(r => r.under == data.under);
-
-			playerRowsLines.sort((a,b) => (a.playerHandicap || a.handicap) - (b.playerHandicap || b.handicap));
-			playerRowsLines.forEach(p => {
-				const line = p.playerHandicap || p.handicap;
-				const el = document.createElement("option");
-				if (line == (data.playerHandicap || data.handicap)) {
-					el.selected = true;
-				}
-				el.setAttribute("data-display", line);
-				//el.innerText = `${line} (${p.ev})`;
-				el.innerText = `${line}`;
-				el.value = line;
-				lineSelect.appendChild(el);
-			});
-
-			// Reset Venue Select
-			document.querySelector("#player-venue-select").value = "A+H";
-			
-			// Year Dropdown
-			const yearSelect = document.querySelector("#player-year-select");
-			yearSelect.value = YEAR;
-			yearSelect.innerHTML = ``;
-			if (data.playerYears) {
-				for (year of data.playerYears) {
-					const el = document.createElement("option");
-					el.value = year;
-					el.innerText = year;
-					yearSelect.appendChild(el);
-				}
-			}
-
-			// Odds Display
-			const playerOdds = document.querySelector("#player-odds");
-			playerOdds.innerHTML = "";
-			const books = ["fd", "dk", "mgm", "365", "pn", "kambi", "cz", "espn"];
-			for (book of books) {
-				if (!data.daily.bookOdds[book]) {
-					continue;
-				}
-				let odds = data.daily.bookOdds[book];
-				const div = document.createElement("div");
-				if (parseFloat(data.daily.ev) > 0 && data.daily.book == book) {
-					div.classList.add("active");
-				}
-				if (odds.includes("/")) {
-					odds = `<mfrac>
-						<mn>${odds.split("/")[0]}</mn>
-						<mn>${odds.split("/")[1]}</mn>
-					</mfrac>`;
-				} else {
-					odds = `<mn>${odds}</mn>`;
-				}
-				div.innerHTML = `
-					<img class='book-img' src='logos/${book.replace("kambi", "br")}.png' />
-					<math xmlns="http://www.w3.org/1998/Math/MathML">
-						${odds}
-					</math>
-					`;
-				playerOdds.appendChild(div);
-			}
-
-			// Pitcher
-			if (SPORT == "mlb") {
-				const pitcher = document.querySelector("#player-pitcher");
-				if (!data.game) {
-					pitcher.innerHTML = `No Game`;
-				} else {
-					pitcher.innerHTML = `
-						<span>
-							${data.game.split(" @ ")[0] != data.opp ? "@" : "v"}
-						</span>
-						${getTeamImg(SPORT, data.opp)}
-						${title(data.pitcher)}:
-						${data.bvp}
-					`;
-				}
-				const weather = document.querySelector("#player-weather");
-				weather.innerHTML = "Weather: "+getWindHTML(data);
-			}
-
-			// Plotly
-			const logs = lastYear ? data.logsLYR : data.logs;
-			const awaySplits = dtSplits.map((date, idx) => {
-				if (data.awayHomeSplits[idx] == "A") {
-					return { date, total: logs[idx] };
-				}
-				return null;
-			}).filter(item => item != null);
-			const homeSplits = dtSplits.map((date, idx) => {
-				if (data.awayHomeSplits[idx] == "H") {
-					return { date, total: logs[idx] };
-				}
-				return null;
-			}).filter(item => item != null);
-			const colors = logs.map(value => {
-				let cond = parseFloat(value) > parseFloat(data.line);
-				if (data.under) {
-					cond = parseFloat(value) < parseFloat(data.line);
-				}
-				return cond ? "rgb(56, 142, 60)" : "rgb(211, 47, 47)";
-			});
-			let tableData = {
-				x: dtSplits,
-				y: logs.map(v => v != "0" ? v : 0.25),
-				type: "bar",
-				text: logs,
-				textposition: "inside",
-				marker: {
-					color: colors
-				}
-			};
-			let layout = {
-				title: "Game Logs",
-				autosize: true,
-				showlegend: false,
-				responsive: true,
-				plot_bgcolor: '#181a1b',
-				paper_bgcolor: "#181a1b",
-				font: {
-					color: "#e8e6e3"
+		function renderOddsTable(data) {
+			new Tabulator("#player-odds-table", {
+				tooltipsHeader: true,
+				//layout: "fitDataFill",
+				responsiveLayout: MOBILE ? "" : "hide",
+				autoResize: true,
+				data: data,
+				initialSort: [
+					//{column: "pts", dir: "desc"},
+				],
+				columnDefaults: {
+					vertAlign: "middle",
+					hozAlign: "center",
+					resizable: false
 				},
-				width: '100%',
-				dragmode: 'pan',
-				margin: { l: 0, r: 0, t: 20, b: 20 },
-				xaxis: {
-					title: "Dates",
-					showgrid: false,
-					type: "category",
-					//tickmode: "array",
-					//tickvals: [dtSplits[0],dtSplits.at(-1)],
-					//ticktext: [dtSplits[0],dtSplits.at(-1)],
-					//range: [-0.5, parseFloat(dtSplits.length)+0.5],
-					rangeslider: {
-						visible: true
-					},
-					range: [dtSplits.length-15.6,dtSplits.length-0.5]
-				},
-				yaxis: {
-					showgrid: false,
-					tickmode: "linear",
-					dtick: 1,
-					fixedrange: true,
-					showticklabels: false,
-					title: {
-						text: data.prop.toUpperCase()
-					}
-				},
-				shapes: [
-					{
-						type: "line",
-						//x0: dtSplits[0], x1: dtSplits.at(-1),
-						x0: -0.25, x1: dtSplits.length,
-						y0: data.line, y1: data.line,
-						line: {
-							color: "#5A5A5A",
-							dash: "dash"
-						}
-					}
+				columns: [
+					{title: "Line", field: "line", width: 50},
+					{title: "Exact%", field: "exact", width: 50, formatter: percentFormatter},
+					{title: "FD", field: "fd"},
+					{title: "B365", field: "365"},
+					{title: "DK", field: "dk"},
+					{title: "ESPN", field: "espn"},
+					{title: "MGM", field: "mgm"},
+					{title: "CZ", field: "cz"},
+					{title: "PN", field: "pn"},
+					{title: "Circa", field: "circa"},
 				]
-			};
-
-			//Plotly.d3.json()
-			/*
-			Plotly.newPlot("log-chart", [tableData], layout, { responsive: true});
-			setTimeout(() => {
-				Plotly.Plots.resize("log-chart")
-			}, 100);
-			*/
-
-			let x = [];
-			let xIdx = [];
-			let y = [];
-			for ([i, val] of data.feed.evo.entries()) {
-				if (parseInt(val || "0") > 50) {
-					x.push(data.feed.keys[i]);
-					xIdx.push(i);
-					y.push(val);
-				}
-			}
-
-			const evoTrend = {
-				x: x,
-				y: linearRegression(xIdx, y).predictedY,
-				name: "evo-reg",
-				mode: "lines",
-				line: {
-					color: "#00c8ff"
-				}
-			}
-			const trace = {
-				x: x,
-				y: y,
-				mode: "markers",
-				type: "scatter",
-				name: "Evo",
-				marker: {
-					color: "#00c8ff"
-				}
-			};
-
-			x = [];
-			xIdx = [];
-			y = [];
-			for ([i, val] of data.feed.dist.entries()) {
-				if (parseInt(val || "0") > 50) {
-					x.push(data.feed.keys[i]);
-					xIdx.push(i);
-					y.push(val);
-				}
-			}
-			const trace2 = {
-				x: x,
-				y: y,
-				//y: data.feed.evo,
-				mode: "markers",
-				type: "scatter",
-				yaxis: "y2",
-				name: "Dist",
-				marker: {
-					color: "#ff9500"
-				}
-			};
-			const distTrend = {
-				x: x,
-				y: linearRegression(xIdx, y).predictedY,
-				name: "dist-reg",
-				mode: "lines",
-				yaxis: "y2",
-				line: {
-					color: "#ff9500"
-				}
-			}
-			layout = {
-				plot_bgcolor: '#181a1b',
-				paper_bgcolor: "#181a1b",
-				font: {
-					color: "#e8e6e3"
-				},
-				margin: { l: 40, r: 0, t: 20, b: 50 },
-				yaxis: {
-					showgrid: false,
-					side: "left",
-					title: {
-						text: "Evo"
-					}
-				},
-				yaxis2: {
-					overlaying: "y",
-					side: "right",
-					title: {
-						text: "Dist"
-					}
-				}
-			};
-			Plotly.newPlot("log-chart", [trace, trace2, evoTrend, distTrend], layout);
+			});
 		}
 
 		function renderTable(data) {
@@ -653,6 +347,8 @@
 					{title: "7", field: "propLines.k.7", formatter: impliedFormatter},
 					{title: "8", field: "propLines.k.8", formatter: impliedFormatter},
 					{title: "9", field: "propLines.k.9", formatter: impliedFormatter},
+					{title: "10", field: "propLines.k.10", formatter: impliedFormatter},
+
 
 					{title: "", field: "pts", visible: false},
 					{title: "", field: "prop", visible: false},
@@ -666,9 +362,16 @@
 
 		let hiddenCols = [];
 		function rowClick(row) {
-			showPlayerInfo(row);
-			TABLE.scrollToRow(row, "center");
-			row.select();
+			const sel = TABLE.getSelectedRows();
+			TABLE.deselectRow();
+			if (sel.length > 0 && sel[0] == row) {
+				document.querySelector("#right-body").style.display = "none";
+				document.querySelector("#left-body").style.width = "100%";
+			} else {
+				row.select();
+				showPlayerInfo(row);
+				TABLE.scrollToRow(row, "center");
+			}
 		}
 
 		function groupByGameStats() {

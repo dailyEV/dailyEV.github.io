@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>⚾ Dingers</title>
+	<title>⚾ Dingers (H)</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
@@ -198,7 +198,7 @@
 			}
 		});
 
-		document.querySelector(selectId+" #sport-select").value = "dingers";
+		document.querySelector(selectId+" #sport-select").value = "historical";
 		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
 			const page = event.target.value;
 			changePage(page);
@@ -248,6 +248,11 @@
 						TABLE.showColumn(`${BOOK}_fairVal`);
 						TABLE.setSort([
 							{column: `${BOOK}_ev`, dir: "desc"}
+						]);
+					}
+					if (HISTORICAL == "z") {
+						TABLE.setSort([
+							{column: `analysis.fd_z_score`, dir: "desc"}
 						]);
 					}
 				}, 200);

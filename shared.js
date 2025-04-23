@@ -5,8 +5,10 @@ if (window.location.protocol == "file:") {
 }
 
 function changePage(page) {
-	if (["dingers", "feed", "leaders", "stats", "bvp", "trends"].includes(page)) {
+	if (["dingers", "feed", "leaders", "stats", "bvp", "trends", "hot"].includes(page)) {
 		window.location.href = `./${page}${HTML}`;
+	} else if (page == "historical") {
+		window.location.href = `./historical${HTML}?historical=z`;
 	} else {
 		window.location.href = `./props${HTML}?sport=${page}`;
 	}
@@ -57,6 +59,13 @@ function groupByGame() {
 
 const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
+}
+
+const decimalFormatter = function(cell) {
+	if (!cell.getValue()) {
+		return "";
+	}
+	return parseFloat(cell.getValue()).toFixed(2);
 }
 
 function addPlus(value) {
