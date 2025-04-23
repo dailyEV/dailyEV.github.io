@@ -176,6 +176,38 @@ const xwobaFormatter = function(cell) {
 	return `<div class="${cls}">${v.toFixed(3).replace(/^0/, "")}</div>`;
 }
 
+const bppPlayerFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const val = parseFloat(cell.getValue());
+	let cls = "";
+	if (val >= 1.01) {
+		cls = "positive";
+	} else if (val < 0.90) {
+		cls = "negative";
+	}
+	return `
+		<div class="${cls}">
+			${cell.getValue()}
+		</div>
+	`;
+}
+
+const bppFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const val = parseInt(cell.getValue().replace("%", ""));
+	let cls = "";
+	if (val >= 10) {
+		cls = "positive";
+	} else if (val <= -10) {
+		cls = "negative";
+	}
+	return `
+		<div class="${cls}">
+			${cell.getValue()}
+		</div>
+	`;
+}
+
 const impliedFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (!cell.getValue()) {

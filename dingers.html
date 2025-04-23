@@ -171,6 +171,7 @@
 		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
+		let PRETTY = URLParams.get("pretty");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
 
 		if (SPORT) {
@@ -221,7 +222,10 @@
 				//window.location.href = window.location.href;
 			}, 30 * 1000)
 		}
-		let intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
+		let intervalId = 0;
+		if (REFRESH != "false") {
+			intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
+		}
 
 		async function fetchData(render=true) {
 			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
@@ -249,6 +253,9 @@
 						TABLE.setSort([
 							{column: `${BOOK}_ev`, dir: "desc"}
 						]);
+					}
+					if (PRETTY != undefined) {
+						pretty_();
 					}
 				}, 200);
 			}).catch(err => console.log(err));
@@ -382,7 +389,10 @@
 						{title: "Med", field: "analysis.circa_median", width: 65, sorter: "number", visible: HISTORICAL ? true : false},
 						{title: "Avg", field: "analysis.circa_avg", width: 60, sorter: "number", visible: HISTORICAL ? true : false},
 					]},
-					
+					{title: "BPP", columns: [
+						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
+						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
+					]},
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: false },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: false },
@@ -440,6 +450,16 @@
 			} else {
 				window.location.href = `./dingers${HTML}${q.replace("filter=", "")}`;
 			}
+		}
+
+		function pretty_() {
+			TABLE.getColumns().map(c => c.hide());
+			let ev = `ev`;
+			if (BOOK) {
+				ev = `${BOOK}_ev`;
+			}
+			[ev, "player", "book", "bvp", "weather", "bookOdds.pn", "bookOdds.circa"].forEach(c => TABLE.showColumn(c));
+			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>
 </body>

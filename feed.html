@@ -187,6 +187,7 @@
 		let DATE = URLParams.get("date");
 		let CLOSE = URLParams.get("close");
 		let PLAYER = URLParams.get("player");
+		let PRETTY = URLParams.get("pretty");
 		TEAM = URLParams.get("team");
 		let TABLE = null;
 		let HIST = null;
@@ -197,6 +198,14 @@
 
 		if (PLAYER) {
 			document.querySelector("#table").style["max-width"] = "520px";
+		}
+
+		if (PRETTY != undefined) {
+			document.querySelector("#left-body").style.display = "none";
+			document.querySelector("body").style.height = "100%";
+			setTimeout(() => {
+				document.querySelector("#hrtable").style["max-height"] = "100%";
+			}, 200);
 		}
 
 		function checkParams() {
