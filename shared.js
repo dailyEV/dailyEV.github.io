@@ -99,6 +99,7 @@ const eraFormatter = function(cell) {
 
 const thresholds = {
 	"exit_velocity_avg": [87.6, 90.8],
+	"la": [0, 25],
 	"evo": [0, 95],
 	"dist": [0, 300],
 	"hard_hit_percent": [35.5, 45.5],
@@ -129,6 +130,10 @@ const summaryFormatter = function(cell, params, rendered) {
 	if (thresholds[field]) {
 		if (thresholds[field][0] && v <= thresholds[field][0]) {
 			cls = switched ? "positive" : "negative";
+		} else if (field == "la") {
+			if (v >= thresholds[field][1] && v <= 35) {
+				cls = switched ? "negative" : "positive";
+			}
 		} else if (v >= thresholds[field][1]) {
 			cls = switched ? "negative" : "positive";
 		}
