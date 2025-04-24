@@ -11,7 +11,6 @@
 
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
-	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
@@ -98,18 +97,7 @@
 			</div>
 			<div id="sub-header">
 				<div class="dropdown">
-					<select id="sport-select">
-						<option value="feed">⚾ Feed</option>
-						<option value="dingers">⚾ Dingers</option>
-						<option value="bvp">⚾ BvP</option>
-						<option value="stats">⚾ Stats</option>
-						<option value="barrels">⚾ Barrels</option>
-						<option value="trends">⚾ Trends</option>
-						<option value="mlb">⚾ Props</option>
-						<option value="nhl">🏒 Props</option>
-						<option value="nba">🏀 NBA</option>
-						<option value="ncaab">🏀 NCAAB</option>
-					</select>
+					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 			</div>
@@ -135,8 +123,9 @@
 	<div id="right-body" class="body">
 	</div>
 	<div id="tooltip"></div>
+	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
-		PAGE = "stats";
+		PAGE = "barrels";
 		let TABLE = null;
 		let HISTORICAL = {};
 		let RES = null;
@@ -149,7 +138,6 @@
 		let LEADERS = URLParams.get("leaders");
 		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
-		let MOBILE = window.innerWidth <= 600;
 		let IS_PITCHER = false;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
@@ -157,17 +145,6 @@
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
-
-		document.querySelector("#sport-select").value = "barrels";
-
-		if (LEADERS) {
-			document.querySelector("h1").innerText = "Distance Leaders";
-		}
-
-		document.querySelector("#sport-select").addEventListener("change", (event) => {
-			const page = event.target.value;
-			changePage(page);
-		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
 			btn.addEventListener("click", () => {
@@ -234,8 +211,10 @@
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					{title: "Barrels", field: "barrel_ct", width: 45, sorter: "number"},
-					{title: "Barrel", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Barrels", columns: [
+						{title: "Count", field: "barrel_ct", width: 45, sorter: "number"},
+						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
+					]},
 					{title: "Exit<br>Velocity", field: "exit_velocity_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
 					{title: "HR Dist", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
 					{title: "Hard<br>Hit", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},

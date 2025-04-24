@@ -6,7 +6,6 @@
 	<title>⚾ Dingers (H)</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
-	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
@@ -67,18 +66,7 @@
 			<h1>+EV Dingers</h1>
 			<div id="sub-header">
 				<div class="dropdown">
-					<select id="sport-select">
-						<option value="feed">⚾ Feed</option>
-						<option value="dingers">⚾ Dingers</option>
-						<option value="bvp">⚾ BvP</option>
-						<option value="stats">⚾ Stats</option>
-						<option value="trends">⚾ Trends</option>
-						<option value="mlb">⚾ Props</option>
-						<option value="nhl">🏒 Props</option>
-						<option value="nba">🏀 NBA</option>
-						<option value="ncaab">🏀 NCAAB</option>
-						<option value="historical">⚾ Dingers (H)</option>
-					</select>
+					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 				<div class="dropdown">
@@ -106,16 +94,7 @@
 		<div id="mobile-header">
 			<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
 				<div class="dropdown">
-					<select id="sport-select">
-						<option value="feed">⚾ Feed</option>
-						<option value="dingers">⚾ Dingers</option>
-						<option value="mlb">⚾ Props</option>
-						<option value="stats">⚾ Stats</option>
-						<option value="bvp">⚾ BvP</option>
-						<option value="nhl">🏒 NHL</option>
-						<option value="nba">🏀 NBA</option>
-						<option value="ncaab">🏀 NCAAB</option>
-					</select>
+					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 				<div class="dropdown">
@@ -157,6 +136,7 @@
 			<div id="table"></div>
 		</div>
 	</div>
+	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "dingers";
 		let TABLE = null;
@@ -165,17 +145,12 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
-		let MOBILE = window.innerWidth <= 600;
 		let PLAYER = URLParams.get("player");
 		let REFRESH = URLParams.get("refresh");
 		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
-
-		if (SPORT) {
-			document.querySelector(selectId+" #sport-select").value = SPORT;
-		}
 
 		const promoSelect = document.querySelector(selectId+" #promo-select");
 		if (BOOK) {
@@ -196,12 +171,6 @@
 			} else {
 				window.location.href = `./dingers${HTML}?book=${book}${suffix}`;
 			}
-		});
-
-		document.querySelector(selectId+" #sport-select").value = "historical";
-		document.querySelector(selectId+" #sport-select").addEventListener("change", (event) => {
-			const page = event.target.value;
-			changePage(page);
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {

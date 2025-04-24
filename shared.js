@@ -1,5 +1,8 @@
 let HTML = "";
 let TEAM = "";
+let PAGE = "";
+let MOBILE = window.innerWidth <= 600;
+let UPDATED = {};
 if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
@@ -11,13 +14,38 @@ function getToday() {
 	return `${Y}-${M}-${D}`;
 }
 
+const PAGE_DROPDOWN = `
+	<option value="dingers">⚾ Dingers</option>
+	<option value="feed">⚾ Feed</option>
+	<option value="bvp">⚾ BvP</option>
+	<option value="stats">⚾ Stats</option>
+	<option value="barrels">⚾ Barrels</option>
+	<option value="trends">⚾ Trends</option>
+	<option value="mlb">⚾ Props</option>
+	<option value="nhl">🏒 Props</option>
+	<option value="nba">🏀 Props</option>
+	<option value="ncaab">🏀 CBB Props</option>
+	<option value="historical">⚾ Dingers (H)</option>
+`;
+
+setTimeout(() => {
+	const selectId = MOBILE ? "#mobile-header" : "#header";
+	const select = document.querySelector(selectId+" #page-select");
+	select.addEventListener("change", (event) => {
+		const page = event.target.value;
+		changePage(page);
+	});
+	select.innerHTML = PAGE_DROPDOWN;
+	select.value = PAGE == "props" ? SPORT : PAGE;
+}, 100);
+
 function changePage(page) {
-	if (["dingers", "feed", "leaders", "stats", "bvp", "trends", "hot"].includes(page)) {
-		window.location.href = `./${page}${HTML}`;
-	} else if (page == "historical") {
+	if (page == "historical") {
 		window.location.href = `./historical${HTML}?historical=z`;
+	} else if (page == "props") {
+		window.location.href = `./props${HTML}?sport=${SPORT}`;
 	} else {
-		window.location.href = `./props${HTML}?sport=${page}`;
+		window.location.href = `./${page}${HTML}`;
 	}
 }
 
@@ -118,6 +146,7 @@ const percentileFormatter = function(cell) {
 			cls = "negative";
 		}
 	}
+	cls = "";
 	let suffix = "";
 	if (field.includes("distance")) {
 		suffix = " ft";
@@ -125,7 +154,7 @@ const percentileFormatter = function(cell) {
 		suffix = "%";
 	}
 	return `
-		<div ${cls}>${cell.getValue()}${suffix}</div>
+		<div class="${cls}">${cell.getValue()}${suffix}</div>
 	`;
 }
 
@@ -795,9 +824,6 @@ function movingAverage(arr, windowSize) {
 		return subset.reduce((a,b) => a+b, 0) / subset.length;
 	});
 }
-
-let PAGE = "";
-let UPDATED = {};
 
 function fetchUpdated(repo="playerprops", render=true) {
 	const url = `https://api.github.com/repos/zhecht/${repo}/contents/updated.json`;

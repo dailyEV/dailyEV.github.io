@@ -6,7 +6,6 @@
 	<title>⚾ Hot</title>
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
-	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
@@ -155,9 +154,9 @@
 			<div id="graph-container"></div>
 		</div>
 	</div>
+	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		let SPORT = "hot";
-		let MOBILE = window.innerWidth <= 600;
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let DEBUG = URLParams.get("debug");
