@@ -138,15 +138,15 @@ const percentileFormatter = function(cell) {
 
 	let cls = "";
 	let percentiles = data[field+"Percentile"];
-	if (percentiles.length > 0) {
+	if (percentiles) {
 		let v = parseFloat(cell.getValue());
-		if (v >= percentiles[1]) {
+		if (v >= percentiles["70"]) {
 			cls = "positive";
-		} else if (v <= percentiles[0]) {
+		} else if (v <= percentiles["30"]) {
 			cls = "negative";
 		}
 	}
-	cls = "";
+	//cls = "";
 	let suffix = "";
 	if (field.includes("distance")) {
 		suffix = " ft";
