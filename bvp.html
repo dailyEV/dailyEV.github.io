@@ -179,6 +179,8 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let DATE = URLParams.get("date");
+		let TODAY = getToday();
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
 		let LEADERS = URLParams.get("leaders");
@@ -194,7 +196,8 @@
 		    dateFormat: "Y-m-d",
 		    minDate: "today",
 		    maxDate: new Date().fp_incr(1),
-		    defaultDate: new Date()
+		    //defaultDate: DATE || new Date()
+		    defaultDate: "2025-04-24"
 		});
 
 		if (!SPORT) {
