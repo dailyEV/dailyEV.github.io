@@ -163,24 +163,13 @@ const percentileFormatter = function(cell) {
 	}
 
 	let cls = "";
-	if (field.includes("game_trends")) {
-		let [_,f,period] = field.split(".");
-		field = f;
+	let percentiles = PERCENTILES[field];
+	if (percentiles) {
 		let v = parseFloat(cell.getValue());
-		if (v >= PERCENTILES[field][period][1]) {
+		if (v >= percentiles["80"]) {
 			cls = "positive";
-		} else if (v <= PERCENTILES[field][period][0]) {
+		} else if (v <= percentiles["20"]) {
 			cls = "negative";
-		}
-	} else {
-		let percentiles = data[field+"Percentile"];
-		if (percentiles) {
-			let v = parseFloat(cell.getValue());
-			if (v >= percentiles["80"]) {
-				cls = "positive";
-			} else if (v <= percentiles["20"]) {
-				cls = "negative";
-			}
 		}
 	}
 	//cls = "";
