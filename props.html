@@ -709,29 +709,6 @@
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					/*
-					{
-						title: "Prop",
-						field: "prop",
-						formatter: propFormatter,
-						width: MOBILE ? 65 : 80,
-						headerFilter:"list",
-						headerFilterParams:{
-							values:["All", "Player Props", ...props]
-						},
-						headerFilterFunc: function(headerValue, rowValue) {
-							if (headerValue == "All") {
-								return true;
-							}
-							if (headerValue == "Player Props") {
-								return !rowValue.includes("total") && !rowValue.includes("spread") && !rowValue.includes("ml") && !rowValue.includes("rfi");
-							}
-							return rowValue.toUpperCase() === headerValue;
-						},
-						hozAlign: "left",
-						responsive: 0
-					},
-					*/
 					{
 						title: "EV Book",
 						field: "book",
@@ -751,9 +728,6 @@
 						formatterParams:{book:BOOK},
 						responsive: 0
 					},
-					//{title: "", field: "game", formatter: gameFormatter,  formatterParams:{sport:SPORT}},
-					//{title: "Prop", field: "prop", width: 60,  formatter: uppercaseFormatter, editor:"input", headerFilter:"list", headerFilterParams:{valuesLookup:true, clearable:true}},
-					//{title: "Line", field: "playerHandicap",  formatter:lineFormatter},
 					{title: "FD", field: "bookOdds.fd",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 5},
 					{title: "DK", field: "bookOdds.dk",  width: MOBILE ? 60 : 85, sorter: "number", responsive: 6},
 					{title: "MGM", field: "bookOdds.mgm",  width: 85, sorter: "number", responsive: 7},
@@ -781,6 +755,7 @@
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
 					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
+					//{title: "Time", field: "start",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 				]
 			});
 
