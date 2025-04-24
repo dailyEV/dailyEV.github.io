@@ -219,14 +219,20 @@
 					},
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
 					{title: "Barrels", columns: [
-						{title: "Count", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
+						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
 					]},
-					{title: "Exit<br>Velocity", field: "exit_velocity_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
-					{title: "HR Dist", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
-					{title: "Hard<br>Hit", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Hard Hit", columns: [
+						{title: "Total", field: "hard_hit_ct", width: 55, sorter: "number", formatter: percentileFormatter},
+						{title: "Rate", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+					]},
 					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Exit<br>Velocity", field: "exit_velocity_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
 					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					{title: "Distance", columns: [
+						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					]}
 				]
 			});
 

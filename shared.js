@@ -132,6 +132,25 @@ const eraFormatter = function(cell) {
 	return `<div class="${cls}">${cell.getValue()}</div>`;
 }
 
+const lastDiffFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let diff = cell.getValue();
+	if (!diff) {
+		return "";
+	}
+	diff = diff.toFixed(1);
+	if (diff > 0) {
+		return `<div class="positive">+${diff}</div>`;
+	}
+	return `<div class="">${diff}</div>`;
+}
+
+const gapFormatter = function(cell) {
+	const data = cell.getRow().getData();
+
+	return `${cell.getValue()}`;
+}
+
 const percentileFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	let field = cell.getField();
@@ -140,9 +159,9 @@ const percentileFormatter = function(cell) {
 	let percentiles = data[field+"Percentile"];
 	if (percentiles) {
 		let v = parseFloat(cell.getValue());
-		if (v >= percentiles["70"]) {
+		if (v >= percentiles["80"]) {
 			cls = "positive";
-		} else if (v <= percentiles["30"]) {
+		} else if (v <= percentiles["20"]) {
 			cls = "negative";
 		}
 	}
