@@ -169,7 +169,8 @@
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
 				RES = data;
-				renderTable(data);
+				PERCENTILES = data.percentiles;
+				renderTable(data.res);
 			}).catch(err => console.log(err));
 		}
 
@@ -226,14 +227,14 @@
 					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.barrel_ct.5g", width: 45, sorter: "number", formatter: percentileFormatter},
-						{title: "L3", field: "game_trends.barrel_ct.3g", width: 45, sorter: "number", formatter: percentileFormatter},
+						{title: "L5", field: "game_trends.barrel_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
+						{title: "L3", field: "game_trends.barrel_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
 					]},
 					{title: "Hard Hit", columns: [
 						{title: "Total", field: "hard_hit_ct", width: 55, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.hard_hit_ct.5g", width: 45, sorter: "number", formatter: percentileFormatter},
-						{title: "L3", field: "game_trends.hard_hit_ct.3g", width: 45, sorter: "number", formatter: percentileFormatter},
+						{title: "L5", field: "game_trends.hard_hit_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
+						{title: "L3", field: "game_trends.hard_hit_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
 					]},
 					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
