@@ -42,8 +42,8 @@ setTimeout(() => {
 function changePage(page) {
 	if (page == "historical") {
 		window.location.href = `./historical${HTML}?historical=z`;
-	} else if (page == "props") {
-		window.location.href = `./props${HTML}?sport=${SPORT}`;
+	} else if (["mlb", "nba", "nfl", "nhl"].includes(page)) {
+		window.location.href = `./props${HTML}?sport=${page}`;
 	} else {
 		window.location.href = `./${page}${HTML}`;
 	}

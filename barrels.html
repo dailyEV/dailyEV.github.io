@@ -175,6 +175,7 @@
 
 		function renderTable(data) {
 			data = data.filter(r => parseInt(r.bip) >= 20);
+			data = data.filter(r => parseInt(r.barrel_ct) >= 3);
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -218,6 +219,11 @@
 						frozen: MOBILE ? true : false
 					},
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
+					{title: "Last Homer", columns: [
+						{title: "Gms", field: "lastHR", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "gamesBtwnAvg", width: 40},
+						{title: "Z", field: "gamesBtwnZ", width: 40, formatter: lastDiffFormatter},
+					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
