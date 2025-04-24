@@ -490,7 +490,7 @@ function getWindHTML(data) {
 		return "";
 	}
 	if (data.weather["wind"].includes("Roof")) {
-		return `Roof`;
+		//return `Roof`;
 	}
 	let cond = data.weather["conditions"].toLowerCase().replaceAll(" ", "_");
 	if (cond == "breezy_and_mostly_cloudy") {
