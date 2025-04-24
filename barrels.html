@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>⚾ Barrels</title>
+
+	<!--
+	<script type="text/javascript" src="test.js"></script>
+	-->
+
+	<script type="text/javascript" src="tabulator.min.js"></script>
+	<script type="text/javascript" src="peity-vanilla.min.js"></script>
+	<script type="text/javascript" src="shared.js"></script>
+	<link href="tabulator.min.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
+	<script src="math.min.js"></script>
+	<style>
+		h1 {
+			display: none;
+		}
+		#sub-header {
+			flex-direction: row;
+		}
+		#header-container {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+		.player-cell .team-img {
+			margin-top: -2px;
+		}
+		.opp-cell .team-img {
+			margin-top: -1px;
+		}
+		.tabulator .tabulator-col[tabulator-field=stadiumRank] .tabulator-col-content {
+			padding-top: 0;
+		}
+		.tabulator .tabulator-col[tabulator-field=oppRank] .tabulator-col-content {
+			padding-top: 2px;
+		}
+		#table, #table-container {
+			width: max-content;
+		}
+		#left-body {
+			height: 100%;
+		}
+		#player-controls {
+			display: none;
+			justify-content: space;
+		}
+		.switch {
+			background-color: #007BFF; /* Nice blue color */
+			color: #fff; /* White text */
+			border: none; /* Remove border */
+			border-radius: 5px; /* Rounded corners */
+			padding: 5px 10px; /* Adjust padding for a smaller size */
+			font-size: 12px; /* Smaller font size */
+			cursor: pointer; /* Pointer cursor */
+			transition: background-color 0.3s ease; /* Smooth hover effect */
+		}
+		@media (max-width: 600px) {
+			#sport-select {
+				min-width: 100px;
+			}
+			#header #donate {
+				position: relative;
+			}
+			#header-container {
+				display: none;
+			}
+			#sub-header {
+				margin: 0.5rem 0;
+			}
+			#table {
+				height: 95%;
+			}
+		}
+	</style>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-FX06BZ5MRL');
+</script>
+
+<body>
+	<div id="left-body" class="body">
+		<div id="header">
+			<div id="header-container">
+				<h1>Daily EV</h1>
+			</div>
+			<div id="sub-header">
+				<div class="dropdown">
+					<select id="sport-select">
+						<option value="feed">⚾ Feed</option>
+						<option value="dingers">⚾ Dingers</option>
+						<option value="bvp">⚾ BvP</option>
+						<option value="stats">⚾ Stats</option>
+						<option value="barrels">⚾ Barrels</option>
+						<option value="trends">⚾ Trends</option>
+						<option value="mlb">⚾ Props</option>
+						<option value="nhl">🏒 Props</option>
+						<option value="nba">🏀 NBA</option>
+						<option value="ncaab">🏀 NCAAB</option>
+					</select>
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
+			</div>
+		</div>
+		<div id="table-container">
+			<div id="updated-container">
+				<div id="donate">
+					<div>Tip</div>
+					<div>
+						<a href="https://cash.app/$intersectinglines" target="_blank">
+							<img src="logos/cashapp.png" alt="cashapp" />
+						</a>
+						<a href="https://buymeacoffee.com/interlines" target="_blank">
+							<img src="logos/coffee.png" alt="coffee" />
+						</a>
+					</div>
+				</div>
+				<div id="updated">Updated: </div>
+			</div>
+			<div id="table"></div>
+		</div>
+	</div>
+	<div id="right-body" class="body">
+	</div>
+	<div id="tooltip"></div>
+	<script type="text/javascript">
+		PAGE = "stats";
+		let TABLE = null;
+		let HISTORICAL = {};
+		let RES = null;
+		let url = "";
+		const windowURL = new URL(window.location.href);
+		const URLParams = new URLSearchParams(windowURL.search);
+		let BOOK = URLParams.get("book");
+		let SPORT = URLParams.get("sport");
+		let PROP = URLParams.get("prop");
+		let LEADERS = URLParams.get("leaders");
+		let PLAYER = URLParams.get("player");
+		let BVP = URLParams.get("bvp");
+		let MOBILE = window.innerWidth <= 600;
+		let IS_PITCHER = false;
+		let YEAR = new Date();
+		YEAR = YEAR.getFullYear();
+
+		if (!SPORT) {
+			SPORT = "mlb";
+		}
+
+		document.querySelector("#sport-select").value = "barrels";
+
+		if (LEADERS) {
+			document.querySelector("h1").innerText = "Distance Leaders";
+		}
+
+		document.querySelector("#sport-select").addEventListener("change", (event) => {
+			const page = event.target.value;
+			changePage(page);
+		});
+
+		document.querySelectorAll("#donate img").forEach(btn => {
+			btn.addEventListener("click", () => {
+				const sport = btn.textContent;
+			});
+		});
+
+		window.addEventListener("resize", () => {
+			MOBILE = window.innerWidth <= 600;
+		});
+
+		fetchUpdated();
+		fetchData();
+
+		function fetchData() {
+			let s = SPORT;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/baseballreference/barrels.json`;
+			fetch(url, {
+				headers: { "Accept": "application/vnd.github.v3.raw" }
+			}).then(response => response.json()).then(data => {
+				RES = data;
+				renderTable(data);
+			}).catch(err => console.log(err));
+		}
+
+		function renderTable(data) {
+			TABLE = new Tabulator("#table", {
+				tooltipsHeader: true,
+				layout: "fitDataFill",
+				responsiveLayout: MOBILE ? "" : "hide",
+				autoResize: true,
+				data: data,
+				initialSort: [
+					{column: "barrel_ct", dir: "desc"},
+				],
+				columnDefaults: {
+					vertAlign: "middle",
+					hozAlign: "center",
+					resizable: false
+				},
+				rowFormatter: function(row) {
+					if (row.getData().prop == "separator") {
+						row.getElement().style.backgroundColor = "#d3d3d3";
+						row.getElement().style.height = "5px";
+						//row.getElement().innerHTML = "";
+					}
+				},
+				groupHeader: function(value, count, data, group){
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+				},
+				groupToggleElement: "header",
+				columns: [
+					{
+						title: "Player",
+						field: "player",
+						headerFilter: "input",
+						formatter: playerFormatter,
+						width: MOBILE ? 100 : undefined,
+						formatterParams: {
+							sport: SPORT,
+							noProp: true
+						},
+						hozAlign: "left",
+						responsive: 0,
+						frozen: MOBILE ? true : false
+					},
+					{title: "Barrels", field: "barrel_ct", width: 45, sorter: "number"},
+					{title: "Barrel", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Exit<br>Velocity", field: "exit_velocity_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					{title: "HR Dist", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					{title: "Hard<br>Hit", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+				]
+			});
+
+			TABLE.on("rowClick", function(e, row) {
+				
+			});
+		}
+	</script>
+</body>
+</html>

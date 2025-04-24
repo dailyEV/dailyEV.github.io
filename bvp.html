@@ -11,8 +11,10 @@
 
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
+	<script type="text/javascript" src="flatpickr.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
+	<link href="flatpickr.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<style>
@@ -68,11 +70,11 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-  gtag('config', 'G-FX06BZ5MRL');
+	gtag('config', 'G-FX06BZ5MRL');
 </script>
 
 <body>
@@ -96,11 +98,8 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<div id="prop-dropdown" class="dropdown" style="display:none;">
-					<!-- <button onclick="toggleFilterProp()">All Props</button> -->
-					<select id="prop-select">
-						
-					</select>
+				<div id="date-dropdown" class="dropdown">
+					<input type="text" id="date" />
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 				<button onclick="groupByGame();">Game Filter</button>
@@ -189,6 +188,15 @@
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
+		flatpickr("#date", {
+				altInput: true,
+		    altFormat: "F j, Y",
+		    dateFormat: "Y-m-d",
+		    minDate: "today",
+		    maxDate: new Date().fp_incr(1),
+		    defaultDate: new Date()
+		});
+
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
@@ -204,122 +212,6 @@
 		document.querySelector("#sport-select").addEventListener("change", (event) => {
 			const page = event.target.value;
 			changePage(page);
-		});
-
-		document.querySelector("#prop-select").addEventListener("change", function(event) {
-			const prop = event.target.value;
-			if (prop == "all") {
-				TABLE.clearFilter();
-			} else {
-				TABLE.setFilter([
-					{field:"prop", type:"=", value: prop.toLowerCase()}
-				]);
-			}
-			TABLE.getRows("active")[0].getElement().click();
-		});
-
-		document.querySelector("#player-props-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const prop = event.target.value;
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == prop && d.player == rowData.player && d.under == false;
-			});
-			rowClick(rows[0]);
-		});
-
-		document.querySelector("#player-lines-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == rowData.prop && d.player == rowData.player && d.under == false && d.playerHandicap == event.target.value;
-			});
-			rowClick(rows[0]);
-		});
-
-		document.querySelector("#player-ou-select").addEventListener("change", function(event) {
-			const rowData = TABLE.getSelectedRows()[0].getData();
-			const rows = TABLE.getRows().filter(function(r) {
-				const d = r.getData();
-				return d.prop == rowData.prop && d.player == rowData.player && d.under == (event.target.value == "under") && d.playerHandicap == rowData.playerHandicap;
-			});
-			rowClick(rows[0]);
-		});
-
-		if (SPORT == "mlb") {
-			const yearSelect = document.querySelector("#player-year-select");
-			yearSelect.value = YEAR;
-			yearSelect.style.display = "flex";
-			yearSelect.addEventListener("change", function(event) {
-				const data = TABLE.getSelectedRows()[0].getData();
-				let logs = data.totalSplits.split(",");
-				let dtSplits = data.dtSplits.split(",");
-
-				if (event.target.value == YEAR) {
-					logs = data.totalSplits.split(",");
-					dtSplits = data.dtSplits.split(",");
-					plotMap(data, dtSplits, logs);
-				} else {
-					getYearLogs(data, event.target.value);
-				}
-			});
-		}
-
-		function getYearLogs(data, year) {
-			const player = data.player;
-			if (player in HISTORICAL) {
-				plotMap(data, HISTORICAL[player][year].date, HISTORICAL[player][year][data.prop]);
-			} else {
-				const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
-				fetch(url, {
-					headers: { "Accept": "application/vnd.github.v3.raw" }
-				}).then(response => response.json()).then(yearData => {
-					HISTORICAL = yearData;
-					plotMap(data, yearData[player][year].date, yearData[player][year][data.prop]);
-				}).catch(err => console.log(err));
-			}
-		}
-
-		document.querySelector("#player-venue-select").addEventListener("change", function(event) {
-			const data = TABLE.getSelectedRows()[0].getData();
-			const venue = event.target.value.toLowerCase();
-			let dtSplits = data.dtSplits.split(",");
-			let logs = data.totalSplits.split(",");
-			let awayHome = data.awayHomeSplits.split(",");
-			let year = document.querySelector("#player-year-select").value;
-
-			if (year != "2025") {
-				dtSplits = HISTORICAL[player][year].date;
-				logs = HISTORICAL[player][year][data.prop];
-				awayHome = HISTORICAL[player][year].awayHome;
-			}
-
-			let newX = [], newY = [];
-			if (venue == "away") {
-				const awaySplits = dtSplits.map((date, idx) => {
-					if (awayHome[idx] == "A") {
-						return { date, total: logs[idx] };
-					}
-					return null;
-				}).filter(item => item != null);
-				newX = awaySplits.map(r => r.date);
-				newY = awaySplits.map(r => r.total);
-			} else if (venue == "home") {
-				const homeSplits = dtSplits.map((date, idx) => {
-					if (awayHome[idx] == "H") {
-						return { date, total: logs[idx] };
-					}
-					return null;
-				}).filter(item => item != null);
-				newX = homeSplits.map(r => r.date);
-				newY = homeSplits.map(r => r.total);
-			} else {
-				newX = dtSplits;
-				newY = logs;
-			}
-
-			plotMap(data, newX, newY);
-			//Plotly.update("log-chart", { x: [newX], y: [newY] }, {}, [0]);
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -356,11 +248,6 @@
 		}
 
 		function renderTable(data) {
-			const select = document.querySelector("#prop-select");
-			select.innerHTML = `
-				<option value="all" selected>All Props</option>
-			`;
-			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
@@ -407,6 +294,10 @@
 
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
+					{title: "BPP HR Factors", columns: [
+						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
+						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
+					]},
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: false },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: false },
@@ -545,7 +436,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => col.hide());
-			["player", "opp", "bvp", "weather"].forEach(col => TABLE.showColumn(col));
+			["player", "opp", "bvp", "weather", "playerFactor", "bpp"].forEach(col => TABLE.showColumn(col));
 		}
 	</script>
 </body>

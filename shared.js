@@ -4,6 +4,13 @@ if (window.location.protocol == "file:") {
 	HTML = ".html";
 }
 
+function getToday() {
+	let today = new Date();
+	today = today.toLocaleDateString("en-US", {day: "2-digit", month: "2-digit", year: "numeric"});
+	let [M,D,Y] = today.split("/");
+	return `${Y}-${M}-${D}`;
+}
+
 function changePage(page) {
 	if (["dingers", "feed", "leaders", "stats", "bvp", "trends", "hot"].includes(page)) {
 		window.location.href = `./${page}${HTML}`;
@@ -95,6 +102,31 @@ const eraFormatter = function(cell) {
 		cls = "positive";
 	}
 	return `<div class="${cls}">${cell.getValue()}</div>`;
+}
+
+const percentileFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	let field = cell.getField();
+
+	let cls = "";
+	let percentiles = data[field+"Percentile"];
+	if (percentiles.length > 0) {
+		let v = parseFloat(cell.getValue());
+		if (v >= percentiles[1]) {
+			cls = "positive";
+		} else if (v <= percentiles[0]) {
+			cls = "negative";
+		}
+	}
+	let suffix = "";
+	if (field.includes("distance")) {
+		suffix = " ft";
+	} else if (field.includes("percent") || ["barrels_per_bip"].includes(field)) {
+		suffix = "%";
+	}
+	return `
+		<div ${cls}>${cell.getValue()}${suffix}</div>
+	`;
 }
 
 const thresholds = {
@@ -548,10 +580,14 @@ const playerFormatter = function(cell, params, rendered) {
 	} else {
 		gameContainer = getGameImgs(data, params).join("");
 	}
+	let p = player.replace("TOTAL", "");
+	if (!params.fullName && p.length > 16) {
+		p = p.substr(0,15)+"...";
+	}
 	return `
 		<div class="player-cell">
 			<div class='game-container'>${gameContainer}</div>
-			${player.replace("TOTAL", "")} ${prop}
+			${p} ${prop}
 		</div>
 	`
 }

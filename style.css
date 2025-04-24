@@ -474,11 +474,15 @@ nav {
 	scroll-behavior: smooth;
 }
 
+#date-dropdown input {
+	max-width: 140px;
+}
+
 .dropdown {
 	position: relative;
 	display: inline-block;
 }
-.dropdown select {
+.dropdown select, .dropdown input {
 	font-weight: 600;
 	appearance: none;
 	-webkit-appearance: none;

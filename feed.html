@@ -7,7 +7,9 @@
 	<script type="text/javascript" src="tabulator.min.js"></script>
 	<script type="text/javascript" src="peity-vanilla.min.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
+	<script type="text/javascript" src="flatpickr.min.js"></script>
 	<link href="tabulator.min.css" rel="stylesheet">
+	<link href="flatpickr.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<script src="math.min.js"></script>
@@ -139,6 +141,10 @@
 					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<div id="date-dropdown" class="dropdown">
+					<input type="text" id="date" />
+					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+				</div>
 				<button onclick="groupByGameFeed();">Game Filter</button>
 			</div>
 		</div>
@@ -183,6 +189,7 @@
 		let MOBILE = window.innerWidth <= 600;
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let TODAY = getToday();
 		let DEBUG = URLParams.get("debug");
 		let DATE = URLParams.get("date");
 		let CLOSE = URLParams.get("close");
@@ -195,6 +202,19 @@
 		let HRROWS = [];
 		let ALMOST = [];
 		let YBY = {};
+
+		flatpickr("#date", {
+			altInput: true,
+			altFormat: "F j, Y",
+			dateFormat: "Y-m-d",
+			minDate: "2025-03-27",
+			maxDate: new Date(),
+			defaultDate: DATE || new Date()
+		});
+
+		document.querySelector("#date").addEventListener("change", (event) => {
+			window.location.href = `./feed${HTML}?date=${event.target.value}`;
+		});
 
 		if (PLAYER) {
 			document.querySelector("#table").style["max-width"] = "520px";
@@ -300,7 +320,7 @@
 		}
 		async function fetchFeed(render=false) {
 			let url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
-			if (DATE) {
+			if (DATE && DATE != TODAY) {
 				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${DATE}.json`;
 			}
 			if (PLAYER) {
@@ -382,13 +402,13 @@
 			}).catch(err => console.log(err));
 		}
 		let intervalId = 0;
-		if (!DEBUG && !PLAYER && !DATE) {
+		if (!DEBUG && !PLAYER && (!DATE || DATE == TODAY)) {
 			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
 		} else if (DATE) {
 			fetchHistorical();
 		}
 
-		if (!DATE) {
+		if (!DATE || DATE == TODAY) {
 			fetchFeed(render=true);
 		}
 
@@ -409,7 +429,7 @@
 			const hrPerG = parseInt(allData.hr) / (allData.liveGames || allData.totGames);
 			document.querySelector("#table-select option[value=homers]").innerText = `${allData.hr} HRs Today (${hrPerG.toFixed(2)} per Game)`;
 			document.querySelector("#table-select option[value=close]").innerText = `${ALMOST.length} Close Call HRs Today`;
-			if (DATE) {
+			if (DATE && DATE != TODAY) {
 				document.querySelector("#updated").innerText = `Updated: ${timeAgo(DATE)}`;
 			} else {
 				document.querySelector("#updated").innerText = `Updated: ${timeAgo(allData.updated)}`;
@@ -589,8 +609,8 @@
 							return rowValue === headerValue;
 						}
 					},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
-					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+					{title: "Exit<br>Velocity", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+					{title: "Launch<br>Angle", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: summaryFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number", width: 65},
 				],
@@ -619,14 +639,14 @@
 					{title: "", field: "in", formatter: inningFormatter, hozAlign: "center", width: 30, visible: PLAYER ? false : true},
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
-						formatterParams:{ sport: SPORT },
+						formatterParams:{ sport: SPORT, fullName: true },
 						width: 130
 					},
 					{title: "Result", field: "result", width: MOBILE ? 50 : 60, visible: false},
 					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: ftFormatter},
 					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number", width: MOBILE ? 60 : 60},
-					{title: "EVelo", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
-					{title: "LA", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
+					{title: "Exit<br>Velocity", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
+					{title: "Launch<br>Angle", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true},
 					{title: "DT", field: "dt", visible: false},
 				]
 			});
