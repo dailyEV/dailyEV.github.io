@@ -489,8 +489,8 @@ function getWindHTML(data) {
 	if (!data.weather || !data.weather["wind speed"]) {
 		return "";
 	}
-	if (data.weather["wind"].includes("Roof")) {
-		//return `Roof`;
+	if (data.roof) {
+		return `Roof`;
 	}
 	let cond = data.weather["conditions"].toLowerCase().replaceAll(" ", "_");
 	if (cond == "breezy_and_mostly_cloudy") {
