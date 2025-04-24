@@ -186,14 +186,13 @@
 
 		//fetchUpdated(repo="lines");
 		fetchData();
-		if (REFRESH != "false") {
-			setTimeout(() => {
-				//window.location.href = window.location.href;
-			}, 30 * 1000)
-		}
 		let intervalId = 0;
-		if (REFRESH != "false") {
+		if (REFRESH == "auto") {
 			intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
+		} else if (REFRESH != "false") {
+			setTimeout(() => {
+				window.location.href = window.location.href;
+			}, 30 * 1000);
 		}
 
 		async function fetchData(render=true) {
@@ -367,7 +366,7 @@
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: false },
 						{title: "SwSp%", field: "savant.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
 						{title: "EVelo", field: "savant.exit_velocity_avg", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
-						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
+						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : false },
 						{title: "BRL%", field: "savant.barrels_per_bip", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
 					]},
 					{title: "Pitcher Summary", columns: [
@@ -377,7 +376,7 @@
 						{title: "Fly%", field: "pitcherData.flyballs_percent", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
 						{title: "SwSp%", field: "pitcherData.sweet_spot_percent", width: 45, formatter: summaryFormatter, visible: false },
 						{title: "EVelo", field: "pitcherData.exit_velocity_avg", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
-						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
+						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : false },
 						{title: "BRL%", field: "pitcherData.barrel_batted_rate", width: 45, formatter: summaryFormatter, visible: HISTORICAL ? false : true },
 					]},
 					{title: "Rankings", columns: [

@@ -29,7 +29,10 @@ const PAGE_DROPDOWN = `
 `;
 
 setTimeout(() => {
-	const selectId = MOBILE ? "#mobile-header" : "#header";
+	let selectId = MOBILE ? "#mobile-header" : "#header";
+	if (MOBILE && document.querySelectorAll("#mobile-header").length == 0) {
+		selectId = "#header";
+	}
 	const select = document.querySelector(selectId+" #page-select");
 	select.addEventListener("change", (event) => {
 		const page = event.target.value;
@@ -154,6 +157,10 @@ const gapFormatter = function(cell) {
 const percentileFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	let field = cell.getField();
+
+	if (!cell.getValue()) {
+		return 0;
+	}
 
 	let cls = "";
 	let percentiles = data[field+"Percentile"];
