@@ -193,6 +193,8 @@
 			setTimeout(() => {
 				window.location.href = window.location.href;
 			}, 30 * 1000);
+		} else {
+			setInterval(() => updateTimes(), 30 * 1000);
 		}
 
 		async function fetchData(render=true) {
@@ -233,6 +235,10 @@
 					}
 				}, 200);
 			}).catch(err => console.log(err));
+		}
+
+		function updateTimes() {
+			updateHeaders();
 		}
 
 		function updateHeaders() {
