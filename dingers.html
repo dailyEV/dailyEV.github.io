@@ -131,7 +131,7 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated"></div>
+				<div id="updated">Refresh: Off</div>
 			</div>
 			<div id="table"></div>
 		</div>
@@ -342,6 +342,7 @@
 					{title: `DK<br>${timeAgo(UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 60, sorter: "number", responsive: 6, visible: HISTORICAL ? false : true},
 					{title: `MGM<br>${timeAgo(UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `ESPN*<br>${timeAgo(UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
+					{title: `PARX*<br>${timeAgo(UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `CZ<br>${timeAgo(UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 50, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number"},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
