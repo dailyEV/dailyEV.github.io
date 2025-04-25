@@ -98,6 +98,8 @@
 					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
+				<button onclick="filterDue()">Filter Due</button>
+				<button onclick="filterToday()">Filter Today</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -169,8 +171,7 @@
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
 				RES = data;
-				PERCENTILES = data.percentiles;
-				renderTable(data.res);
+				renderTable(data);
 			}).catch(err => console.log(err));
 		}
 
@@ -228,6 +229,7 @@
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.barrel_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
+						{title: "L5", field: "game_trends.barrel_ct.5GPercentile", visible: false},
 						{title: "L3", field: "game_trends.barrel_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.barrels_per_bip.5G", width: 40, sorter: "number", formatter: percentileFormatter},
@@ -235,11 +237,16 @@
 					{title: "Hard Hit", columns: [
 						{title: "Total", field: "hard_hit_ct", width: 55, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.hard_hit_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
+						{title: "L5", field: "game_trends.hard_hit_ct.5GPercentile", visible: false},
 						{title: "L3", field: "game_trends.hard_hit_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
+						{title: "L5", field: "game_trends.hard_hit_percent.5G", width: 40, sorter: "number", formatter: percentileFormatter},
 					]},
 					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
-					{title: "Exit<br>Velocity", field: "exit_velocity_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					{title: "Exit Velocity", columns: [
+						{title: "Total", field: "exit_velocity_avg", formatter: percentileFormatter, width: 45, sorter: "number"},
+						{title: "L5", field: "game_trends.exit_velocity_avg.5G", formatter: percentileFormatter, width: 45, sorter: "number"},
+					]},
 					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
 					{title: "Distance", columns: [
 						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
@@ -251,6 +258,24 @@
 			TABLE.on("rowClick", function(e, row) {
 				
 			});
+		}
+
+		function filterDue() {
+			TABLE.setFilter([
+				{field:"gamesBtwnZ", type:">", value: 0},
+				{field:"game", type:"!=", value: ""},
+				//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
+				{field:"game_trends.hard_hit_ct.5GPercentile", type:">=", value: 80},
+			]);
+			TABLE.setSort([
+				{column: "gamesBtwnZ", dir: "desc"}
+			])
+		}
+
+		function filterToday() {
+			TABLE.setFilter([
+				{field:"game", type:"!=", value: ""},
+			]);
 		}
 	</script>
 </body>
