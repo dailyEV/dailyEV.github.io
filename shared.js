@@ -204,7 +204,7 @@ const percentileFormatter = function(cell) {
 const thresholds = {
 	"exit_velocity_avg": [87.6, 90.8],
 	"la": [0, 26],
-	"evo": [0, 98],
+	"evo": [0, 95],
 	"dist": [0, 300],
 	"hard_hit_percent": [35.5, 45.5],
 	"barrel_batted_rate": [5,10.5],
@@ -235,7 +235,7 @@ const summaryFormatter = function(cell, params, rendered) {
 		if (thresholds[field][0] && v <= thresholds[field][0]) {
 			cls = switched ? "positive" : "negative";
 		} else if (field == "la") {
-			if (v >= thresholds[field][1] && v <= 30) {
+			if (isBarrel(data)) {
 				cls = switched ? "negative" : "positive";
 			}
 		} else if (v >= thresholds[field][1]) {
