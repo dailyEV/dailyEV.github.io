@@ -452,7 +452,7 @@ const evBookFormatter = function(cell, params, rendered) {
 		`;
 	}
 
-	const book = cell.getValue().replace("kambi", "br").replace("-50%", "");
+	const book = cell.getValue().replace("kambi", "parx").replace("-50%", "");
 	let line = data.line === undefined ? "-" : data.line;
 	if (window.location.href.includes("stats")) {
 		line = data.daily.odds;

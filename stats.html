@@ -827,7 +827,7 @@
 				},
 				groupBy: PROP == "hr" ? "" : "game",
 				groupHeader: function(value, count, data, group){
-					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()} (${data[0].start})</span>`;
 				},
 				groupToggleElement: "header",
 				columns: [
@@ -905,26 +905,7 @@
 					{title: "L10", field: "hitRateL10",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
-					{title: "100mph", field: "100-evo", sorter: "number", visible: false, formatter: percentFormatter, width: 65},
-					{
-						title: "Exit Velo Logs<br>>100mph",
-						field: "feed.evo",
-						width: 160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: false
-					},
-					{title: "300ft", field: "300-ft", sorter: "number", visible: false, formatter: percentFormatter, width: 65},
-					{
-						title: "Distance Logs<br>>300ft",
-						field: "feed.dist",
-						width: 160,
-						formatter: chartFormatter,
-						formatterParams:{type:"bar"},
-						responsive: 3,
-						visible: false
-					},
+					//{title: "Start", field: "start", visible: SPORT == "mlb" ? true : false},
 					
 					// hidden
 					{title: "", field: "bvpHR", sorter: "number", visible: false},
