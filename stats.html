@@ -389,11 +389,13 @@
 				setTimeout(function() {
 					if (PROP) {
 						document.querySelector("#prop-select").value = PROP;
-						TABLE.setSort([
-							{column: "hitRate", dir: "desc"},
-							{column: "hitRateL10", dir: "desc"},
-							{column: "startSortable", dir: "asc"},
-						])
+						if (PROP != "hr") {
+							TABLE.setSort([
+								{column: "hitRate", dir: "desc"},
+								{column: "hitRateL10", dir: "desc"},
+								//{column: "startSortable", dir: "asc"},
+							])
+						}
 					}
 					hideCols();
 					TABLE.redraw();
