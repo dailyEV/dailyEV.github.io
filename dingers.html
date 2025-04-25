@@ -222,6 +222,12 @@
 							{column: `${BOOK}_ev`, dir: "desc"}
 						]);
 					}
+					if (FILTER != undefined) {
+						TABLE.setSort([
+							{column: "ev", dir: "desc"},
+							{column: "startSortable", dir: "asc"},
+						])
+					}
 					if (PRETTY != undefined) {
 						pretty_();
 					}
@@ -287,7 +293,7 @@
 					}
 				},
 				groupHeader: function(value, count, data, group){
-					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()} (${data[0].start})</span>`;
 				},
 				groupToggleElement: "header",
 				groupBy: FILTER != undefined ? "game" : "",
@@ -385,7 +391,7 @@
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50, visible: HISTORICAL ? false : true},
 					]},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
-					{title: "Start", field: "start", visible: false},
+					{title: "Start", field: "startSortable", visible: false, sorter: "number"},
 					{title: "FD Z", field: "analysis.fd_z_score", width: 45, sorter: "number", visible: HISTORICAL ? false : true},
 					//{title: "Last HR", field: "lastHR"},
 				]
@@ -410,10 +416,12 @@
 
 		function groupByGame() {
 			let q = window.location.search;
-			console.log()
+			console.log(TABLE.options.groupBy)
 			if (!TABLE.options.groupBy) {
 				if (q) {
 					q += "&filter=";
+				} else {
+					q += "?filter=";
 				}
 				window.location.href = `./dingers${HTML}${q}`;
 			} else {

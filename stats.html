@@ -388,8 +388,12 @@
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
-						//TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
 						document.querySelector("#prop-select").value = PROP;
+						TABLE.setSort([
+							{column: "hitRate", dir: "desc"},
+							{column: "hitRateL10", dir: "desc"},
+							{column: "startSortable", dir: "asc"},
+						])
 					}
 					hideCols();
 					TABLE.redraw();
@@ -403,12 +407,6 @@
 		function hideCols() {
 			if (SPORT == "mlb") {
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
-			}
-			if (LEADERS) {
-				TABLE.setSort([{"column": LEADERS, "dir": "desc"}]);
-				TABLE.showColumn(LEADERS);
-				TABLE.showColumn("feed.evo");
-				["logs", "weather", "stadiumRank", "oppRank", "ba", "order", "hitRate", "hitRateLYR"].map(x => TABLE.hideColumn(x));
 			}
 			if (IS_PITCHER) {
 				["pitcherData.k_percent", "pitcherData.whiff_percent"].map(x => TABLE.showColumn(x));
@@ -853,6 +851,10 @@
 					
 					//{title: "xBA", field: "xba",  width: 45, sorter: "number", formatter: avgFormatter, visible: MOBILE ? false : true},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 70},
+					{title: "BPP Factors", columns: [
+						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
+						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
+					]},
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: true },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: true },
@@ -908,6 +910,7 @@
 					//{title: "Start", field: "start", visible: SPORT == "mlb" ? true : false},
 					
 					// hidden
+					{title: "", field: "startSortable", sorter: "number", visible: false},
 					{title: "", field: "bvpHR", sorter: "number", visible: false},
 					{title: "", field: "bvpAvg", sorter: "number", visible: false},
 					{title: "", field: "prop", visible: false},
