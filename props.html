@@ -143,6 +143,7 @@
 	<script type="text/javascript">
 		PAGE = "props";
 		let TABLE = null;
+		let RES = null;
 		let HISTORICAL = {};
 		let url = "";
 		const windowURL = new URL(window.location.href);
@@ -319,6 +320,7 @@
 				if (OVER == "true") {
 					data = data.filter(r => r.under == false);
 				}
+				RES = data;
 				renderTable(data);
 				setTimeout(function() {
 					if (PROP) {
@@ -755,6 +757,7 @@
 					{title: "SZN", field: "totalOver",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2},
 					{title: "L10", field: "total10Over",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 1},
 					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
+					{title: "Start", field: "start", visible: SPORT == "mlb" ? true : false},
 					//{title: "Time", field: "start",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 				]
 			});
