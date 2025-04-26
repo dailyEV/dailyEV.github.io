@@ -130,6 +130,7 @@
 		let HISTORICAL = {};
 		let RES = null;
 		let url = "";
+		let TOGGLE_PERCENTILE = false;
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let BOOK = URLParams.get("book");
@@ -137,6 +138,7 @@
 		let PROP = URLParams.get("prop");
 		let LEADERS = URLParams.get("leaders");
 		let PLAYER = URLParams.get("player");
+		let PRETTY = URLParams.get("pretty");
 		let BVP = URLParams.get("bvp");
 		let IS_PITCHER = false;
 		let YEAR = new Date();
@@ -172,6 +174,11 @@
 			}).then(response => response.json()).then(data => {
 				RES = data;
 				renderTable(data);
+				setTimeout(() => {
+					if (PRETTY != undefined) {
+						pretty_();
+					}
+				}, 100);
 			}).catch(err => console.log(err));
 		}
 
@@ -223,9 +230,10 @@
 					},
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
 					{title: "Last Homer", columns: [
-						{title: "Gms", field: "lastHR", width: 40, formatter: gapFormatter},
-						{title: "Avg", field: "gamesBtwnAvg", width: 40},
-						{title: "Z", field: "gamesBtwnZ", width: 40, formatter: lastDiffFormatter},
+						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
+						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
+						{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter},
 					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
@@ -238,7 +246,8 @@
 					{title: "Hard Hit", columns: [
 						{title: "Total", field: "hard_hit_ct", width: 55, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.hard_hit_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.hard_hit_ct.5GPercentile", visible: false},
+						{title: "", field: "game_trends.hard_hit_ct.5GPercentile", visible: false},
+						{title: "", field: "game_trends.hard_hit_ct.3GPercentile", visible: false},
 						{title: "L3", field: "game_trends.hard_hit_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "Rate", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.hard_hit_percent.5G", width: 40, sorter: "number", formatter: percentileFormatter},
@@ -263,13 +272,13 @@
 
 		function filterDue() {
 			TABLE.setFilter([
-				{field:"gamesBtwnZ", type:">", value: 0},
+				{field:"homerLogs.z", type:">", value: 0},
 				{field:"game", type:"!=", value: ""},
 				//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
-				{field:"game_trends.hard_hit_ct.5GPercentile", type:">=", value: 80},
+				{field:"game_trends.hard_hit_ct.3GPercentile", type:">=", value: 75},
 			]);
 			TABLE.setSort([
-				{column: "gamesBtwnZ", dir: "desc"}
+				{column: "homerLogs.z", dir: "desc"}
 			])
 		}
 
@@ -277,6 +286,14 @@
 			TABLE.setFilter([
 				{field:"game", type:"!=", value: ""},
 			]);
+		}
+
+		function pretty_() {
+			TABLE.getColumns().map(col => {
+				if (!["book", "player", "homerLogs.last", "homerLogs.gamesBtwnAvg", "homerLogs.z", "barrel_ct", "game_trends.barrel_ct.3G", "hard_hit_ct", "game_trends.hard_hit_ct.3G"].includes(col.getField())) {
+					col.hide()
+				}
+			});
 		}
 	</script>
 </body>

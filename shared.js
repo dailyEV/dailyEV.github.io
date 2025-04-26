@@ -55,7 +55,7 @@ function changePage(page) {
 function isBarrel(row) {
 	const evo = parseInt(row["evo"] || 0);
 	const la = parseInt(row["la"] || 0);
-	const thresh = {98: [26, 30], 99: [25, 31], 100: [24, 33], 101: [23, 34], 102: [22, 35], 103: [21, 36], 104: [20, 37], 105: [19, 38], 106: [18, 39], 107: [17, 40], 108: [16, 41], 109: [15, 42], 110: [14, 43], 111: [13, 44], 112: [12, 45], 113: [11, 46], 114: [10, 47], 115: [9, 48], 116: [8, 49]};
+	const thresh = {98: [26, 30], 99: [25, 31], 100: [24, 33], 101: [23, 34], 102: [22, 35], 103: [21, 36], 104: [20, 37], 105: [19, 38], 106: [18, 39], 107: [17, 40], 108: [16, 41], 109: [15, 42], 110: [14, 43], 111: [13, 44], 112: [12, 45], 113: [11, 46], 114: [10, 47], 115: [9, 48], 116: [8, 50]};
 
 	if (evo < 98) return false;
 	if (evo > 116) return la >= thresh[116][0] && la <= thresh[116][1];
@@ -184,14 +184,21 @@ const percentileFormatter = function(cell) {
 		cls = "negative";
 	}
 	//cls = "";
-	let suffix = "";
-	if (field.includes("distance")) {
-		suffix = " ft";
-	} else if (field.includes("percent") || field.includes("barrels_per_bip")) {
-		suffix = "%";
+	let v = "";
+
+	if (TOGGLE_PERCENTILE) {
+		v = `${addSuffix(percentile)}`;
+	} else {
+		let suffix = "";
+		if (field.includes("distance")) {
+			suffix = " ft";
+		} else if (field.includes("percent") || field.includes("barrels_per_bip")) {
+			suffix = "%";
+		}
+		v = `${cell.getValue()}${suffix}`;
 	}
 	return `
-		<div class="${cls}">${cell.getValue()}${suffix}</div>
+		<div class="${cls}">${v}</div>
 	`;
 }
 

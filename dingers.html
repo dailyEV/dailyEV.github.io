@@ -188,13 +188,23 @@
 		fetchData();
 		let intervalId = 0;
 		if (REFRESH == "auto") {
-			intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
+			intervalId = setInterval(() => {
+				if (document.hasFocus()) {
+					fetchData(render=false)
+				}
+			}, 30 * 1000);
 		} else if (REFRESH && REFRESH != "false") {
 			setTimeout(() => {
-				window.location.href = window.location.href;
+				if (document.hasFocus()) {
+					window.location.href = window.location.href;
+				}
 			}, 30 * 1000);
 		} else {
-			setInterval(() => updateTimes(), 30 * 1000);
+			setInterval(() => {
+				if (document.hasFocus()) {
+					updateTimes()
+				}
+			}, 30 * 1000);
 		}
 
 		async function fetchData(render=true) {
