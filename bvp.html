@@ -272,11 +272,10 @@
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
 					{title: "Last Homer", columns: [
-						{title: "Gms", field: "lastHR", width: 40, formatter: gapFormatter},
-						{title: "Avg", field: "gamesBtwnAvg", width: 40},
-						//{title: "Diff", field: "gamesBtwnDiff", width: 40, formatter: lastDiffFormatter},
-						//{title: "SD", field: "gamesBtwnSD", width: 40},
-						{title: "Z", field: "gamesBtwnZ", width: 40, formatter: lastDiffFormatter},
+						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
+						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
+						{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter},
 					]},
 					{title: "BPP HR Factors", columns: [
 						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
