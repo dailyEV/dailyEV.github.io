@@ -40,6 +40,10 @@
 	.tabulator .tabulator-col[tabulator-field=oppRank] .tabulator-col-content {
 		padding-top: 2px;
 	}
+	#refresh-select {
+		padding: 0 0.5rem;
+		height: 24px;
+	}
 	@media (max-width: 1350px) {
 		#table-container {
 			justify-content: normal;
@@ -131,7 +135,17 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated">Refresh: Off</div>
+				<div id="updated">
+					<div class="dropdown">
+						<label>Refresh</label>
+						<select id="refresh-select">
+							<option value="off">Off</option>
+							<option value="auto">Auto</option>
+							<option value="reload">Reload</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+				</div>
 			</div>
 			<div id="table"></div>
 		</div>
@@ -146,7 +160,7 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
 		let PLAYER = URLParams.get("player");
-		let REFRESH = URLParams.get("refresh");
+		let REFRESH = URLParams.get("refresh") || "off";
 		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
@@ -163,15 +177,17 @@
 
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
-			let suffix = "";
-			if (HISTORICAL) {
-				suffix += "&historical=";
-			}
-			if (!book) {
-				window.location.href = `./dingers${HTML}?book=${suffix}`;
-			} else {
-				window.location.href = `./dingers${HTML}?book=${book}${suffix}`;
-			}
+			let url = new URL(window.location.href);
+			url.searchParams.set("book", book);
+			window.location.href = `./dingers${HTML}${url.search}`;
+		});
+
+		document.querySelector("#refresh-select").value = REFRESH;
+		document.querySelector("#refresh-select").addEventListener("change", (event) => {
+			const refresh = event.target.value;
+			let url = new URL(window.location.href);
+			url.searchParams.set("refresh", refresh);
+			window.location.href = `./dingers${HTML}${url.search}`;
 		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -193,7 +209,7 @@
 					fetchData(render=false)
 				}
 			}, 30 * 1000);
-		} else if (REFRESH && REFRESH != "false") {
+		} else if (REFRESH == "reload") {
 			setTimeout(() => {
 				if (document.hasFocus()) {
 					window.location.href = window.location.href;

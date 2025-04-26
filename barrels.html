@@ -240,6 +240,10 @@
 						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
 						{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter},
 					]},
+					{title: "Close Calls", columns: [
+						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
+						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : true},
+					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.barrel_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
