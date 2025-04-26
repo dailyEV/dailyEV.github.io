@@ -393,7 +393,7 @@
 							TABLE.setSort([
 								{column: "hitRate", dir: "desc"},
 								{column: "hitRateL10", dir: "desc"},
-								//{column: "startSortable", dir: "asc"},
+								{column: "startSortable", dir: "asc"},
 							])
 						}
 					}
@@ -428,6 +428,10 @@
 			} else if (["h", "h+r+rbi"].includes(PROP)) {
 				["savant.exit_velocity_avg", "pitcherData.exit_velocity_avg"].map(x => TABLE.hideColumn(x));
 				["pitcherData.xba", "pitcherData.xwoba"].map(x => TABLE.showColumn(x));
+			}
+
+			if (PROP == "k") {
+				["bpp", "playerFactor"].map(x => TABLE.hideColumn(x));
 			}
 		}
 
@@ -858,7 +862,7 @@
 						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
 						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
 					]},
-					{title: "Batter Summary", columns: [
+					{title: "Adv Batter", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: true },
 						{title: "xwOBA", field: "savant.est_woba", width: 45, formatter: xwobaFormatter, visible: true },
 						{title: "BRL%", field: "savant.barrels_per_bip", width: 45, formatter: summaryFormatter },
@@ -866,7 +870,7 @@
 						{title: "EVelo", field: "savant.exit_velocity_avg", width: 45, formatter: summaryFormatter },
 						{title: "HH%", field: "savant.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
 					]},
-					{title: "Pitcher Summary", columns: [
+					{title: "Adv Pitcher", columns: [
 						{title: "ERA", field: "pitcherData.p_era", width: 45, formatter: eraFormatter, visible: true },
 						// PITCHER K (whiff_percent, oz_swing_miss_percent, in_zone_swing_miss, z_swing_miss_percent, oz_contact_percent)
 						// swings and misses
@@ -885,12 +889,12 @@
 						{title: "EVelo", field: "pitcherData.exit_velocity_avg", width: 45, formatter: summaryFormatter, visible: IS_PITCHER ? false : true },
 						{title: "HH%", field: "pitcherData.hard_hit_percent", width: 45, formatter: summaryFormatter, visible: false },
 					]},
-					{title: "Rankings", columns: [
+					{title: "Team Rankings", columns: [
 						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50},
 						{title: "K/6", field: "oppRankPer6", width: 50, visible: IS_PITCHER ? true : false},
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50},
 					]},
-					{title: "Game Lines", columns: [
+					{title: "PN Game Lines", columns: [
 						{title: "ML", field: "gameLines.ml",  width: 40, sorter: "number", formatter: plusMinusFormatter},
 						{title: "Total", field: "gameLines.total",  width: 40, sorter: "number"},
 						{title: "TT", field: "gameLines.tt",  width: 40, sorter: "number"},
@@ -898,7 +902,7 @@
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					
 					{
-						title: "Game Logs",
+						title: "L15 Game Logs",
 						field: IS_PITCHER ? "longLogs" : "logs",
 						width:160,
 						formatter: chartFormatter,
@@ -960,8 +964,14 @@
 		function groupByGameStats() {
 			if (!TABLE.options.groupBy) {
 				TABLE.setGroupBy("game");
+				TABLE.setSort([
+					{column: "hitRate", dir: "desc"},
+					{column: "hitRateL10", dir: "desc"},
+					{column: "startSortable", dir: "asc"},
+				]);
 			} else {
 				TABLE.setGroupBy();
+				TABLE.setSort(TABLE.getSorters().filter(s => s.field != "startSortable"));
 			}
 		}
 

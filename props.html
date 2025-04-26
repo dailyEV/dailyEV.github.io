@@ -161,6 +161,14 @@
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
+		if (SPORT == "nhl") {
+			document.title = "🏒 Props";
+		} else if (SPORT == "nba") {
+			document.title = "🏀 Props";
+		} else if (SPORT == "mlb") {
+			document.title = "⚾ Props";
+		}
+
 		document.querySelector("#prop-select").addEventListener("change", function(event) {
 			const prop = event.target.value;
 			if (prop == "all") {
@@ -672,7 +680,8 @@
 				columnDefaults: {
 					vertAlign: "middle",
 					hozAlign: "center",
-					resizable: false
+					resizable: false,
+					headerSortStartingDir: "desc"
 				},
 				rowFormatter: function(row) {
 					if (row.getData().prop == "separator") {
@@ -759,6 +768,7 @@
 					{title: "LYR", field: "hitRateLYR",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
 					{title: "Start", field: "start", visible: SPORT == "mlb" ? true : false},
 					//{title: "Time", field: "start",  sorter: "number", formatter: percentFormatter,  width: MOBILE ? 40 : 60, responsive: 2, visible: false},
+					{title: "", field: "game", visible: false},
 				]
 			});
 

@@ -186,9 +186,9 @@
 		    minDate: "today",
 		    maxDate: new Date().fp_incr(1),
 		    //defaultDate: DATE || new Date()
-		    minDate: "2025-04-25",
-		    maxDate: "2025-04-25",
-		    defaultDate: "2025-04-25"
+		    minDate: "2025-04-26",
+		    maxDate: "2025-04-26",
+		    defaultDate: "2025-04-26"
 		});
 
 		if (!SPORT) {
@@ -213,12 +213,7 @@
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
-				if (PROP) {
-					data = data.filter(r => r.prop == PROP);
-				}
-				if (LEADERS) {
-					data = data.filter(r => r.feed.evo.length > 20);
-				}
+				data = data.filter(r => r.game != "");
 				renderTable(data);
 				setTimeout(function() {
 					TABLE.redraw();
