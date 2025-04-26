@@ -98,8 +98,9 @@
 					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="filterDue()">Filter Due</button>
-				<button onclick="filterToday()">Filter Today</button>
+				<button onclick="filterDue()">Due</button>
+				<button id="percentiles-btn" onclick="viewPercentiles()">Percentiles</button>
+				<!-- <button onclick="filterToday()">Filter Today</button> -->
 			</div>
 		</div>
 		<div id="table-container">
@@ -130,7 +131,6 @@
 		let HISTORICAL = {};
 		let RES = null;
 		let url = "";
-		let TOGGLE_PERCENTILE = false;
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let BOOK = URLParams.get("book");
@@ -139,6 +139,7 @@
 		let LEADERS = URLParams.get("leaders");
 		let PLAYER = URLParams.get("player");
 		let PRETTY = URLParams.get("pretty");
+		let TOGGLE_PERCENTILE = URLParams.get("percentiles") != undefined;
 		let BVP = URLParams.get("bvp");
 		let IS_PITCHER = false;
 		let YEAR = new Date();
@@ -146,6 +147,10 @@
 
 		if (!SPORT) {
 			SPORT = "mlb";
+		}
+
+		if (TOGGLE_PERCENTILE) {
+			document.querySelector("#percentiles-btn").innerText = "Raw Values";
 		}
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -271,21 +276,37 @@
 		}
 
 		function filterDue() {
-			TABLE.setFilter([
-				{field:"homerLogs.z", type:">", value: 0},
-				{field:"game", type:"!=", value: ""},
-				//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
-				{field:"game_trends.hard_hit_ct.3GPercentile", type:">=", value: 75},
-			]);
-			TABLE.setSort([
-				{column: "homerLogs.z", dir: "desc"}
-			])
+			if (TABLE.getFilters().length == 0) {
+				TABLE.setFilter([
+					{field:"homerLogs.z", type:">", value: 0},
+					{field:"game", type:"!=", value: ""},
+					//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
+					{field:"game_trends.hard_hit_ct.3GPercentile", type:">=", value: 75},
+				]);
+				TABLE.setSort([
+					{column: "homerLogs.z", dir: "desc"}
+				]);
+			} else {
+				TABLE.setFilter();
+				TABLE.setSort([
+					{column: "barrel_ct", dir: "desc"}
+				]);
+			}
+			
 		}
 
 		function filterToday() {
 			TABLE.setFilter([
 				{field:"game", type:"!=", value: ""},
 			]);
+		}
+
+		function viewPercentiles() {
+			if (TOGGLE_PERCENTILE) {
+				window.location.href = `./barrels${HTML}`;
+			} else {
+				window.location.href = `./barrels${HTML}?percentiles=`;
+			}
 		}
 
 		function pretty_() {
