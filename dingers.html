@@ -168,6 +168,11 @@
 		let HISTORICAL = URLParams.get("historical");
 		let PRETTY = URLParams.get("pretty");
 		let GAME = URLParams.get("game");
+
+		if (GAME) {
+			let [a,h] = GAME.split("-");
+			GAME = `${a} @ ${h}`;
+		}
 		const selectId = MOBILE ? "#mobile-header" : "#header";
 
 		const promoSelect = document.querySelector(selectId+" #promo-select");
