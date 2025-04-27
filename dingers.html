@@ -205,20 +205,20 @@
 		let intervalId = 0;
 		if (REFRESH == "auto") {
 			intervalId = setInterval(() => {
-				if (document.hasFocus()) {
-					fetchData(render=false)
+				if (!MOBILE || document.hasFocus()) {
+					fetchData(render=false);
 				}
 			}, 30 * 1000);
 		} else if (REFRESH == "reload") {
 			setTimeout(() => {
-				if (document.hasFocus()) {
+				if (!MOBILE || document.hasFocus()) {
 					window.location.href = window.location.href;
 				}
 			}, 30 * 1000);
 		} else {
 			setInterval(() => {
-				if (document.hasFocus()) {
-					updateTimes()
+				if (!MOBILE || document.hasFocus()) {
+					updateTimes();
 				}
 			}, 30 * 1000);
 		}
