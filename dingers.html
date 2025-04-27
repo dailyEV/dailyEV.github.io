@@ -78,6 +78,7 @@
 						<option value="" selected>All Books</option>
 						<option value="mgm-20">MGM 20% HR</option>
 						<option value="fd-50">FD 50%</option>
+						<option value="espn-hr">ESPN HR</option>
 						<option value="espn-50">ESPN 50%</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="mgm-sweat">MGM No Sweat</option>
@@ -106,6 +107,7 @@
 						<option value="" selected>All Books</option>
 						<option value="mgm-20">MGM 20% HR</option>
 						<option value="fd-50">FD 50%</option>
+						<option value="espn-hr">ESPN HR</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="mgm-sweat">MGM No Sweat</option>
 						<option value="fd">FD</option>
@@ -165,6 +167,7 @@
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
 		let PRETTY = URLParams.get("pretty");
+		let GAME = URLParams.get("game");
 		const selectId = MOBILE ? "#mobile-header" : "#header";
 
 		const promoSelect = document.querySelector(selectId+" #promo-select");
@@ -259,6 +262,11 @@
 					if (PRETTY != undefined) {
 						pretty_();
 					}
+					if (GAME) {
+						TABLE.setFilter([
+							{field:"game", type:"=", value: GAME}
+						])
+					}
 				}, 200);
 			}).catch(err => console.log(err));
 		}
@@ -336,6 +344,7 @@
 					{title: "EV", field: "fd_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "espn-hr_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn-50-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
@@ -424,6 +433,7 @@
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50, visible: HISTORICAL ? false : true},
 					]},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
+					{title: "Game", field: "game", visible: false},
 					{title: "Start", field: "startSortable", visible: false, sorter: "number"},
 					{title: "FD Z", field: "analysis.fd_z_score", width: 45, sorter: "number", visible: HISTORICAL ? false : true},
 					//{title: "Last HR", field: "lastHR"},
