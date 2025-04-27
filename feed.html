@@ -218,19 +218,6 @@
 			}, 200);
 		}
 
-		function checkParams() {
-			setTimeout(function() {
-				const url = new URL(window.location.href);
-				const params = new URLSearchParams(url.search);
-				const result = params.get("result");
-				if (result) {
-					TABLE.setFilter([
-						{field:"result", type:"=", value: result}
-					]);
-				}
-			}, 100);
-		}
-
 		const tableSelect = document.querySelector("#table-select");
 		tableSelect.value = "homers";
 		tableSelect.addEventListener("change", (event) => {
@@ -385,7 +372,6 @@
 				if (render) {
 					renderTable(data);
 					renderHRTable(HRROWS);
-					checkParams();
 				} else {
 					//TABLE.replaceData(data);
 					TABLE.updateOrAddData(data);

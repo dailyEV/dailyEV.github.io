@@ -236,13 +236,13 @@
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
 					{title: "Last Homer", columns: [
 						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
-						{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
+						//{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
 						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
-						{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter},
-					]},
-					{title: "Close Calls", columns: [
-						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
-						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : true},
+						//{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+
+						{title: "AB", field: "homerLogs.lastHR_AB", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.abBtwnAvg", width: 40},
+						{title: "Z", field: "homerLogs.abZ", width: 40, formatter: lastDiffFormatter, sorter: "number"},
 					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
@@ -270,7 +270,11 @@
 					{title: "Distance", columns: [
 						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
 						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
-					]}
+					]},
+					{title: "Close Calls", columns: [
+						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
+						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : true},
+					]},
 				]
 			});
 
@@ -282,13 +286,13 @@
 		function filterDue() {
 			if (TABLE.getFilters().length == 0) {
 				TABLE.setFilter([
-					{field:"homerLogs.z", type:">", value: 0},
+					{field:"homerLogs.abZ", type:">", value: -0.2},
 					{field:"game", type:"!=", value: ""},
 					//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
 					{field:"game_trends.hard_hit_ct.3GPercentile", type:">=", value: 75},
 				]);
 				TABLE.setSort([
-					{column: "homerLogs.z", dir: "desc"}
+					{column: "homerLogs.abZ", dir: "desc"}
 				]);
 			} else {
 				TABLE.setFilter();

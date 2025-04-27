@@ -100,21 +100,6 @@
 					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<div>
-					<div id="prop-dropdown" class="dropdown">
-						<!-- <button onclick="toggleFilterProp()">All Props</button> -->
-						<select id="prop-select">
-							<option value="h+r+rbi">H+R+RBI</option>
-							<option value="hr">HR</option>
-							<option value="h">Hit</option>
-							<option value="tb">TB</option>
-							<!-- <option value="sb">SB</option> -->
-							<option value="k">K</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-				</div>
-				<button onclick="groupByGameStats();">Game Filter</button>
 				<!-- <button onclick="toggleSummary();">Batter Summary</button> -->
 				<!-- <button onclick="filterConfirmed();">Confirmed Filter</button> -->
 			</div>
@@ -197,7 +182,7 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
-		let IS_PITCHER = true;
+		let IS_PITCHER = false;
 		let PROP = null;
 		let PLAYER = null;
 		let YEAR = new Date();
@@ -206,12 +191,6 @@
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
-
-		document.querySelector("#prop-select").addEventListener("change", function(event) {
-			const prop = event.target.value;
-			window.location.href = `./stats${HTML}?prop=${prop.replaceAll("+","-")}`;
-			//TABLE.getRows("active")[0].getElement().click();
-		});
 
 		document.querySelectorAll("#donate img").forEach(btn => {
 			btn.addEventListener("click", () => {
@@ -624,8 +603,12 @@
 					},
 					{title: IS_PITCHER ? "Opp" : "Opp – Pitcher", field: "opp", formatter: oppFormatter, formatterParams: {is_pitcher: IS_PITCHER}, hozAlign: "left", width: MOBILE ? 100 : (IS_PITCHER ? 80 : 140)},
 					{title: "Pts", field: "pts", width: 50, formatter: decimalFormatter},
-					{title: "Ks", field: "propPts.k", formatter: decimalFormatter},
-					{title: "Outs", field: "propPts.outs", formatter: decimalFormatter},
+					{title: "HR", field: "propPts.hr", formatter: decimalFormatter},
+					{title: "H", field: "propPts.h", formatter: decimalFormatter},
+					{title: "R", field: "propPts.r", formatter: decimalFormatter},
+					{title: "RBI", field: "propPts.rbi", formatter: decimalFormatter},
+					{title: "K", field: "propPts.k", formatter: decimalFormatter},
+					{title: "Outs", field: "propPts.outs", formatter: decimalFormatter, visible: IS_PITCHER ? true : false},
 
 					{title: "", field: "pts", visible: false},
 					{title: "", field: "prop", visible: false},
