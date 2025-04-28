@@ -655,6 +655,7 @@
 				//data.splice(idx, 0, {prop: "separator", ev: ""});
 			}
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
+			props.sort();
 			const select = document.querySelector("#prop-select");
 			select.innerHTML = `
 				<option value="all" selected>All Props</option>

@@ -559,7 +559,6 @@
 		}
 
 		function renderTable(data) {
-			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				layout: "fitDataFill",
@@ -572,7 +571,8 @@
 				columnDefaults: {
 					vertAlign: "middle",
 					hozAlign: "center",
-					resizable: false
+					resizable: false,
+					headerSortStartingDir: "desc"
 				},
 				rowFormatter: function(row) {
 					if (row.getData().prop == "separator") {

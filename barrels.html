@@ -272,10 +272,10 @@
 						{title: "Total", field: "exit_velocity_avg", formatter: percentileFormatter, width: 45, sorter: "number"},
 						{title: "L5", field: "game_trends.exit_velocity_avg.5G", formatter: percentileFormatter, width: 45, sorter: "number"},
 					]},
-					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
 					{title: "Distance", columns: [
-						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
-						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number"},
+						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
+						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
 					]},
 					{title: "Close Calls", columns: [
 						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
