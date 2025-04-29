@@ -187,9 +187,9 @@
 		    minDate: "today",
 		    maxDate: new Date().fp_incr(1),
 		    //defaultDate: DATE || new Date()
-		    minDate: "2025-04-28",
-		    maxDate: "2025-04-28",
-		    defaultDate: "2025-04-28"
+		    minDate: "2025-04-29",
+		    maxDate: "2025-04-29",
+		    defaultDate: "2025-04-29"
 		});
 
 		if (!SPORT) {
@@ -372,14 +372,14 @@
 			}
 		}
 
-		function nickname(player) {
+		function nickname(team, player) {
 			let last = player.split(" ")[1];
 			if (player == "enrique hernandez") {
 				return "K. Hernandez";
 			} else if (player == "michael a taylor") {
 				return "M. Taylor";
-			} else if (player.split(" ")[1] == "contreras") {
-				return (player.split(" ")[0] == "william" ? "Wi." : "Ws.") + " Contreras";
+			} else if (player == "max muncy" || last == "contreras") {
+				return `${title(last)} (${team.toUpperCase()})`;
 			} else if (last == "de") {
 				last = "DLC";
 			}
@@ -402,7 +402,7 @@
 				if (!out[tot]) {
 					out[tot] = [];
 				}
-				out[tot].push(nickname(row.player));
+				out[tot].push(nickname(row.team, row.player));
 			}
 			let o ="";
 			let dt = new Date();

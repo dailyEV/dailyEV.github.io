@@ -100,7 +100,7 @@
 				</div>
 				<button onclick="filterDue()">Due</button>
 				<button id="percentiles-btn" onclick="viewPercentiles()">Percentiles</button>
-				<!-- <button onclick="filterToday()">Filter Today</button> -->
+				<button onclick="filterToday()">Today</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -296,7 +296,7 @@
 					{field:"game", type:"!=", value: ""},
 					//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
 					{field:"game_trends.hard_hit_ct.5GPercentile", type:">=", value: 75},
-					{field:"game_trends.barrel_ct.3G", type:">", value: 0},
+					{field:"game_trends.barrel_ct.5G", type:">", value: 0},
 				]);
 				TABLE.setSort([
 					{column: "homerLogs.abZ", dir: "desc"}

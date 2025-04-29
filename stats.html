@@ -209,6 +209,7 @@
 		let LEADERS = URLParams.get("leaders");
 		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
+		let CUTOFF = URLParams.get("cutoff") || 10;
 		let IS_PITCHER = false;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
@@ -716,7 +717,17 @@
 				line: {
 					color: "#00c8ff"
 				}
-			}
+			};
+			const evoTrendCutoff = {
+				x: x.slice(-CUTOFF),
+				y: linearRegression(x.slice(-CUTOFF).map((_,i) => i), y.slice(-CUTOFF)).predictedY,
+				name: `evo-reg-L${CUTOFF}`,
+				mode: "lines",
+				line: {
+					color: "#00c8ff",
+					dash: "dash"
+				}
+			};
 			const trace = {
 				x: x,
 				y: y,
@@ -750,16 +761,28 @@
 					color: "#ff9500"
 				}
 			};
+			console.log(y)
 			const distTrend = {
 				x: x,
 				y: linearRegression(xIdx, y).predictedY,
+				//y: movingAverage(y, 5),
 				name: "dist-reg",
 				mode: "lines",
 				yaxis: "y2",
 				line: {
 					color: "#ff9500"
 				}
-			}
+			};
+			const distTrendCutoff = {
+				x: x.slice(-CUTOFF),
+				y: linearRegression(x.slice(-CUTOFF).map((_,i) => i), y.slice(-CUTOFF)).predictedY,
+				name: `dist-reg-L${CUTOFF}`,
+				mode: "lines", yaxis: "y2",
+				line: {
+					color: "#ff9500",
+					dash: "dash"
+				}
+			};
 			layout = {
 				plot_bgcolor: '#181a1b',
 				paper_bgcolor: "#181a1b",
