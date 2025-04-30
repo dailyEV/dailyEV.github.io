@@ -367,13 +367,11 @@
 				["hitRateLYR"].forEach(col => TABLE.showColumn(col));
 			}
 
-			if (["nhl"].includes(SPORT)) {
+			if (["nhl", "nba"].includes(SPORT)) {
 				["oppRank", "oppRankPos"].forEach(col => TABLE.hideColumn(col));
 			}
 
-			if (SPORT == "nba") {
-				TABLE.showColumn("oppRankPos");
-			} else if (SPORT == "mlb") {
+			if (SPORT == "mlb") {
 				TABLE.showColumn("stadiumRank");
 			}
 

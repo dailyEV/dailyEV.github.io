@@ -246,8 +246,11 @@
 						//{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
 
 						{title: "AB", field: "homerLogs.lastHR_AB", width: 40, formatter: gapFormatter},
+						{title: "Med", field: "homerLogs.abBtwnMed", width: 40},
 						{title: "Avg", field: "homerLogs.abBtwnAvg", width: 40},
+						{title: "SD", field: "homerLogs.abSD", width: 40},
 						{title: "Z", field: "homerLogs.abZ", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+						//{title: "Z", field: "homerLogs.ab_med_z_score", width: 40, formatter: lastDiffFormatter, sorter: "number"},
 					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
@@ -316,9 +319,20 @@
 
 		function plotHRGap() {
 			const data = TABLE.getSelectedData()[0];
-			const x = data.homerLogs.abBtwn;
+			const abBtwn = data.homerLogs.abBtwn;
+			const maxAB = Math.max(...abBtwn);
+			const counts = {};
+			abBtwn.forEach(ab => {
+				counts[ab] = (counts[ab] || 0) + 1
+			});
+			const arr = new Array(maxAB + 1).fill(0);
+			Object.keys(counts).forEach(ab => {
+				arr[ab] = counts[ab];
+			})
 			const graph = {
-				//x: x,
+				x: Array.from({length: arr.length}, (_, i) => i+1),
+				y: arr,
+				type: "bar"
 			};
 			let layout = {
 				title: "",
@@ -335,8 +349,7 @@
 				margin: { l: 0, r: 0, t: 20, b: 20 },
 				xaxis: {
 					title: "AB btwn HR",
-					showgrid: false,
-					type: "category"
+					showgrid: false
 				},
 				yaxis: {
 					showgrid: false,
