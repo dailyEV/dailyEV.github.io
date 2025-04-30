@@ -441,6 +441,12 @@
 						{title: "Opp", field: "oppRank", formatter: rankingFormatter, width: 50, visible: HISTORICAL ? false : true},
 						{title: "🏟", field: "stadiumRank", formatter: rankingFormatter, width: 50, visible: HISTORICAL ? false : true},
 					]},
+					{title: "Last Homer", columns: [
+						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
+						{title: "AB", field: "homerLogs.lastHR_AB", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.abBtwnAvg", width: 40},
+						{title: "Z", field: "homerLogs.abZ", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+					]},
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
 					{title: "Game", field: "game", visible: false},
 					{title: "Start", field: "startSortable", visible: false, sorter: "number"},

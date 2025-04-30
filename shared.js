@@ -105,6 +105,23 @@ function groupByGame() {
 	}
 }
 
+const oddsFormatter = function(cell) {
+	let odds = cell.getValue();
+	if (!odds) {
+		return "";
+	}
+	if (odds.includes("/")) {
+		let [o,u] = odds.split("/");
+		return `<div>
+		<mfrac>
+			<mn>${o}</mn>
+			<mn>${u}</mn>
+		</mfrac></div>`;
+	} else {
+		return odds;
+	}
+}
+
 const percentFormatter = function(cell, params, rendered) {
 	return cell.getValue()+"%";
 }
@@ -878,7 +895,9 @@ function fetchUpdated(repo="playerprops", render=true) {
 			data["dingers"] = data;
 		}
 		UPDATED = data;
-		if (SPORT != "dingers") {
+		if (PAGE == "bvp") {
+			console.log(data["stats"]);
+		} else if (PAGE != "dingers") {
 			const [datePart, timePart] = (data[PAGE] || data[SPORT]).split(" ");
 			const formattedString = `${datePart}T${timePart.split(".")[0]}`;
 			document.querySelector("#updated").innerText = `Updated: ${timeAgo(formattedString)}`;

@@ -122,6 +122,7 @@
 		</div>
 	</div>
 	<div id="right-body" class="body">
+		<div id="chart"></div>
 	</div>
 	<div id="tooltip"></div>
 	<script type="text/javascript" src="shared.js"></script>
@@ -281,11 +282,15 @@
 						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
 						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : true},
 					]},
+					{title: "BPP", columns: [
+						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
+						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
+					]},
 				]
 			});
 
 			TABLE.on("rowClick", function(e, row) {
-				
+				rowClick(row);
 			});
 		}
 
@@ -307,7 +312,70 @@
 					{column: "barrel_ct", dir: "desc"}
 				]);
 			}
-			
+		}
+
+		function plotHRGap() {
+			const data = TABLE.getSelectedData()[0];
+			const x = data.homerLogs.abBtwn;
+			const graph = {
+				//x: x,
+			};
+			let layout = {
+				title: "",
+				autosize: true,
+				showlegend: false,
+				responsive: true,
+				plot_bgcolor: '#181a1b',
+				paper_bgcolor: "#181a1b",
+				font: {
+					color: "#e8e6e3"
+				},
+				width: '100%',
+				dragmode: 'pan',
+				margin: { l: 0, r: 0, t: 20, b: 20 },
+				xaxis: {
+					title: "AB btwn HR",
+					showgrid: false,
+					type: "category"
+				},
+				yaxis: {
+					showgrid: false,
+					tickmode: "linear",
+					dtick: 1,
+					fixedrange: true,
+					showticklabels: false,
+					title: {
+						text: "Total"
+					}
+				}
+			};
+			Plotly.newPlot("chart", [graph], layout, { responsive: true, displayModeBar: false});
+		}
+
+		function rowClick(row) {
+			const data = row.getData();
+			const right = document.querySelector("#right-body");
+			const left = document.querySelector("#left-body");
+			const table = document.querySelector("#table");
+			const tableContainer = document.querySelector("#table-container");
+			const sel = TABLE.getSelectedRows();
+			TABLE.deselectRow();
+			if (sel.length > 0 && sel[0] == row) {
+				right.style.display = "none";
+				left.style.width = "100%";
+				table.style.width = "100%";
+				setTimeout(() => {
+					table.style.width = "max-content";
+					tableContainer.style.width = "max-content";
+				}, 40);
+			} else {
+				row.select();
+				left.style.width = MOBILE ? "100%" : "50%";
+				right.style.display = "flex";
+				table.style.width = "100%";
+				tableContainer.style.width = "100%";
+				plotHRGap();
+			}
 		}
 
 		function filterToday() {
