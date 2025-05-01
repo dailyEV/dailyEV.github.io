@@ -403,7 +403,8 @@
 				if (!out[tot]) {
 					out[tot] = [];
 				}
-				out[tot].push(nickname(row.team, row.player));
+				//out[tot].push(nickname(row.team, row.player));
+				out[tot].push(`${row.team.toUpperCase()} ${title(row.player.split(" ").at(-1))}`);
 			}
 			let o ="";
 			let dt = new Date();
