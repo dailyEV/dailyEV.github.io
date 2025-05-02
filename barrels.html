@@ -137,6 +137,7 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let PLAYERS = URLParams.get("players");
 		let TODAY = URLParams.get("today");
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
@@ -192,9 +193,6 @@
 					if (DUE != undefined) {
 						filterDue();
 					}
-					if (TODAY != undefined) {
-
-					}
 				}, 100);
 			}).catch(err => console.log(err));
 		}
@@ -202,6 +200,11 @@
 		function renderTable(data) {
 			data = data.filter(r => parseInt(r.bip) >= 20);
 			data = data.filter(r => parseInt(r.barrel_ct) >= 3);
+
+			if (PLAYERS) {
+				PLAYERS = PLAYERS.split(",").map(r => r.replaceAll("-", " "));
+				data = data.filter(r => PLAYERS.includes(r.player));
+			}
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,

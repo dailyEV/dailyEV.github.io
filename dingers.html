@@ -161,6 +161,7 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
+		let SIMPLE = URLParams.get("simple");
 		let PLAYER = URLParams.get("player");
 		let REFRESH = URLParams.get("refresh") || "off";
 		let FILTER = URLParams.get("filter");
@@ -271,6 +272,9 @@
 						TABLE.setFilter([
 							{field:"game", type:"=", value: GAME}
 						])
+					}
+					if (SIMPLE != undefined) {
+						["savant.exit_velocity_avg", "savant.barrels_per_bip", "pitcherData.flyballs_percent", "pitcherData.exit_velocity_avg", "pitcherData.barrel_batted_rate", "oppRank", "stadiumRank"].forEach(r => TABLE.hideColumn(r));
 					}
 				}, 200);
 			}).catch(err => console.log(err));
