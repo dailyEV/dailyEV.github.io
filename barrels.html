@@ -43,6 +43,9 @@
 		#left-body {
 			height: 100%;
 		}
+		#right-body {
+			justify-content: center;
+		}
 		#player-controls {
 			display: none;
 			justify-content: space;
@@ -134,6 +137,7 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let TODAY = URLParams.get("today");
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
 		let PROP = URLParams.get("prop");
@@ -187,6 +191,9 @@
 					}
 					if (DUE != undefined) {
 						filterDue();
+					}
+					if (TODAY != undefined) {
+
 					}
 				}, 100);
 			}).catch(err => console.log(err));
@@ -328,11 +335,22 @@
 			const arr = new Array(maxAB + 1).fill(0);
 			Object.keys(counts).forEach(ab => {
 				arr[ab] = counts[ab];
-			})
+			});
+
+			let x = Array.from({length: arr.length}, (_, i) => i+1);
+			let y = arr;
+
+			if (false) {
+				x = [], y = [];
+				for (ab of Object.keys(counts)) {
+					y.push(ab);
+					x.push(arr[ab]);
+				}
+			}
 			const graph = {
-				x: Array.from({length: arr.length}, (_, i) => i+1),
-				y: arr,
-				type: "bar"
+				x: x, y: y,
+				type: "bar",
+				//orientation: "h"
 			};
 			let layout = {
 				title: "",
@@ -345,22 +363,36 @@
 					color: "#e8e6e3"
 				},
 				width: '100%',
-				dragmode: 'pan',
-				margin: { l: 0, r: 0, t: 20, b: 20 },
+				margin: { l: 40, r: 0, t: 20, b: 30 },
 				xaxis: {
 					title: "AB btwn HR",
-					showgrid: false
-				},
-				yaxis: {
 					showgrid: false,
-					tickmode: "linear",
-					dtick: 1,
-					fixedrange: true,
-					showticklabels: false,
+					//range: [0, 50],
 					title: {
 						text: "Total"
 					}
-				}
+				},
+				yaxis: {
+					showgrid: false,
+					//tickmode: "linear",
+					//dtick: 1,
+					//fixedrange: true,
+					//showticklabels: false,
+					title: {
+						text: "AB Between HR"
+					}
+				},
+				shapes: [
+					{
+						type: "line",
+						x0: data.homerLogs.lastHR_AB, x1: data.homerLogs.lastHR_AB,
+						y0: 0, y1: Math.max(...arr),
+						line: {
+							color: "#ff7f0e",
+							dash: "dash"
+						}
+					}
+				]
 			};
 			Plotly.newPlot("chart", [graph], layout, { responsive: true, displayModeBar: false});
 		}
@@ -392,9 +424,17 @@
 		}
 
 		function filterToday() {
-			TABLE.setFilter([
-				{field:"game", type:"!=", value: ""},
-			]);
+			TABLE.setFilter([{field:"game", type:"!=", value: ""}]);
+		}
+
+		function filterToday2() {
+			let url = new URL(window.location.href);
+			if (TODAY) {
+				url.searchParams.delete("today");
+			} else {
+				url.searchParams.set("today", "");
+			}
+			window.location.href = `./barrels${HTML}${url.search}`;
 		}
 
 		function viewPercentiles() {
