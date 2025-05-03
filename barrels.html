@@ -366,6 +366,7 @@
 					color: "#e8e6e3"
 				},
 				width: '100%',
+				dragmode: MOBILE ? 'pan' : "",
 				margin: { l: 40, r: 0, t: 20, b: 30 },
 				xaxis: {
 					title: "AB btwn HR",
@@ -398,6 +399,9 @@
 				]
 			};
 			Plotly.newPlot("chart", [graph], layout, { responsive: true, displayModeBar: false});
+			setTimeout(() => {
+				Plotly.Plots.resize("chart");
+			}, 100);
 		}
 
 		function rowClick(row) {
