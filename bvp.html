@@ -180,18 +180,6 @@
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
-		flatpickr("#date", {
-				altInput: true,
-		    altFormat: "F j, Y",
-		    dateFormat: "Y-m-d",
-		    minDate: "today",
-		    maxDate: new Date().fp_incr(1),
-		    //defaultDate: DATE || new Date()
-		    minDate: "2025-05-02",
-		    maxDate: "2025-05-02",
-		    defaultDate: "2025-05-02"
-		});
-
 		if (!SPORT) {
 			SPORT = "mlb";
 		}
@@ -206,8 +194,23 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
+		function initDatepicker(dt) {
+			flatpickr("#date", {
+				altInput: true,
+			    altFormat: "F j, Y",
+			    dateFormat: "Y-m-d",
+			    minDate: "today",
+			    maxDate: new Date().fp_incr(1),
+			    //defaultDate: DATE || new Date()
+			    minDate: dt,
+			    maxDate: dt,
+			    defaultDate: dt,
+			});
+		}
+
 		fetchData();
 		//fetchUpdated();
+		initDatepicker("2025-05-04");
 
 		function fetchData() {
 			let s = SPORT;

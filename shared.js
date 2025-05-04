@@ -896,7 +896,7 @@ function fetchUpdated(repo="playerprops", render=true) {
 		}
 		UPDATED = data;
 		if (PAGE == "bvp") {
-			console.log(data["stats"]);
+			initDatepicker(data["bvp"]);
 		} else if (PAGE != "dingers") {
 			const [datePart, timePart] = (data[PAGE] || data[SPORT]).split(" ");
 			const formattedString = `${datePart}T${timePart.split(".")[0]}`;
