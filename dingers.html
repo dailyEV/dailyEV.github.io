@@ -161,6 +161,7 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
+		let KAMBI = URLParams.get("kambi");
 		let SIMPLE = URLParams.get("simple");
 		let PLAYER = URLParams.get("player");
 		let REFRESH = URLParams.get("refresh") || "off";
@@ -233,7 +234,7 @@
 		}
 
 		async function fetchData(render=true) {
-			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -396,7 +397,7 @@
 					{title: `DK<br>${timeAgo(UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 60, sorter: "number", responsive: 6, visible: HISTORICAL ? false : true},
 					{title: `MGM<br>${timeAgo(UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `ESPN*<br>${timeAgo(UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `PARX*<br>${timeAgo(UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: HISTORICAL ? false : false},
+					{title: `PARX*<br>${timeAgo(UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: KAMBI ? true : false},
 					{title: `CZ<br>${timeAgo(UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 50, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number"},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
