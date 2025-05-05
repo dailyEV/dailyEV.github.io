@@ -326,7 +326,7 @@
 						data.push(row);
 						if (row["result"] == "Home Run") {
 							HRROWS.push(row);
-						} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0" || parseInt(row["dist"]) >= 350)) {
+						} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0")) {
 							ALMOST.push(row);
 						}
 
@@ -354,7 +354,7 @@
 							data.push(row);
 							if (row["result"] == "Home Run") {
 								HRROWS.push(row);
-							} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0" || parseInt(row["dist"]) >= 350)) {
+							} else if (row["hr/park"] != "" && (row["hr/park"].split("/")[0] != "0")) {
 								ALMOST.push(row);
 							}
 
