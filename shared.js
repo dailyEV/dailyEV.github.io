@@ -670,7 +670,7 @@ const playerFormatter = function(cell, params, rendered) {
 	} else {
 		gameContainer = getGameImgs(data, params).join("");
 	}
-	let p = player.replace("TOTAL", "");
+	let p = player.replace("TOTAL", "").replace("SPREAD", "");
 	if (!params.fullName && p.length > 16) {
 		p = p.substr(0,15)+"...";
 	}

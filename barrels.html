@@ -266,17 +266,17 @@
 					},
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
 					{title: "Last Homer", columns: [
-						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
+						//{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
 						//{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
 						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
 						//{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
 
-						{title: "AB", field: "homerLogs.lastHR_AB", width: 40, formatter: gapFormatter},
-						{title: "Med", field: "homerLogs.abBtwnMed", width: 40},
-						{title: "Avg", field: "homerLogs.abBtwnAvg", width: 40},
-						{title: "SD", field: "homerLogs.abSD", width: 40},
-						{title: "Z", field: "homerLogs.abZ", width: 40, formatter: lastDiffFormatter, sorter: "number"},
-						//{title: "Z", field: "homerLogs.ab_med_z_score", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+						{title: "PA", field: "homerLogs.pa.streak", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.pa.avg", width: 40},
+						{title: "Z", field: "homerLogs.pa.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+						{title: "Med", field: "homerLogs.pa.med", width: 40},
+						{title: "Z", field: "homerLogs.pa.z_median", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+						{title: "SD", field: "homerLogs.pa.sd", width: 40},
 					]},
 					{title: "Barrels", columns: [
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
@@ -308,8 +308,8 @@
 						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
 					]},
 					{title: "Close Calls", columns: [
-						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : true},
-						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : true},
+						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : false},
+						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : false},
 					]},
 					{title: "BPP", columns: [
 						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
@@ -326,14 +326,14 @@
 		function filterDue() {
 			if (TABLE.getFilters().length == 0) {
 				TABLE.setFilter([
-					{field:"homerLogs.abZ", type:">", value: -0.2},
+					{field:"homerLogs.pa.z_median", type:">", value: -0.3},
 					{field:"game", type:"!=", value: ""},
 					//{field:"game_trends.barrel_ct.5GPercentile", type:">=", value: 70},
 					{field:"game_trends.hard_hit_ct.5GPercentile", type:">=", value: 75},
 					{field:"game_trends.barrel_ct.5G", type:">", value: 0},
 				]);
 				TABLE.setSort([
-					{column: "homerLogs.abZ", dir: "desc"}
+					{column: "homerLogs.pa.z_median", dir: "desc"}
 				]);
 			} else {
 				TABLE.setFilter();
