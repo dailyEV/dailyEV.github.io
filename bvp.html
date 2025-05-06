@@ -288,10 +288,10 @@
 						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
 					]},
 					{title: "Last Homer", columns: [
-						{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
-						{title: "AB", field: "homerLogs.lastHR_AB", width: 40, formatter: gapFormatter},
-						{title: "Avg", field: "homerLogs.abBtwnAvg", width: 40},
-						{title: "Z", field: "homerLogs.abZ", width: 40, formatter: lastDiffFormatter, sorter: "number"},
+						{title: "PA", field: "homerLogs.pa.streak", width: 40, formatter: gapFormatter},
+						{title: "Avg", field: "homerLogs.pa.avg", width: 40},
+						{title: "Med", field: "homerLogs.pa.med", width: 40},
+						{title: "Z", field: "homerLogs.pa.z_median", width: 40, formatter: lastDiffFormatter, sorter: "number"},
 					]},
 					{title: "Batter Summary", columns: [
 						{title: "xBA", field: "savant.est_ba", width: 45, formatter: baFormatter, visible: false },
@@ -442,7 +442,7 @@
 				let tot = row.bvp.split(" HR")[0].split(" ");
 				tot = tot[tot.length - 1];
 				if (!tot) {
-					continue;
+					//continue;
 				}
 				let key = row.start+" "+row.game;
 				if (!out[key]) {
@@ -451,7 +451,9 @@
 					out[key][row.team] = [];
 				}
 
-				out[key][row.team].push(`${title(row.player.split(" ").at(-1))} (${row.bvp})`);
+				if (tot) {
+					out[key][row.team].push(`${title(row.player.split(" ").at(-1))} (${row.bvp})`);
+				}
 			}
 			let o = "";
 			let dt = new Date();
@@ -486,7 +488,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => col.hide());
-			["player", "opp", "bvp", "weather", "playerFactor", "bpp", "homerLogs.lastHR_AB", "homerLogs.abBtwnAvg", "homerLogs.abZ"].forEach(col => TABLE.showColumn(col));
+			["player", "opp", "bvp", "weather", "playerFactor", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
 		}
 	</script>
 </body>

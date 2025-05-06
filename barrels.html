@@ -127,8 +127,7 @@
 	<div id="right-body" class="body">
 		<div class="dropdown">
 			<select id="btwn-select">
-				<option value="ab">AB Btwn</option>
-				<option value="g">Games Btwn</option>
+				<option value="pa">PA Btwn</option>
 			</select>
 			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 		</div>
@@ -185,7 +184,7 @@
 			fetchData();
 		}
 
-		document.querySelector("#btwn-select").value = "ab";
+		document.querySelector("#btwn-select").value = "pa";
 		document.querySelector("#btwn-select").addEventListener("change", function(event) {
 			if (event.target.value == "g") {
 				plotHRGap(showGames=true);
@@ -345,7 +344,7 @@
 
 		function plotHRGap(showGames = false) {
 			const data = TABLE.getSelectedData()[0];
-			const abBtwn = showGames ? data.homerLogs.gamesBtwn : data.homerLogs.abBtwn;
+			const abBtwn = data.homerLogs.pa.btwn;
 			const maxAB = Math.max(...abBtwn);
 			const counts = {};
 			abBtwn.forEach(ab => {
@@ -383,13 +382,13 @@
 				},
 				width: '100%',
 				dragmode: MOBILE ? 'pan' : "",
-				margin: { l: 40, r: 0, t: 20, b: 30 },
+				margin: { l: 40, r: 0, t: 20, b: 40 },
 				xaxis: {
-					title: "AB btwn HR",
+					title: "PA btwn HR",
 					showgrid: false,
 					//range: [0, 50],
 					title: {
-						text: "AB Between HR"
+						text: "PA Between HR"
 					}
 				},
 				yaxis: {
@@ -405,8 +404,8 @@
 				shapes: [
 					{
 						type: "line",
-						x0: showGames ? data.homerLogs.last : data.homerLogs.lastHR_AB,
-						x1: showGames ? data.homerLogs.last : data.homerLogs.lastHR_AB,
+						x0: data.homerLogs.pa.streak,
+						x1: data.homerLogs.pa.streak,
 						y0: 0, y1: Math.max(...arr),
 						line: {
 							color: "#ff7f0e",
@@ -443,7 +442,7 @@
 				right.style.display = "flex";
 				table.style.width = "100%";
 				tableContainer.style.width = "100%";
-				document.querySelector("#btwn-select").value = "ab";
+				document.querySelector("#btwn-select").value = "pa";
 				plotHRGap();
 			}
 		}
