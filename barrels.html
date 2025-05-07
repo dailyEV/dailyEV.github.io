@@ -40,6 +40,9 @@
 		#table, #table-container {
 			width: max-content;
 		}
+		#chart {
+			max-height: 400px;
+		}
 		#left-body {
 			height: 100%;
 		}
@@ -128,6 +131,7 @@
 		<div class="dropdown">
 			<select id="btwn-select">
 				<option value="pa">PA Btwn</option>
+				<option value="feed">Feed</option>
 			</select>
 			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 		</div>
@@ -138,6 +142,7 @@
 	<script type="text/javascript">
 		PAGE = "barrels";
 		let TABLE = null;
+		let FEED = null;
 		let HISTORICAL = {};
 		let RES = null;
 		let url = "";
@@ -188,10 +193,82 @@
 		document.querySelector("#btwn-select").addEventListener("change", function(event) {
 			if (event.target.value == "g") {
 				plotHRGap(showGames=true);
+			} else if (event.target.value == "feed") {
+				renderFeed();
 			} else {
 				plotHRGap();
 			}
 		});
+
+		function renderFeed() {
+			const data = TABLE.getSelectedRows()[0].getData();
+			let player = data.player;
+			let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${data.team}.json`;
+			fetch(url, {
+				headers: {
+					"Accept": "application/vnd.github.v3.raw"
+				}
+			}).then(
+				response => response.json()
+			).then(res => {
+				const data = [];
+				for (dt of Object.keys(res[player])) {
+					let row = res[player][dt];
+					let [y,m,d,p] = dt.split("-");
+					row["id"] = dt;
+					row["dt"] = `${y}-${m}-${d}`;
+					row["player"] = player;
+					data.push(row);
+				}
+				renderFeedTable(data);
+			});
+		}
+
+		function renderFeedTable(data) {
+			let results = [...new Set(data.map(row => row.result))];
+			FEED = new Tabulator("#chart", {
+				tooltipsHeader: true,
+				data: data,
+				layout: "fitDataFill",
+				initialSort: [
+					//{column: "pa", dir: "desc"},
+					{column: "dt", dir: "desc"},
+				],
+				groupHeader: function(value, count, data, group){
+					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+				},
+				columnDefaults: {
+					resizable: false,
+					headerSortStartingDir: "desc"
+				},
+				groupToggleElement: "header",
+				columns: [
+					{title: "", field: "dt", formatter: dtFormatter, formatterParams: {noYear: true}, hozAlign: "center"},
+					{title: "Result", field: "result", width: MOBILE ? 70 : 85, editor:"input", headerFilter:"list",
+						headerFilterParams:{
+							values:["All", ...results]
+						},
+						headerFilterFunc: function(headerValue, rowValue) {
+							if (headerValue == "All") {
+								return true;
+							}
+							return rowValue === headerValue;
+						}
+					},
+					{title: "Exit<br>Velocity", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+					{title: "Launch<br>Angle", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+					{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: summaryFormatter},
+					{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number", width: 65},
+					{title: "BRL", field: "brl", hozAlign: "center", width: 30, formatter: brlFormatter},
+					{title: "HH", field: "hh", hozAlign: "center", width: 30, formatter: hhFormatter},
+				],
+				rowFormatter: function(row) {
+					if (row.getData().result == "Home Run") {
+						row.getCells().map(r => r.getElement().classList.add("homer"));
+					}
+				}
+			});
+		}
 
 		function fetchData() {
 			let s = SPORT;
@@ -411,6 +488,15 @@
 							color: "#ff7f0e",
 							dash: "dash"
 						}
+					}
+				],
+				annotations: [
+					{
+						x: data.homerLogs.pa.streak,
+						y: Math.max(...arr),
+						text: `${data.homerLogs.pa.streak} PA`,
+						showarrow: false,
+						xanchor: "left"
 					}
 				]
 			};

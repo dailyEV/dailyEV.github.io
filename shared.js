@@ -166,7 +166,7 @@ const lastDiffFormatter = function(cell) {
 	const data = cell.getRow().getData();
 	let diff = cell.getValue();
 	if (!diff) {
-		return "";
+		return "0";
 	}
 	diff = diff.toFixed(1);
 	if (diff > 0) {
@@ -559,12 +559,22 @@ function getTeamImg(sport, team) {
 	return `<img class='team-img' src='logos/${sport}/${team}.png' alt='${team}' title='${team}' />`;
 }
 
+const brlFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return isBarrel(data) ? "🏏" : "";
+}
+
+const hhFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return parseFloat(data.evo || "0") >= 95 ? "💥" : "";
+}
+
 const dtFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
 	if (!cell.getValue()) return "";
 	let d = new Date(cell.getValue()+" 10:00");
-	if (PLAYER) {
+	if (PLAYER || params.noYear) {
 		return d.toLocaleDateString("en-US", {
 			month: "short", day: "numeric"
 		}).replace(", ", " '");
@@ -660,13 +670,15 @@ const playerFormatter = function(cell, params, rendered) {
 		prop = propFormatter(cell);
 	}
 	let gameContainer = "";
-	if (["feed", "dingers"].includes(sport) || isPlayerProp) {
-		let s = ["feed", "dingers"].includes(sport) ? "mlb" : sport;
+	if (["feed", "dingers", "barrels"].includes(sport) || isPlayerProp) {
+		let s = ["feed", "dingers", "barrels"].includes(sport) ? "mlb" : sport;
 		let t = sport == "ncaab" ? data.teamId : data.team;
 		if (TEAM) {
 			t = TEAM;
 		}
-		gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
+		if (t) {
+			gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
+		}
 	} else {
 		gameContainer = getGameImgs(data, params).join("");
 	}

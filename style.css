@@ -478,6 +478,14 @@ nav {
 	max-width: 140px;
 }
 
+.homer {
+	color: white;
+	background: rgb(56, 142, 60);
+}
+.homer .positive {
+	color: white;
+}
+
 .dropdown {
 	position: relative;
 	display: inline-block;

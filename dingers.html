@@ -318,6 +318,10 @@
 			data.sort((a,b) => {
 				return parseFloat(b.ev) || 0 - parseFloat(a.ev) || 0;
 			});
+			let first = [...data];
+			first.sort((a,b) => {
+				return parseInt(a.startSortable) - parseInt(b.startSortable);
+			});
 			const idx = data.findIndex(item => parseFloat(item.ev) < 0);
 			if (idx != -1) {
 				//data.splice(idx, 0, {prop: "separator", ev: ""});
@@ -351,6 +355,9 @@
 				},
 				groupToggleElement: "header",
 				groupBy: FILTER != undefined ? "game" : "",
+				groupStartOpen: function (value) {
+					return value == first[0].game;
+				},
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0},
@@ -393,13 +400,14 @@
 					},
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: `FD<br>${timeAgo(UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 60, sorter: "number"},
+					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? true : false},
 					{title: `B365<br>${timeAgo(UPDATED["dingers"]["b365"], short=true)}`, field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `DK<br>${timeAgo(UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 60, sorter: "number", responsive: 6, visible: HISTORICAL ? false : true},
 					{title: `MGM<br>${timeAgo(UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `ESPN*<br>${timeAgo(UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: `PARX*<br>${timeAgo(UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: KAMBI ? true : false},
 					{title: `CZ<br>${timeAgo(UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 50, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number"},
+					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? false : true},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
