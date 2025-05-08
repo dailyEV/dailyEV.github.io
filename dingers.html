@@ -152,6 +152,16 @@
 			<div id="table"></div>
 		</div>
 	</div>
+	<div id="right-body" class="body">
+		<div class="dropdown">
+			<select id="btwn-select">
+				<option value="pa">PA Btwn</option>
+				<option value="feed">Feed</option>
+			</select>
+			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+		</div>
+		<div id="chart"></div>
+	</div>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "dingers";
@@ -467,6 +477,37 @@
 					//{title: "Last HR", field: "lastHR"},
 				]
 			});
+
+			TABLE.on("rowClick", function(e, row) {
+				rowClick(row);
+			});
+		}
+
+		function rowClick(row) {
+			const data = row.getData();
+			const right = document.querySelector("#right-body");
+			const left = document.querySelector("#left-body");
+			const table = document.querySelector("#table");
+			const tableContainer = document.querySelector("#table-container");
+			const sel = TABLE.getSelectedRows();
+			TABLE.deselectRow();
+			if (sel.length > 0 && sel[0] == row) {
+				right.style.display = "none";
+				left.style.width = "100%";
+				table.style.width = "100%";
+				setTimeout(() => {
+					table.style.width = "max-content";
+					tableContainer.style.width = "max-content";
+				}, 40);
+			} else {
+				row.select();
+				left.style.width = MOBILE ? "100%" : "50%";
+				right.style.display = "flex";
+				table.style.width = "100%";
+				tableContainer.style.width = "100%";
+				document.querySelector("#btwn-select").value = "pa";
+				plotHRGap();
+			}
 		}
 
 		function groupByTop() {
