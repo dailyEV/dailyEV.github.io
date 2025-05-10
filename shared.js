@@ -898,6 +898,76 @@ function movingAverage(arr, windowSize) {
 	});
 }
 
+function renderFeed() {
+	const data = TABLE.getSelectedRows()[0].getData();
+	let player = data.player;
+	let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${data.team}.json`;
+	fetch(url, {
+		headers: {
+			"Accept": "application/vnd.github.v3.raw"
+		}
+	}).then(
+		response => response.json()
+	).then(res => {
+		const data = [];
+		for (dt of Object.keys(res[player])) {
+			let row = res[player][dt];
+			let [y,m,d,p] = dt.split("-");
+			row["id"] = dt;
+			row["dt"] = `${y}-${m}-${d}`;
+			row["player"] = player;
+			data.push(row);
+		}
+		renderFeedTable(data);
+	});
+}
+
+function renderFeedTable(data) {
+	let results = [...new Set(data.map(row => row.result))];
+	FEED = new Tabulator("#chart", {
+		tooltipsHeader: true,
+		data: data,
+		layout: "fitDataFill",
+		initialSort: [
+			//{column: "pa", dir: "desc"},
+			{column: "dt", dir: "desc"},
+		],
+		groupHeader: function(value, count, data, group){
+			return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
+		},
+		columnDefaults: {
+			resizable: false,
+			headerSortStartingDir: "desc"
+		},
+		groupToggleElement: "header",
+		columns: [
+			{title: "", field: "dt", formatter: dtFormatter, formatterParams: {noYear: true}, hozAlign: "center"},
+			{title: "Result", field: "result", width: MOBILE ? 70 : 85, editor:"input", headerFilter:"list",
+				headerFilterParams:{
+					values:["All", ...results]
+				},
+				headerFilterFunc: function(headerValue, rowValue) {
+					if (headerValue == "All") {
+						return true;
+					}
+					return rowValue === headerValue;
+				}
+			},
+			{title: "Exit<br>Velocity", field: "evo", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+			{title: "Launch<br>Angle", field: "la", hozAlign: "center", sorter: "number", width: MOBILE ? 45 : 60, visible: MOBILE ? false : true, formatter: summaryFormatter},
+			{title: "Dist", field: "dist", hozAlign: "center", sorter: "number", formatter: summaryFormatter},
+			{title: "HR/Park", field: "hr/park", hozAlign: "center", sorter: "number", width: 65},
+			{title: "BRL", field: "brl", hozAlign: "center", width: 30, formatter: brlFormatter},
+			{title: "HH", field: "hh", hozAlign: "center", width: 30, formatter: hhFormatter},
+		],
+		rowFormatter: function(row) {
+			if (row.getData().result == "Home Run") {
+				row.getCells().map(r => r.getElement().classList.add("homer"));
+			}
+		}
+	});
+}
+
 function plotHRGap(showGames = false) {
 	const data = TABLE.getSelectedData()[0];
 	const abBtwn = data.homerLogs.pa.btwn;

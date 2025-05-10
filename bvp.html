@@ -433,7 +433,7 @@
 		}
 
 		function print_() {
-			const rows = TABLE.getRows("active").map(r => r.getData()).filter(r => !r.bvp.includes("0 HR"));
+			const rows = TABLE.getRows("active").map(r => r.getData());
 			let out = {};
 			let oppPitchers = {};
 			for (row of rows) {
@@ -451,8 +451,18 @@
 					out[key][row.team] = [];
 				}
 
-				if (tot) {
-					out[key][row.team].push(`${title(row.player.split(" ").at(-1))} (${row.bvp})`);
+				if (row.bvp) {
+					if (row.bvp.includes("HR") && !row.bvp.includes("0 HR")) {
+						out[key][row.team].push(`**${title(row.player.split(" ").at(-1))}** (${row.bvp})`);
+					} else {
+						let b = row.bvp;
+						if (b.split("-")[0] == "0") {
+							b = row.bvp.replace(", 0 HR", "");
+						} else {
+							b = row.bvp;
+						}
+						out[key][row.team].push(`${title(row.player.split(" ").at(-1))} (${b})`);
+					}
 				}
 			}
 			let o = "";
@@ -461,7 +471,7 @@
 			let formattedDt = dt.toLocaleDateString("en-US", {month: "short", day: "numeric"});
 			const day = dt.getDate();
 			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
-			o = `${formattedDt}${suffix} BvP\n\ndailyev.github.io/bvp\n\n`;
+			o = `${formattedDt}${suffix} BvP\n\nhttps://dailyev.github.io/bvp\n\n`;
 			let keys = Object.keys(out).sort();
 			for (game of keys) {
 				let [t,pm,a,sep,h] = game.split(" ");
@@ -477,10 +487,18 @@
 				} else if (oppPitchers[h]) {
 					oppH = oppPitchers[h]["player"];
 				}
-				//console.log(game, oppA, oppH)
+				
 				o += `###${a.toUpperCase()} (${oppA}) @ ${h.toUpperCase()} (${oppH}) (${t} ${pm})\n\n`;
-				o += `- ${a.toUpperCase()}: ${out[game][a].join(", ")}\n`;
-				o += `- ${h.toUpperCase()}: ${out[game][h].join(", ")}\n`;
+				let awayArr = out[game][a].filter(r => r.includes("HR") && !r.includes("0 HR"));
+				if (awayArr.length < 5) {
+					awayArr.push(...out[game][a].slice(awayArr.length, 5));
+				}
+				let homeArr = out[game][h].filter(r => r.includes("HR") && !r.includes("0 HR"));
+				if (homeArr.length < 5) {
+					homeArr.push(...out[game][h].slice(homeArr.length, 5));
+				}
+				o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
+				o += `- ${h.toUpperCase()}: ${homeArr.join(", ")}\n`;
 				o += "\n";
 			}
 			console.log(o);

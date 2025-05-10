@@ -44,6 +44,13 @@
 		padding: 0 0.5rem;
 		height: 24px;
 	}
+	#right-body {
+		justify-content: center;
+	}
+	#chart {
+		max-height: 400px;
+		margin-top: 0.5rem;
+	}
 	@media (max-width: 1350px) {
 		#table-container {
 			justify-content: normal;
@@ -194,6 +201,17 @@
 		} else {
 			promoSelect.value = "";
 		}
+
+		document.querySelector("#btwn-select").value = "pa";
+		document.querySelector("#btwn-select").addEventListener("change", function(event) {
+			if (event.target.value == "g") {
+				plotHRGap(showGames=true);
+			} else if (event.target.value == "feed") {
+				renderFeed();
+			} else {
+				plotHRGap();
+			}
+		});
 
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
