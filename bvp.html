@@ -436,7 +436,9 @@
 			const rows = TABLE.getRows("active").map(r => r.getData());
 			let out = {};
 			let oppPitchers = {};
+			let gameLines = {};
 			for (row of rows) {
+				gameLines[row.game] = {...row.gameLines};
 				oppPitchers[row.opp] = {...row.pitcherData};
 				oppPitchers[row.opp]["player"] = title(row.pitcher.split(" ").at(-1));
 				let tot = row.bvp.split(" HR")[0].split(" ");
@@ -488,6 +490,7 @@
 					oppH = oppPitchers[h]["player"];
 				}
 				
+				let gameLine = gameLines[`${a} ${sep} ${h}`];
 				o += `###${a.toUpperCase()} (${oppA}) @ ${h.toUpperCase()} (${oppH}) (${t} ${pm})\n\n`;
 				let awayArr = out[game][a].filter(r => r.includes("HR") && !r.includes("0 HR"));
 				if (awayArr.length < 5) {
@@ -496,6 +499,12 @@
 				let homeArr = out[game][h].filter(r => r.includes("HR") && !r.includes("0 HR"));
 				if (homeArr.length < 5) {
 					homeArr.push(...out[game][h].slice(homeArr.length, 5));
+				}
+				
+				let spread = gameLine.spread;
+				let total = gameLine.total;
+				if (spread != undefined) {
+					o += `- ${a.toUpperCase()} ${spread} (${total} OU)\n`;
 				}
 				o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
 				o += `- ${h.toUpperCase()}: ${homeArr.join(", ")}\n`;
