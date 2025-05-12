@@ -211,14 +211,16 @@
 
 		fetchData();
 		//fetchUpdated();
-		initDatepicker("2025-05-11");
+		//initDatepicker("2025-05-11");
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_hr.json`;
+			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_bvp.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
+				initDatepicker(data.date);
+				data = data.res;
 				data = data.filter(r => r.game != "");
 				RES = data;
 				renderTable(data);
@@ -437,8 +439,10 @@
 			let out = {};
 			let oppPitchers = {};
 			let gameLines = {};
+			let teamLines = {};
 			for (row of rows) {
 				gameLines[row.game] = {...row.gameLines};
+				teamLines[row.team] = {...row.gameLines};
 				oppPitchers[row.opp] = {...row.pitcherData};
 				oppPitchers[row.opp]["player"] = title(row.pitcher.split(" ").at(-1));
 				let tot = row.bvp.split(" HR")[0].split(" ");
@@ -503,11 +507,22 @@
 				
 				let spread = gameLine.spread;
 				let total = gameLine.total;
-				if (spread != undefined) {
-					o += `- ${a.toUpperCase()} ${spread} (${total} OU)\n`;
+				let awayLine = teamLines[a];
+				let homeLine = teamLines[h];
+				if (gameLine.total) {
+					o += `- ${a.toUpperCase()} o${awayLine.tt} (${awayLine.ttOU}) @ ${h.toUpperCase()} o${homeLine.tt} (${homeLine.ttOU})\n`;
 				}
-				o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
-				o += `- ${h.toUpperCase()}: ${homeArr.join(", ")}\n`;
+
+				if (awayArr.length == 0) {
+					o += `- ${a.toUpperCase()}: n/a\n`;
+				} else {
+					o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
+				}
+				if (homeArr.length == 0) {
+					o += `- ${h.toUpperCase()}: n/a\n`;
+				} else {
+					o += `- ${h.toUpperCase()}: ${homeArr.join(", ")}\n`;
+				}
 				o += "\n";
 			}
 			console.log(o);

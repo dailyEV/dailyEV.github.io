@@ -1034,7 +1034,27 @@ function plotHRGap(showGames = false) {
 				x1: data.homerLogs.pa.streak,
 				y0: 0, y1: Math.max(...arr),
 				line: {
-					color: "#ff7f0e",
+					color: "#c388ff",
+					dash: "dash"
+				}
+			},
+			{
+				type: "line",
+				x0: data.homerLogs.pa.med,
+				x1: data.homerLogs.pa.med,
+				y0: 0, y1: Math.max(...arr) / 2,
+				line: {
+					color: "#ffcc00",
+					dash: "dash"
+				}
+			},
+			{
+				type: "line",
+				x0: data.homerLogs.pa.avg,
+				x1: data.homerLogs.pa.avg,
+				y0: 0, y1: Math.max(...arr) / 2,
+				line: {
+					color: "#ffcc00",
 					dash: "dash"
 				}
 			}
@@ -1044,6 +1064,20 @@ function plotHRGap(showGames = false) {
 				x: data.homerLogs.pa.streak,
 				y: Math.max(...arr),
 				text: `${data.homerLogs.pa.streak} PA`,
+				showarrow: false,
+				xanchor: "left"
+			},
+			{
+				x: data.homerLogs.pa.med,
+				y: Math.max(...arr) / 2,
+				text: `${data.homerLogs.pa.med} Median`,
+				showarrow: false,
+				xanchor: "left"
+			},
+			{
+				x: data.homerLogs.pa.avg,
+				y: Math.max(...arr) / 4,
+				text: `${data.homerLogs.pa.avg} Avg`,
 				showarrow: false,
 				xanchor: "left"
 			}
