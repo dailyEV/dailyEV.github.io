@@ -181,6 +181,8 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
 		let KAMBI = URLParams.get("kambi");
+		let BPP = URLParams.get("bpp") != undefined;
+		let PH = URLParams.get("ph") != undefined;
 		let SIMPLE = URLParams.get("simple");
 		let PLAYER = URLParams.get("player");
 		let REFRESH = URLParams.get("refresh") || "off";
@@ -431,6 +433,8 @@
 						frozen: MOBILE ? true : false
 					},
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
+					{title: "BPP", field: "bppProj", visible: BPP ? true : false, width: 50, sorter: "number", formatter: percentFormatter},
+					{title: "Diff", field: "bppDiff", visible: BPP ? true : false, width: 60, sorter: "number", formatter: percentFormatter},
 					{title: `FD<br>${timeAgo(UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 60, sorter: "number"},
 					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? true : false},
 					{title: `B365<br>${timeAgo(UPDATED["dingers"]["b365"], short=true)}`, field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number", visible: HISTORICAL ? false : true},
@@ -443,7 +447,7 @@
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
-					//{title: "Pinch Hits", field: "ph"},
+					{title: "Pinch Hits", field: "ph", visible: PH ? true : false},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", formatter: bvpFormatter, width: 75},
 					{title: "Historical FD", columns: [
 						{title: "Med", field: "analysis.fd_median", width: 45, sorter: "number", visible: HISTORICAL ? true : false},

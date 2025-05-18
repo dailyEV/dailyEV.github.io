@@ -123,6 +123,9 @@ const oddsFormatter = function(cell) {
 }
 
 const percentFormatter = function(cell, params, rendered) {
+	if (!cell.getValue()) {
+		return "";
+	}
 	return cell.getValue()+"%";
 }
 
@@ -997,7 +1000,10 @@ function plotHRGap(showGames = false) {
 		//orientation: "h"
 	};
 	let layout = {
-		title: "",
+		title: `${title(data.player)} Career PA Btwn HR`,
+		title: {
+			text: `${title(data.player)} Career PA Btwn HR`,
+		},
 		autosize: true,
 		showlegend: false,
 		responsive: true,
@@ -1008,7 +1014,7 @@ function plotHRGap(showGames = false) {
 		},
 		width: '100%',
 		dragmode: MOBILE ? 'pan' : "",
-		margin: { l: 40, r: 0, t: 20, b: 40 },
+		margin: { l: 40, r: 0, t: 40, b: 40 },
 		xaxis: {
 			title: "PA btwn HR",
 			showgrid: false,
