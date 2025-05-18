@@ -477,17 +477,19 @@
 			let formattedDt = dt.toLocaleDateString("en-US", {month: "short", day: "numeric"});
 			const day = dt.getDate();
 			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
-			o = `${formattedDt}${suffix} BvP\n\nhttps://dailyev.github.io/bvp\n\n`;
+			o = `${formattedDt}${suffix} BvP (batter vs starting pitcher)\n\nhttps://dailyev.github.io/bvp\n\n`;
 			let keys = Object.keys(out).sort();
 			for (game of keys) {
 				let [t,pm,a,sep,h] = game.split(" ");
 				let oppA = "";
+				let oppAData = oppPitchers[a];
 				if (oppPitchers[a] && oppPitchers[a]["player_id"] != undefined) {
 					oppA = `[${oppPitchers[a]["player"]}](https://baseballsavant.mlb.com/savant-player/${oppPitchers[a]["player_id"]})`;
 				} else if (oppPitchers[a]) {
 					oppA = oppPitchers[a]["player"];
 				}
 				let oppH = "";
+				let oppHData = oppPitchers[h];
 				if (oppPitchers[h] && oppPitchers[h]["player_id"] != undefined) {
 					oppH = `[${oppPitchers[h]["player"]}](https://baseballsavant.mlb.com/savant-player/${oppPitchers[h]["player_id"]})`;
 				} else if (oppPitchers[h]) {
@@ -509,7 +511,10 @@
 				let total = gameLine.total;
 				let awayLine = teamLines[a];
 				let homeLine = teamLines[h];
+				let [awayTotal, homeTotal] = ["", ""];
 				if (gameLine.total) {
+					awayTotal = `o${awayLine.tt} (${awayLine.ttOU})`;
+					homeTotal = `o${homeLine.tt} (${homeLine.ttOU})`;
 					o += `- ${a.toUpperCase()} o${awayLine.tt} (${awayLine.ttOU}) @ ${h.toUpperCase()} o${homeLine.tt} (${homeLine.ttOU})\n`;
 				}
 
@@ -519,11 +524,14 @@
 				
 				*/
 
+				o += `- ${h.toUpperCase()} ${oppH}: ${oppHData.barrel_batted_rate}% BRL, ${oppHData.flyballs_percent}% Flyball\n`;
 				if (awayArr.length == 0) {
 					o += `- ${a.toUpperCase()}: n/a\n`;
 				} else {
 					o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
 				}
+
+				o += `- ${a.toUpperCase()} ${oppA}: ${oppAData.barrel_batted_rate}% BRL, ${oppAData.flyballs_percent}% Flyball\n`;
 				if (homeArr.length == 0) {
 					o += `- ${h.toUpperCase()}: n/a\n`;
 				} else {
