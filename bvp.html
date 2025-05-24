@@ -450,7 +450,7 @@
 				if (!tot) {
 					//continue;
 				}
-				let key = row.start+" "+row.game;
+				let key = row.startSortable.toString().padStart(4, "0")+" "+row.start+" "+row.game;
 				if (!out[key]) {
 					out[key] = {};
 					out[key][row.opp] = [];
@@ -464,6 +464,7 @@
 						let b = row.bvp;
 						if (b.split("-")[0] == "0") {
 							b = row.bvp.replace(", 0 HR", "");
+							//b = `${b}, ${row.bvpStats.so} Ks`;
 						} else {
 							b = row.bvp;
 						}
@@ -478,9 +479,11 @@
 			const day = dt.getDate();
 			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
 			o = `${formattedDt}${suffix} BvP (batter vs starting pitcher)\n\nhttps://dailyev.github.io/bvp\n\n`;
+			o += "[Cash App](https://cash.app/$intersectinglines) | [Coffee](https://buymeacoffee.com/interlines) tips if you appreciate the work put in\n\n";
 			let keys = Object.keys(out).sort();
+			//console.log(keys)
 			for (game of keys) {
-				let [t,pm,a,sep,h] = game.split(" ");
+				let [sortable,t,pm,a,sep,h] = game.split(" ");
 				let oppA = "";
 				let oppAData = oppPitchers[a];
 				if (oppPitchers[a] && oppPitchers[a]["player_id"] != undefined) {
@@ -524,18 +527,28 @@
 				
 				*/
 
-				o += `- ${h.toUpperCase()} ${oppH}: ${oppHData.barrel_batted_rate}% BRL, ${oppHData.flyballs_percent}% Flyball\n`;
+				if (!oppHData || oppHData.barrel_batted_rate == undefined) {
+					o += `- ${h.toUpperCase()} ${oppH}\n`;
+				} else {
+					hrPA = (oppHData.home_run * 100 / oppHData.pa).toFixed(2);
+					o += `- ${h.toUpperCase()} SP: ${oppHData.home_run} HRs, ${hrPA}% HR/PA, ${oppHData.barrel_batted_rate}% BRL, ${oppHData.flyballs_percent}% Flyball, ${oppHData.meatball_percent}% Meatball, ${oppHData.k_percent}% K\n`;
+				}
 				if (awayArr.length == 0) {
 					o += `- ${a.toUpperCase()}: n/a\n`;
 				} else {
-					o += `- ${a.toUpperCase()}: ${awayArr.join(", ")}\n`;
+					o += `- ${a.toUpperCase()} batters: ${awayArr.join(", ")}\n`;
 				}
 
-				o += `- ${a.toUpperCase()} ${oppA}: ${oppAData.barrel_batted_rate}% BRL, ${oppAData.flyballs_percent}% Flyball\n`;
+				if (!oppAData || oppAData.barrel_batted_rate == undefined) {
+					o += `- ${a.toUpperCase()} ${oppA}\n`;
+				} else {
+					hrPA = (oppAData.home_run * 100 / oppAData.pa).toFixed(2);
+					o += `- ${a.toUpperCase()} SP: ${oppAData.home_run} HRs, ${hrPA}% HR/PA, ${oppAData.barrel_batted_rate}% BRL, ${oppAData.flyballs_percent}% Flyball, ${oppAData.meatball_percent}% Meatball, ${oppAData.k_percent}% K\n`;
+				}
 				if (homeArr.length == 0) {
 					o += `- ${h.toUpperCase()}: n/a\n`;
 				} else {
-					o += `- ${h.toUpperCase()}: ${homeArr.join(", ")}\n`;
+					o += `- ${h.toUpperCase()} batters: ${homeArr.join(", ")}\n`;
 				}
 				o += "\n";
 			}

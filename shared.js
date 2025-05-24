@@ -26,6 +26,7 @@ const PAGE_DROPDOWN = `
 	<option value="nba">🏀 Props</option>
 	<option value="ncaab">🏀 CBB Props</option>
 	<option value="historical">⚾ Dingers (H)</option>
+	<option value="kambi">⚾ Dingers (K)</option>
 `;
 
 setTimeout(() => {
@@ -45,6 +46,8 @@ setTimeout(() => {
 function changePage(page) {
 	if (page == "historical") {
 		window.location.href = `./historical${HTML}?historical=z`;
+	} else if (page == "kambi") {
+		window.location.href = `./dingers${HTML}?kambi=true`;
 	} else if (["mlb", "nba", "nfl", "nhl"].includes(page)) {
 		window.location.href = `./props${HTML}?sport=${page}`;
 	} else {
