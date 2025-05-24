@@ -40,7 +40,13 @@ setTimeout(() => {
 		changePage(page);
 	});
 	select.innerHTML = PAGE_DROPDOWN;
-	select.value = PAGE == "props" ? SPORT : PAGE;
+	if (PAGE == "props") {
+		select.value = SPORT;
+	} else if (PAGE == "dingers" && KAMBI) {
+		select.value = "kambi";
+	} else {
+		select.value = PAGE;
+	}
 }, 100);
 
 function changePage(page) {
