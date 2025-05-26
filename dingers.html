@@ -87,6 +87,7 @@
 						<option value="fd-50">FD 50%</option>
 						<option value="espn-hr">ESPN HR</option>
 						<option value="espn-50">ESPN 50%</option>
+						<option value="dk-dinger">DK Dinger</option>
 						<option value="dk-200">DK +200</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="mgm-sweat">MGM No Sweat</option>
@@ -116,6 +117,7 @@
 						<option value="mgm-20">MGM 20% HR</option>
 						<option value="fd-50">FD 50%</option>
 						<option value="espn-hr">ESPN HR</option>
+						<option value="dk-dinger">DK Dinger</option>
 						<option value="dk-200">DK +200</option>
 						<option value="dk-sweat">DK No Sweat</option>
 						<option value="mgm-sweat">MGM No Sweat</option>
@@ -191,6 +193,7 @@
 		let HISTORICAL = URLParams.get("historical");
 		let PRETTY = URLParams.get("pretty");
 		let GAME = URLParams.get("game");
+		let DATE = URLParams.get("date");
 
 		if (GAME) {
 			let [a,h] = GAME.split("-");
@@ -266,7 +269,10 @@
 		}
 
 		async function fetchData(render=true) {
-			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
+			let url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
+			if (DATE) {
+				url = "https://api.github.com/repos/zhecht/lines/contents/static/dingers/odds_historical.json";
+			}
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -401,9 +407,11 @@
 					{title: "EV", field: "espn-hr_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "espn-50-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "fd-50-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-20-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "dk-sweat_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "dk-dinger_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "mgm-sweat_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-365_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
@@ -416,6 +424,7 @@
 					{title: "FV", field: "vs-pn_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "vs-365_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fd-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "fd-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "dk-200_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "vs-sharp_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
