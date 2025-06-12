@@ -279,7 +279,7 @@
 					},
 					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
 					{title: "Last Homer", columns: [
-						//{title: "Gms", field: "homerLogs.last", width: 40, formatter: gapFormatter},
+						//{title: "Gms", field: "homerLogs.g.streak", width: 40, formatter: gapFormatter},
 						//{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
 						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
 						//{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
@@ -408,8 +408,8 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => {
-				if (!["book", "player", "homerLogs.last", "homerLogs.gamesBtwnAvg", "homerLogs.z", "barrel_ct", "game_trends.barrel_ct.3G", "hard_hit_ct", "game_trends.hard_hit_ct.3G"].includes(col.getField())) {
-					col.hide()
+				if (!["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"].includes(col.getField())) {
+					col.hide();
 				}
 			});
 		}

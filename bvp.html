@@ -573,6 +573,7 @@
 			let gameLines = {};
 			let teamLines = {};
 			let playerSavant = {};
+			let gameBpp = {};
 			for (row of rows) {
 				gameLines[row.game] = {...row.gameLines};
 				teamLines[row.team] = {...row.gameLines};
@@ -595,8 +596,14 @@
 				}
 				playerSavant[row.team][row.player] = {...row.savant};
 
+				if (key.includes("Suspended")) {
+					continue;
+				}
 				out[key][row.team].push(row);
+				gameBpp[key] = row.bpp;
 			}
+
+			console.log(gameBpp);
 			let o = "";
 			let dt = new Date();
 			dt.setDate(dt.getDate() + 1);
@@ -608,6 +615,10 @@
 			let keys = Object.keys(out).sort();
 			//console.log(keys)
 			for (game of keys) {
+				if (game.includes("Suspended")) {
+					continue;
+				}
+				let key = game;
 				let [sortable,t,pm,a,sep,h] = game.split(" ");
 				let oppA = "";
 				let oppAData = oppPitchers[a];
@@ -627,6 +638,8 @@
 				let gameLine = gameLines[`${a} ${sep} ${h}`];
 				o += `###${a.toUpperCase()} (${oppA}) @ ${h.toUpperCase()} (${oppH}) (${t} ${pm})\n\n`;
 
+				o += `> ${gameBpp[key]} BPP HR Factor\n\n`;
+
 				let awayArr = out[game][a];
 				let homeArr = out[game][h];
 				let spread = gameLine.spread;
@@ -637,7 +650,7 @@
 				if (gameLine.total) {
 					awayTotal = `o${awayLine.tt} (${awayLine.ttOU})`;
 					homeTotal = `o${homeLine.tt} (${homeLine.ttOU})`;
-					o += `- ${a.toUpperCase()} o${awayLine.tt} (${awayLine.ttOU}) @ ${h.toUpperCase()} o${homeLine.tt} (${homeLine.ttOU})\n`;
+					o += `> ${a.toUpperCase()} o${awayLine.tt} (${awayLine.ttOU}) @ ${h.toUpperCase()} o${homeLine.tt} (${homeLine.ttOU})\n`;
 				}
 
 				/*
@@ -668,8 +681,8 @@
 				o2 += ":--|:--|:--|:--|:--|:--|:--|:--\n";
 
 				let i = 0;
-				awayArr = awayArr.filter(r => r.savant && r.savant.est_slg);
-				homeArr = homeArr.filter(r => r.savant && r.savant.est_slg);
+				awayArr = awayArr.filter(r => r.savant && r.savant.est_slg).sort((a,b) => b.savant.est_slg - a.savant.est_slg);
+				homeArr = homeArr.filter(r => r.savant && r.savant.est_slg).sort((a,b) => b.savant.est_slg - a.savant.est_slg);
 				for (i = 0; i < Math.max(awayArr.length, homeArr.length); ++i) {
 					let row = awayArr[i];
 					let row2 = homeArr[i];
@@ -681,12 +694,12 @@
 						if (p == "Lowe" && row.team == "tb") {
 							p = `${row.player.toUpperCase().at(0)} Lowe`;
 						}
-						o2 += `${p}|${row.bvp || "-"}|${row.savant.est_slg.toString().substr(1)}|${row.savant.barrels_per_bip}%|`;
+						o2 += `${p}|${row.bvp || "-"}|${row.savant.est_slg.toFixed(3).slice(1).replace(/^0/, ".")}|${row.savant.barrels_per_bip}%|`;
 					}
 					if (!row2) {
 						o2 += "||||\n";
 					} else {
-						o2 += `${title(row2.player).split(" ").at(-1)}|${row2.bvp || "-"}|${row2.savant.est_slg.toString().substr(1)}|${row2.savant.barrels_per_bip}%\n`;
+						o2 += `${title(row2.player).split(" ").at(-1)}|${row2.bvp || "-"}|${row2.savant.est_slg.toFixed(3).slice(1).replace(/^0/, ".")}|${row2.savant.barrels_per_bip}%\n`;
 					}
 				}
 				o += o2;
