@@ -269,9 +269,9 @@
 		}
 
 		async function fetchData(render=true) {
-			let url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
+			let url = `https://api.github.com/repos/zhecht/odds/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
 			if (DATE) {
-				url = "https://api.github.com/repos/zhecht/lines/contents/static/dingers/odds_historical.json";
+				url = "https://api.github.com/repos/zhecht/odds/contents/static/dingers/odds_historical.json";
 			}
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }

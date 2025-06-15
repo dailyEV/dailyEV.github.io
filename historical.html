@@ -193,7 +193,7 @@
 		let intervalId = setInterval(() => fetchData(render=false), 30 * 1000);
 
 		async function fetchData(render=true) {
-			const url = `https://api.github.com/repos/zhecht/lines/contents/static/dingers/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/odds/contents/static/dingers/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
