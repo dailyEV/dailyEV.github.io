@@ -27,6 +27,7 @@ const PAGE_DROPDOWN = `
 	<option value="ncaab">🏀 CBB Props</option>
 	<option value="historical">⚾ Dingers (H)</option>
 	<option value="kambi">⚾ Dingers (K)</option>
+	<option value="hedge">Hedge</option>
 `;
 
 setTimeout(() => {
@@ -130,6 +131,19 @@ const oddsFormatter = function(cell) {
 		return odds;
 	}
 }
+
+const sportFormatter = function(cell) {
+	let sport = "";
+	if (cell.getValue() == "nba") {
+		sport = "🏀";
+	} else if (cell.getValue() == "mlb") {
+		sport = "⚾";
+	} else if (cell.getValue() == "nhl") {
+		sport = "🏒";
+	}
+	return `<div>${sport}</div>`;
+}
+
 
 const percentFormatter = function(cell, params, rendered) {
 	if (!cell.getValue()) {
@@ -462,9 +476,33 @@ const bvpFormatter = function(cell) {
 	`;
 }
 
+const hedgeFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return `$${data.hedge}`;
+}
+
+const hedgeBookFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return `<div class='evbook-cell'>
+		<span class='evbook-odds'>${data.hedgeLine}</span>
+		<img class='book-img' src='logos/${data.book}.png' alt='${data.book}' title='${data.book}' />
+	</div>`;
+}
+
 const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator" || !cell.getValue()) return "";
+
+	if (PAGE == "hedge") {
+		let line = data.line;
+		if (line > 0) {
+			line = "+"+line;
+		}
+		return `<div class='evbook-cell'>
+				<span class='evbook-odds'>${line}</span>
+				<img class='book-img' src='logos/${params.book}.png' alt='${params.book}' title='${params.book}' />
+			</div>`;
+	}
 
 	if (params.book && !params.book.includes("vs-")) {
 		const book = params.book.split("-")[0];
@@ -638,14 +676,19 @@ const ftFormatter = function(cell, params, rendered) {
 const playerFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator") return "";
-	const sport = params.sport;
+	const sport = params.sport || data.sport;
 	let player = title(data.player);
 	if (PLAYER) {
 		player = title(PLAYER);
 	}
 	if (MOBILE && cell.getTable().element.id == "table") {
 		player = player.split(" ");
-		player = player[player.length-1];
+		if (player[player.length-1] == "Hernandez") {
+			player = player[0][0] + " " + player[player.length-1];
+
+		} else {
+			player = player[player.length-1];
+		}
 	}
 
 	if (sport.includes("futures")) {
@@ -657,7 +700,10 @@ const playerFormatter = function(cell, params, rendered) {
 		return player;
 	}
 
-	const team = SPORT == "ncaab" ? data.teamId : data.team;
+	let team = SPORT == "ncaab" ? data.teamId : data.team;
+	if (team == undefined) {
+		team = "";
+	}
 	let isPlayerProp = true;
 
 	if (player == "") {
@@ -715,7 +761,8 @@ function getGameImgs(data, params) {
 		awayAlt = title(awayAlt);
 		homeAlt = title(homeAlt);
 	}
-	let sport = params.sport.replace("dingers", "mlb").replace("feed", "mlb");
+	let sport = params.sport || data.sport;
+	sport = sport.replace("dingers", "mlb").replace("feed", "mlb");
 	return [
 		`<img class='game-img away' src='logos/${sport}/${away}.png' alt='${awayAlt}' title='${awayAlt}' />`,
 		`<img class='game-img home' src='logos/${sport}/${home}.png' alt='${homeAlt}' title='${homeAlt}' />`
