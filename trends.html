@@ -228,7 +228,7 @@
 				let yVals = [];
 				let yValsMA = [];
 				Object.keys(res[year]).forEach(month => {
-					if (!["04", "05"].includes(month)) {
+					if (!["04", "05", "06"].includes(month)) {
 						return;
 					}
 					const data = res[year][month];
@@ -319,7 +319,7 @@
 					bgcolor: "rgba(0,0,0,0.1)"
 				},
 				title: {
-					text: `${movingAvg}-day ${graph} Trend (Apr + May)`
+					text: `${movingAvg}-day ${graph} Trend (Apr - June)`
 				},
 				font: {
 					color: "#e8e6e3"

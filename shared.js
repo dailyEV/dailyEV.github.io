@@ -385,7 +385,7 @@ const oppFormatter = function(cell, params, rendered) {
 			${cell.getValue().toUpperCase()}
 		</div>`;
 	}
-	const pitcher = MOBILE ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
+	const pitcher = MOBILE || params.lastName ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
 	return `
 		<div class="opp-cell" aria-label="${data.pitcherSummary}">
 			${ah}
@@ -681,7 +681,7 @@ const playerFormatter = function(cell, params, rendered) {
 	if (PLAYER) {
 		player = title(PLAYER);
 	}
-	if (MOBILE && cell.getTable().element.id == "table") {
+	if (params.lastName || (MOBILE && cell.getTable().element.id == "table")) {
 		player = player.split(" ");
 		if (player[player.length-1] == "Hernandez") {
 			player = player[0][0] + " " + player[player.length-1];

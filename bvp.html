@@ -178,6 +178,8 @@
 		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
 		let PRETTY = URLParams.get("pretty");
+		//let LAST = URLParams.get("last") != undefined;
+		let LAST = false;
 		let YEAR = new Date();
 		YEAR = YEAR.getFullYear();
 
@@ -275,13 +277,13 @@
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 90 : 140,
-						formatterParams:{ sport: SPORT, noProp: true, fullName: true },
+						width: MOBILE || LAST ? 100 : 140,
+						formatterParams:{ sport: SPORT, noProp: true, fullName: true, lastName: LAST },
 						hozAlign: "left",
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, hozAlign: "left", width: MOBILE ? 90 : 150},
+					{title: "Opp – Pitcher", field: "opp", formatter: oppFormatter, formatterParams: {lastName: LAST}, hozAlign: "left", width: MOBILE || LAST ? 100 : 150},
 
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
