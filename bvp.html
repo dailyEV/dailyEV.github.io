@@ -217,7 +217,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/stats_bvp.json`;
+			const url = `https://api.github.com/repos/zhecht/props/contents/static/mlb/stats_bvp.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -242,7 +242,7 @@
 		function renderTable(data) {
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
+				//ajaxURL: "https://raw.githubusercontent.com/zhecht/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,
@@ -695,13 +695,21 @@
 						let p = title(row.player).split(" ").at(-1);
 						if (p == "Lowe" && row.team == "tb") {
 							p = `${row.player.toUpperCase().at(0)} Lowe`;
+						} else if (p == "Hernandez" && row.team == "lad") {
+							p = `${row.player.toUpperCase().at(0)} Hernandez`;
 						}
 						o2 += `${p}|${row.bvp || "-"}|${row.savant.est_slg.toFixed(3).slice(1).replace(/^0/, ".")}|${row.savant.barrels_per_bip}%|`;
 					}
 					if (!row2) {
 						o2 += "||||\n";
 					} else {
-						o2 += `${title(row2.player).split(" ").at(-1)}|${row2.bvp || "-"}|${row2.savant.est_slg.toFixed(3).slice(1).replace(/^0/, ".")}|${row2.savant.barrels_per_bip}%\n`;
+						let p = title(row2.player).split(" ").at(-1);
+						if (p == "Lowe" && row2.team == "tb") {
+							p = `${row2.player.toUpperCase().at(0)} Lowe`;
+						} else if (p == "Hernandez" && row2.team == "lad") {
+							p = `${row2.player.toUpperCase().at(0)} Hernandez`;
+						}
+						o2 += `${p}|${row2.bvp || "-"}|${row2.savant.est_slg.toFixed(3).slice(1).replace(/^0/, ".")}|${row2.savant.barrels_per_bip}%\n`;
 					}
 				}
 				o += o2;

@@ -128,7 +128,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/hedge.json`;
+			const url = `https://api.github.com/repos/zhecht/props/contents/hedge.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {

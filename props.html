@@ -236,7 +236,7 @@
 			if (player in HISTORICAL) {
 				plotMap(data, HISTORICAL[player][year].date, HISTORICAL[player][year][data.prop]);
 			} else {
-				const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/${SPORT}_historical/${data.team}.json`;
+				const url = `https://api.github.com/repos/zhecht/props/contents/static/splits/${SPORT}_historical/${data.team}.json`;
 				fetch(url, {
 					headers: { "Accept": "application/vnd.github.v3.raw" }
 				}).then(response => response.json()).then(yearData => {
@@ -315,7 +315,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/${s}/evArr.json`;
+			const url = `https://api.github.com/repos/zhecht/props/contents/static/${s}/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -394,7 +394,7 @@
 			const playerRows = TABLE.getRows()
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
-			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
+			const props = Array.from(new Set(playerRows.map(r => r.prop)));
 
 			let playerRowsLines = playerRows.filter(r => r.prop == data.prop);
 			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
@@ -440,8 +440,8 @@
 			// Props Nav
 			let propsSelect = document.querySelector("#player-props-select");
 			propsSelect.innerHTML = "";
-			playerProps.sort((a, b) => a - b);
-			playerProps.forEach(p => {
+			props.sort((a, b) => a - b);
+			props.forEach(p => {
 				const el = document.createElement("option");
 				el.value = p;
 				el.innerText = p.toUpperCase();
@@ -668,7 +668,7 @@
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				//ajaxURL: "https://raw.githubusercontent.com/zhecht/playerprops/main/static/dailyev/evArr.json",
+				//ajaxURL: "https://raw.githubusercontent.com/zhecht/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,

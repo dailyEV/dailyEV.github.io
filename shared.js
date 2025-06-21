@@ -810,7 +810,7 @@ const dtMutator = function(value) {
 }
 
 function fetchFile(file, cb) {
-	const url = "https://api.github.com/repos/zhecht/playerprops/contents/static/"+file;
+	const url = "https://api.github.com/repos/zhecht/props/contents/static/"+file;
 	fetch(url, {
 		headers: { "Accept": "application/vnd.github.v3.raw" }
 	}).then(response => response.json()).then(res => {
@@ -960,7 +960,7 @@ function movingAverage(arr, windowSize) {
 function renderFeed() {
 	const data = TABLE.getSelectedRows()[0].getData();
 	let player = data.player;
-	let url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${data.team}.json`;
+	let url = `https://api.github.com/repos/zhecht/props/contents/static/splits/mlb_feed/${data.team}.json`;
 	fetch(url, {
 		headers: {
 			"Accept": "application/vnd.github.v3.raw"
@@ -1151,7 +1151,7 @@ function plotHRGap(showGames = false) {
 	}, 100);
 }
 
-function fetchUpdated(repo="playerprops", render=true) {
+function fetchUpdated(repo="props", render=true) {
 	const url = `https://api.github.com/repos/zhecht/${repo}/contents/updated.json`;
 	fetch(url, {
 		headers: { "Accept": "application/vnd.github.v3.raw" }

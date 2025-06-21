@@ -207,7 +207,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/playerprops/contents/static/mlb/fantasyRanks.json`;
+			const url = `https://api.github.com/repos/zhecht/props/contents/static/mlb/fantasyRanks.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -230,7 +230,7 @@
 			const playerRows = TABLE.getRows()
 				.filter(r => r.getData().player == data.player)
 				.map(r => r.getData());
-			const playerProps = Array.from(new Set(playerRows.map(r => r.prop)));
+			const props = Array.from(new Set(playerRows.map(r => r.prop)));
 
 			let playerRowsLines = playerRows.filter(r => r.prop == data.prop);
 			const playerLines = Array.from(new Set(playerRowsLines.map(r => r.playerHandicap || r.handicap)));
@@ -261,8 +261,8 @@
 			// Props Nav
 			let propsSelect = document.querySelector("#player-props-select");
 			propsSelect.innerHTML = "";
-			playerProps.sort((a, b) => a - b);
-			playerProps.forEach(p => {
+			props.sort((a, b) => a - b);
+			props.forEach(p => {
 				const el = document.createElement("option");
 				el.value = p;
 				el.innerText = p.toUpperCase();

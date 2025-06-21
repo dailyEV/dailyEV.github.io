@@ -291,10 +291,10 @@
 		async function fetchFeed(render=false) {
 			let url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
 			if (DATE && DATE != TODAY) {
-				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${DATE}.json`;
+				url = `https://api.github.com/repos/zhecht/props/contents/static/splits/mlb_feed/${DATE}.json`;
 			}
 			if (PLAYER) {
-				url = `https://api.github.com/repos/zhecht/playerprops/contents/static/splits/mlb_feed/${TEAM}.json`;
+				url = `https://api.github.com/repos/zhecht/props/contents/static/splits/mlb_feed/${TEAM}.json`;
 			}
 			fetch(url, {
 				headers: {
