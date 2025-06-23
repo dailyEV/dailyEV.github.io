@@ -63,8 +63,16 @@
 		#table {
 			height: 85%;
 		}
-		#header {
+		#sub-header {
 			display: none;
+		}
+		#header-container {
+			position: inherit;
+			justify-content: space-around;
+			align-items: baseline;
+		}
+		.disclaimer {
+			position: initial;
 		}
 		.game-container {
 			min-width: auto;
@@ -75,6 +83,7 @@
 	<div id="left-body" class="body">
 		<div id="header">
 			<h1>+EV Dingers</h1>
+			<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="page-select"></select>

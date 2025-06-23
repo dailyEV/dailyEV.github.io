@@ -47,6 +47,9 @@
 			height: 100%;
 		}
 		@media (max-width: 600px) {
+			h1 {
+				display: initial;
+			}
 			#sport-select {
 				min-width: 100px;
 			}
@@ -54,7 +57,12 @@
 				position: relative;
 			}
 			#header-container {
-				display: none;
+				position: inherit;
+				justify-content: space-around;
+				align-items: baseline;
+			}
+			.disclaimer {
+				position: initial;
 			}
 			#sub-header {
 				margin: 0.5rem 0;
@@ -81,6 +89,7 @@
 		<div id="header">
 			<div id="header-container">
 				<h1>Daily EV</h1>
+				<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
 			</div>
 			<div id="sub-header">
 				<div class="dropdown">
@@ -424,7 +433,7 @@
 			let formattedDt = dt.toLocaleDateString("en-US", {month: "short", day: "numeric"});
 			const day = dt.getDate();
 			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
-			o = `${formattedDt}${suffix} BvP\n\ndailyev.github.io/bvp\n\n`;
+			o = `${formattedDt}${suffix} BvP (Batter vs Starting Pitcher History)\n\ndailyev.github.io/bvp\n\n`;
 			let keys = Object.keys(out).sort().reverse();
 			for (hr of keys) {
 				let emoji = "🔥".repeat(parseInt(hr));
