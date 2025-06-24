@@ -27,7 +27,6 @@ const PAGE_DROPDOWN = `
 	<option value="ncaab">🏀 CBB Props</option>
 	<option value="historical">⚾ Dingers (H)</option>
 	<option value="kambi">⚾ Dingers (K)</option>
-	<option value="hedge">Hedge</option>
 `;
 
 setTimeout(() => {
