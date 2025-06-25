@@ -503,7 +503,7 @@ const evBookFormatter = function(cell, params, rendered) {
 			</div>`;
 	}
 
-	if (params.book) {
+	if (params.book && !params.book.includes("vs-")) {
 		const book = params.book.split("-")[0];
 		let line = data.bookOdds[book] || "0";
 		if (line.includes("/")) {
