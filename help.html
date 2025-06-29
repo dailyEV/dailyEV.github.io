@@ -28,6 +28,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		font-size: 1.5rem;
 	}
 	img {
 		width: 30px; height: 30px;
@@ -45,6 +46,7 @@
 	}
 	.glossary h3 {
 		margin-top: 0.5rem;
+		text-align: center;
 	}
 	.glossary span {
 		margin-bottom: 0.5rem;
@@ -53,24 +55,29 @@
 <body>
 	<div class="glossary" style="display: flex; flex-direction: column;">
 		<h3>Glossary</h3>
-		<span>BvP: Batter vs Pitcher</span>
-		<span>EV: Expected Value</span>
+		<span><span style="font-weight: bold;">BvP</span>: Batter vs Pitcher</span>
+		<span><span style="font-weight: bold;">EV</span>: Expected Value</span>
 		<span style="margin-left: 1.5rem"><i>- A long-term strategy leveraging Sportsbook Odds to identify value plays</i></span>
-		<span>FV: Fair Value</span>
+		<span><span style="font-weight: bold;">FV</span>: Fair Value</span>
 		<span style="margin-left: 1.5rem"><i>- True odds after removing the vig (the sportsbook's built-in edge or fee)</i></span>
-		<span>BPP: <a>@BallParkPal</a> HR Factors</span>
-		<span>PA: Plate Appearance</span>
-		<span>Med: Median</span>
-		<span>Z: Z-Score</span>
-		<span style="margin-left: 1.5rem"><i>- Measures how overdue a player is for a HR vs. career norms</i></span>
-		<span>BRL: Barrel</span>
-		<span style="margin-left: 1.5rem"><i>- Balls hit at an ideal exit velocity and launch angle</i></span>
-		<span>HH: Hard Hit</span>
+		<span><span style="font-weight: bold;">BPP</span>: <a>@BallParkPal</a> HR Factors</span>
+		<span><span style="font-weight: bold;">LA</span>: Launch Angle, <span style="font-weight: bold;">EVelo</span>: Exit Velocity</span>
+		<span><span style="font-weight: bold;">BRL</span>: Barrel</span>
+		<span style="margin-left: 1.5rem"><i>- Balls hit at an ideal EVelo and LA</i></span>
+		<span><span style="font-weight: bold;">HH</span>: Hard Hit</span>
 		<span style="margin-left: 1.5rem"><i>- Exit Velocity >= 95 mph</i></span>
-		<span>LA: Launch Angle</span>
-		<span>EVelo: Exit Velocity</span>
+		<span></span>
+		<div style="display: flex;justify-content: center;">
+			<div style="display: flex; flex-direction: column;border: 2px solid;width: max-content;padding: 0.5rem;">
+				<div style="text-align: center;border-bottom: 1px solid;">Last Homer (Due)</div>
+				<span style="margin-top: 0.25rem;">PA: Plate Appearance</span>
+				<span>Med: Median</span>
+				<span>Z: Z-Score</span>
+				<span style="margin-left: 1.5rem"><i>- Measures how overdue a player is for a HR vs. career norms</i></span>
+			</div>
+		</div>
 	</div>
-	<div style="margin-top: 1rem;display: flex;width: 37%;justify-content: space-evenly;">
+	<div style="margin-top: 1rem;display: flex;width: 50%;justify-content: space-evenly;">
 		<div class="book">
 			<img src="logos/fd.png" alt="FD" />
 			<span>Fanduel</span>

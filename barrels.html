@@ -122,7 +122,7 @@
 						</a>
 					</div>
 				</div>
-				<div id="updated">Updated: </div>
+				<div id="updated"></div>
 			</div>
 			<div id="table"></div>
 		</div>
@@ -235,7 +235,7 @@
 				data = data.filter(r => PLAYERS.includes(r.player));
 			}
 
-			data = data.filter(r => r.book != "");
+			//data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
