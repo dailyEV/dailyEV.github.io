@@ -159,6 +159,7 @@
 		let PLAYER = URLParams.get("player");
 		let PRETTY = URLParams.get("pretty");
 		let DUE = URLParams.get("due");
+		let L3 = URLParams.get("L3");
 		let TOGGLE_PERCENTILE = URLParams.get("percentiles") != undefined;
 		let BVP = URLParams.get("bvp");
 		let IS_PITCHER = false;
@@ -235,7 +236,7 @@
 				data = data.filter(r => PLAYERS.includes(r.player));
 			}
 
-			//data = data.filter(r => r.book != "");
+			data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -294,6 +295,7 @@
 						{title: "SD", field: "homerLogs.pa.sd", width: 40},
 					]},
 					{title: "Barrels", columns: [
+						{title: "Test", field: "brlCntTest", width: 45, sorter: "number"},
 						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.barrel_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
 						{title: "L5", field: "game_trends.barrel_ct.5GPercentile", visible: false},
@@ -410,7 +412,12 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => {
-				if (!["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"].includes(col.getField())) {
+				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"];
+				if (L3 != undefined) {
+					arr.push("game_trends.barrel_ct.3G");
+					arr.push("game_trends.hard_hit_ct.3G");
+				}
+				if (!arr.includes(col.getField())) {
 					col.hide();
 				}
 			});
