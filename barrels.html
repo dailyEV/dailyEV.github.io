@@ -236,10 +236,12 @@
 				data = data.filter(r => PLAYERS.includes(r.player));
 			}
 
+			/*
 			let filtered = data.filter(r => r.book != "");
 			if (filtered.length != 0) {
 				data = filtered;
 			}
+			*/
 			//data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
