@@ -320,6 +320,10 @@
 						{title: "", field: "game_trends.hard_hit_ct.5GPercentile", visible: false},
 						{title: "", field: "game_trends.hard_hit_ct.3GPercentile", visible: false},
 					]},
+					{title: "Close Calls", columns: [
+						{title: "Total", field: "homerLogs.close", width: 45, sorter: "number"},
+						{title: "L7", field: "homerLogs.close7", width: 45, sorter: "number"},
+					]},
 					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
 					{title: "Exit Velocity", columns: [
 						{title: "Total", field: "exit_velocity_avg", formatter: percentileFormatter, width: 45, sorter: "number"},
