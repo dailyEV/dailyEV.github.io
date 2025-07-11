@@ -289,12 +289,12 @@
 			Plotly.newPlot("yby", [hrAB], layout);
 		}
 		async function fetchFeed(render=false) {
-			let url = "https://api.github.com/repos/zhecht/feed/contents/feed.json";
+			let url = "https://api.github.com/repos/dailyev/feed/contents/feed.json";
 			if (DATE && DATE != TODAY) {
-				url = `https://api.github.com/repos/zhecht/props/contents/static/splits/mlb_feed/${DATE}.json`;
+				url = `https://api.github.com/repos/dailyev/props/contents/static/splits/mlb_feed/${DATE}.json`;
 			}
 			if (PLAYER) {
-				url = `https://api.github.com/repos/zhecht/props/contents/static/splits/mlb_feed/${TEAM}.json`;
+				url = `https://api.github.com/repos/dailyev/props/contents/static/splits/mlb_feed/${TEAM}.json`;
 			}
 			fetch(url, {
 				headers: {
@@ -392,7 +392,7 @@
 		}
 
 		function fetchHistorical() {
-			const url = "https://api.github.com/repos/zhecht/feed/contents/feed_times_historical.json";
+			const url = "https://api.github.com/repos/dailyev/feed/contents/feed_times_historical.json";
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(res => {

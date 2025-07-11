@@ -284,9 +284,9 @@
 		}
 
 		async function fetchData(render=true) {
-			let url = `https://api.github.com/repos/zhecht/odds/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
+			let url = `https://api.github.com/repos/dailyev/odds/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
 			if (DATE) {
-				url = "https://api.github.com/repos/zhecht/odds/contents/static/dingers/odds_historical.json";
+				url = "https://api.github.com/repos/dailyev/odds/contents/static/dingers/odds_historical.json";
 			}
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -382,7 +382,7 @@
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				//ajaxURL: "https://raw.githubusercontent.com/zhecht/props/main/static/dailyev/evArr.json",
+				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,
@@ -633,7 +633,7 @@
 				ev = `${BOOK}_ev`;
 				fv = `${BOOK}_fairVal`;
 			}
-			[ev, "player", "book", "bvp", "weather", "bookOdds.pn", "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
+			[ev, "player", "book", "bvp", "weather", "bookOdds.circa", "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
 			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>

@@ -148,7 +148,7 @@
 		fetchPlays();
 
 		function fetchPlays() {
-			const url = `https://api.github.com/repos/zhecht/props/contents/plays.json`;
+			const url = `https://api.github.com/repos/dailyev/props/contents/plays.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {

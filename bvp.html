@@ -226,7 +226,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/props/contents/static/mlb/stats_bvp.json`;
+			const url = `https://api.github.com/repos/dailyev/props/contents/static/mlb/stats_bvp.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -251,7 +251,7 @@
 		function renderTable(data) {
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-				//ajaxURL: "https://raw.githubusercontent.com/zhecht/props/main/static/dailyev/evArr.json",
+				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
 				autoResize: true,

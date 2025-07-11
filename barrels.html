@@ -205,7 +205,7 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/zhecht/props/contents/static/baseballreference/barrels.json`;
+			const url = `https://api.github.com/repos/dailyev/props/contents/static/baseballreference/barrels.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
@@ -242,7 +242,7 @@
 				data = filtered;
 			}
 			*/
-			data = data.filter(r => r.book != "");
+			//data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
