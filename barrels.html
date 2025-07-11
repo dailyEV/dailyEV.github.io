@@ -242,7 +242,7 @@
 				data = filtered;
 			}
 			*/
-			//data = data.filter(r => r.book != "");
+			data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -323,6 +323,7 @@
 					{title: "Close Calls", columns: [
 						{title: "Total", field: "homerLogs.close", width: 45, sorter: "number"},
 						{title: "L7", field: "homerLogs.close7", width: 45, sorter: "number"},
+						{title: "L3", field: "homerLogs.close3", width: 45, sorter: "number"},
 					]},
 					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
 					{title: "Exit Velocity", columns: [
@@ -361,7 +362,8 @@
 					{field:"game_trends.barrel_ct.5G", type:">", value: 0},
 				]);
 				TABLE.setSort([
-					{column: "homerLogs.pa.z_median", dir: "desc"}
+					{column: "homerLogs.pa.z_median", dir: "desc"},
+					//{column: "game_trends.barrel_ct.3G", dir: "desc"},
 				]);
 			} else {
 				TABLE.setFilter();

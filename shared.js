@@ -27,6 +27,7 @@ const PAGE_DROPDOWN = `
 	<option value="ncaab">🏀 CBB Props</option>
 	<option value="historical">⚾ Dingers (H)</option>
 	<option value="kambi">⚾ Dingers (K)</option>
+	<option value="preview">⚾ Preview</option>
 `;
 
 setTimeout(() => {
@@ -400,7 +401,12 @@ const oppFormatter = function(cell, params, rendered) {
 			${cell.getValue().toUpperCase()}
 		</div>`;
 	}
-	const pitcher = MOBILE || params.lastName ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
+	let pitcher = "";
+	if (PAGE == "preview") {
+		pitcher = cell.getValue().toUpperCase();
+	} else {
+		pitcher = MOBILE || params.lastName ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
+	}
 	return `
 		<div class="opp-cell" aria-label="${data.pitcherSummary}">
 			${ah}
@@ -519,7 +525,7 @@ const evBookFormatter = function(cell, params, rendered) {
 			</div>`;
 	}
 
-	if (params.book && !params.book.includes("vs-")) {
+	if (params.book && (!params.book.includes("vs-") || params.book.includes("-vs-circa"))) {
 		const book = params.book.split("-")[0];
 		let line = data.bookOdds[book] || "0";
 		if (line.includes("/")) {
@@ -706,7 +712,7 @@ const playerFormatter = function(cell, params, rendered) {
 		}
 	}
 
-	if (sport.includes("futures")) {
+	if (sport && sport.includes("futures")) {
 		if (data.prop == "team_wins") {
 			return player.toUpperCase()+" Wins";
 		} else if (["playoffs", "roty", "mvp", "division"].includes(data.prop)) {

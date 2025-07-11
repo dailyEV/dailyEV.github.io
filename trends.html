@@ -221,14 +221,14 @@
 				if (!["2025", "2024", "2023", "2022", "2021"].includes(year)) {
 					//return;
 				}
-				if (["2015"].includes(year)) {
+				if (["2015", "2020"].includes(year)) {
 					return;
 				}
 				let xVals = [];
 				let yVals = [];
 				let yValsMA = [];
 				Object.keys(res[year]).forEach(month => {
-					if (!["04", "05", "06"].includes(month)) {
+					if (!["04", "05", "06", "07"].includes(month)) {
 						return;
 					}
 					const data = res[year][month];
