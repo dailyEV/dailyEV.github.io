@@ -610,6 +610,9 @@
 				initialSort: [
 					{column: "dt", dir: "desc"},
 				],
+				columnDefaults: {
+					headerSortStartingDir: "desc"
+				},
 				groupHeader: function(value, count, data, group){
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
 				},

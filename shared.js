@@ -22,6 +22,8 @@ const PAGE_DROPDOWN = `
 	<option value="barrels">⚾ Barrels</option>
 	<option value="trends">⚾ Trends</option>
 	<option value="mlb">⚾ Props</option>
+	<option value="nfl">🏈 Props</option>
+	<option value="futures">🏈 Futures</option>
 	<option value="nhl">🏒 Props</option>
 	<option value="nba">🏀 Props</option>
 	<option value="ncaab">🏀 CBB Props</option>
@@ -228,7 +230,10 @@ const percentileFormatter = function(cell) {
 	let field = cell.getField();
 
 	if (!cell.getValue()) {
-		return 0;
+		if (["game_trends.barrels_per_bip.5G", "game_trends.hard_hit_percent.5G"].includes(field)) {
+			return "0";
+		}
+		return `<div class="negative">0</div>`;
 	}
 
 	let cls = "";
@@ -525,6 +530,19 @@ const evBookFormatter = function(cell, params, rendered) {
 			</div>`;
 	}
 
+	console.log(PAGE);
+
+	if (PAGE == "derby") {
+		let line = data.line;
+		if (line > 0) {
+			line = "+"+line;
+		}
+		return `<div class='evbook-cell'>
+				<span class='evbook-odds'>${line}</span>
+				<img class='book-img' src='logos/mgm.png' alt='dk' title='dk' />
+			</div>`;
+	}
+
 	if (params.book && (!params.book.includes("vs-") || params.book.includes("-vs-circa"))) {
 		const book = params.book.split("-")[0];
 		let line = data.bookOdds[book] || "0";
@@ -549,7 +567,7 @@ const evBookFormatter = function(cell, params, rendered) {
 
 	const book = cell.getValue().replace("kambi", "parx").replace("-50%", "");
 	let line = data.line === undefined ? "-" : data.line;
-	if (window.location.href.includes("stats")) {
+	if (window.location.href.includes("stats") || window.location.href.includes("bvp")) {
 		line = data.daily.odds;
 	}
 	let lineInt = parseInt(line);
@@ -767,7 +785,6 @@ const playerFormatter = function(cell, params, rendered) {
 	}
 	return `
 		<div class="player-cell">
-			<div class='game-container'>${gameContainer}</div>
 			${p} ${prop}
 		</div>
 	`

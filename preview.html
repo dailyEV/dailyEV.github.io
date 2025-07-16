@@ -88,7 +88,7 @@
 	<div id="left-body" class="body">
 		<div id="header">
 			<div id="header-container">
-				<h1>Daily EV</h1>
+				<h1>+EV Dingers</h1>
 				<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
 			</div>
 			<div id="sub-header">
@@ -113,6 +113,9 @@
 				</div>
 			</div>
 			<div id="table"></div>
+			<div id="watermark">
+				<img src="logos/logo.png">
+			</div>
 		</div>
 	</div>
 	<div id="right-body" class="body">
@@ -214,8 +217,9 @@
 						frozen: MOBILE ? true : false
 					},
 					{title: "Opp", field: "opp", formatter: oppFormatter, formatterParams: {is_pitcher: false}, hozAlign: "left", width: 80},
-					{title: "HRs", field: "home_run", width: 45 },
 					{title: "HR/PA", field: "hr_pa", width: 45 },
+					{title: "HRs", field: "home_run", width: 45 },
+					{title: "PA", field: "pa", width: 45 },
 					{title: "ERA", field: "p_era", width: 45, formatter: eraFormatter, visible: false },
 					{title: "xBA", field: "xba", width: 45, formatter: baFormatter, visible: false },
 					{title: "xwOBA", field: "xwoba", width: 45, formatter: xwobaFormatter, visible: false },

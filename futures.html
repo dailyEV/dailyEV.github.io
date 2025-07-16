@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>⚾ Barrels</title>
+	<title>🏈 Futures</title>
 
 	<script type="text/javascript" src="test.js"></script>
 
@@ -104,9 +104,6 @@
 					<select id="page-select"></select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
-				<button onclick="filterDue()">Due</button>
-				<button id="percentiles-btn" onclick="viewPercentiles()">Percentiles</button>
-				<button onclick="filterToday()">Today</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -131,19 +128,12 @@
 		</div>
 	</div>
 	<div id="right-body" class="body">
-		<div class="dropdown">
-			<select id="btwn-select">
-				<option value="pa">PA Btwn</option>
-				<option value="feed">Feed</option>
-			</select>
-			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-		</div>
-		<div id="chart"></div>
+		
 	</div>
 	<div id="tooltip"></div>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
-		PAGE = "barrels";
+		PAGE = "futures";
 		let TABLE = null;
 		let FEED = null;
 		let HISTORICAL = {};
@@ -208,16 +198,22 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/dailyev/props/contents/static/baseballreference/barrels.json`;
+			const url = `https://api.github.com/repos/dailyev/props/contents/static/nflfutures/evArr.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
-				if (TEAM) {
-					data = data.filter(r => r.team == TEAM);
-				}
 				RES = data;
 				renderTable(data);
 				setTimeout(() => {
+					if (BOOK) {
+						TABLE.hideColumn("ev");
+						TABLE.hideColumn("fairVal");
+						TABLE.showColumn(`${BOOK}_ev`);
+						TABLE.showColumn(`${BOOK}_fairVal`);
+						TABLE.setSort([
+							{column: `${BOOK}_ev`, dir: "desc"}
+						]);
+					}
 					if (PRETTY != undefined) {
 						pretty_();
 					}
@@ -229,24 +225,6 @@
 		}
 
 		function renderTable(data) {
-			if (!ALL) {
-				data = data.filter(r => parseInt(r.bip) >= 20);
-				data = data.filter(r => parseInt(r.barrel_ct) >= 3);
-			}
-
-			if (PLAYERS) {
-				PLAYERS = PLAYERS.split(",").map(r => r.replaceAll("-", " "));
-				data = data.filter(r => PLAYERS.includes(r.player));
-			}
-
-			/*
-			let filtered = data.filter(r => r.book != "");
-			if (filtered.length != 0) {
-				data = filtered;
-			}
-			*/
-			//data = data.filter(r => r.book != "");
-
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
 				layout: "fitDataFill",
@@ -255,8 +233,7 @@
 				data: data,
 				initialSort: [
 					//{column: "barrel_ct", dir: "desc"},
-					{column: "game_trends.hard_hit_ct.5G", dir: "desc"},
-					{column: "game_trends.hard_hit_ct.3G", dir: "desc"},
+					{column: "ev", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
@@ -276,79 +253,27 @@
 				},
 				groupToggleElement: "header",
 				columns: [
+					{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0},
+					{title: "EV", field: "vs-circa_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0, visible: false},
 					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
 						headerFilter: "input",
 						formatter: playerFormatter,
-						width: MOBILE ? 100 : undefined,
+						width: MOBILE ? 80 : undefined,
 						formatterParams: {
-							sport: SPORT,
-							noProp: true
+							sport: SPORT
 						},
 						hozAlign: "left",
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					//{title: "BIP", field: "bip", width: 55, sorter: "number"},
-					{title: "Last Homer", columns: [
-						//{title: "Gms", field: "homerLogs.g.streak", width: 40, formatter: gapFormatter},
-						//{title: "Avg", field: "homerLogs.gamesBtwnAvg", width: 40},
-						//{title: "Med", field: "homerLogs.gamesBtwnMed", width: 40},
-						//{title: "Z", field: "homerLogs.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
-
-						{title: "PA", field: "homerLogs.pa.streak", width: 40, formatter: gapFormatter},
-						{title: "Avg", field: "homerLogs.pa.avg", width: 40},
-						{title: "Z", field: "homerLogs.pa.z", width: 40, formatter: lastDiffFormatter, sorter: "number"},
-						{title: "Med", field: "homerLogs.pa.med", width: 40},
-						{title: "Z", field: "homerLogs.pa.z_median", width: 40, formatter: lastDiffFormatter, sorter: "number"},
-						{title: "SD", field: "homerLogs.pa.sd", width: 40},
-					]},
-					{title: "Barrels", columns: [
-						//{title: "Test", field: "brlCntTest", width: 45, sorter: "number"},
-						{title: "Total", field: "barrel_ct", width: 45, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.barrel_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.barrel_ct.5GPercentile", visible: false},
-						{title: "L3", field: "game_trends.barrel_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
-						{title: "Rate", field: "barrels_per_bip", width: 55, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.barrels_per_bip.5G", width: 40, sorter: "number", formatter: percentileFormatter},
-					]},
-					{title: "Hard Hit", columns: [
-						{title: "Total", field: "hard_hit_ct", width: 55, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.hard_hit_ct.5G", width: 40, sorter: "number", formatter: percentileFormatter},
-						{title: "L3", field: "game_trends.hard_hit_ct.3G", width: 40, sorter: "number", formatter: percentileFormatter},
-						{title: "Rate", field: "hard_hit_percent", width: 55, sorter: "number", formatter: percentileFormatter},
-						{title: "L5", field: "game_trends.hard_hit_percent.5G", width: 40, sorter: "number", formatter: percentileFormatter},
-						//
-						{title: "", field: "game_trends.barrel_ct.3G", visible: false},
-						{title: "", field: "game_trends.hard_hit_ct.5GPercentile", visible: false},
-						{title: "", field: "game_trends.hard_hit_ct.3GPercentile", visible: false},
-					]},
-					{title: "Close Calls", columns: [
-						{title: "Total", field: "homerLogs.close", width: 45, sorter: "number"},
-						{title: "L7", field: "homerLogs.close7", width: 45, sorter: "number"},
-						{title: "L3", field: "homerLogs.close3", width: 45, sorter: "number"},
-					]},
-					{title: "Sweet<br>Spot", field: "sweet_spot_percent", width: 55, sorter: "number", formatter: percentileFormatter},
-					{title: "Exit Velocity", columns: [
-						{title: "Total", field: "exit_velocity_avg", formatter: percentileFormatter, width: 45, sorter: "number"},
-						{title: "L5", field: "game_trends.exit_velocity_avg.5G", formatter: percentileFormatter, width: 45, sorter: "number"},
-					]},
-					{title: "Launch<br>Angle", field: "launch_angle_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
-					{title: "Distance", columns: [
-						{title: "HR Avg", field: "distance_hr_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
-						{title: "Avg", field: "distance_avg", formatter: percentileFormatter, width: 55, sorter: "number", visible: false},
-					]},
-					{title: "Close Calls", columns: [
-						{title: "Tot", field: "homerLogs.closest_ct", width: 40, visible: MOBILE ? false : false},
-						{title: "Last", field: "homerLogs.lastClosest", width: 40, visible: MOBILE ? false : false},
-					]},
-					{title: "BPP", columns: [
-						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
-						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
-					]},
-					{title: "", field: "barrel_ctPercentile", visible: false}
+					{title: `FD`, field: "bookOdds.fd",  width: 70, sorter: "number"},
+					{title: `DK`, field: "bookOdds.dk",  width: 70, sorter: "number"},
+					{title: `MGM`, field: "bookOdds.mgm",  width: 70, sorter: "number"},
+					{title: `CZ`, field: "bookOdds.cz",  width: 70, sorter: "number"},
+					{title: `Circa`, field: "bookOdds.circa",  width: 70, sorter: "number"},
 				]
 			});
 

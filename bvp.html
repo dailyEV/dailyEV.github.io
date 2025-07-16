@@ -88,7 +88,7 @@
 	<div id="left-body" class="body">
 		<div id="header">
 			<div id="header-container">
-				<h1>Daily EV</h1>
+				<h1>+EV Dingers</h1>
 				<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
 			</div>
 			<div id="sub-header">
@@ -118,6 +118,9 @@
 				</div>
 			</div>
 			<div id="table"></div>
+			<div id="watermark">
+				<img src="logos/logo.png">
+			</div>
 		</div>
 	</div>
 	<div id="right-body" class="body">
@@ -179,6 +182,7 @@
 		let url = "";
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
+		let BOOK = URLParams.get("book");
 		let DATE = URLParams.get("date");
 		let TODAY = getToday();
 		let SPORT = URLParams.get("sport");
@@ -281,6 +285,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					//{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
+					{title: "Book", field: "daily.book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{
 						title: "Player",
 						field: "player",
@@ -730,7 +735,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => col.hide());
-			["player", "opp", "bvp", "bvt", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
+			["daily.book", "player", "opp", "bvp", "bvt", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
 		}
 	</script>
 </body>

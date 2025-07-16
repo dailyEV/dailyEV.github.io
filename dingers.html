@@ -176,6 +176,9 @@
 				</div>
 			</div>
 			<div id="table"></div>
+			<div id="watermark">
+				<img src="logos/logo.png">
+			</div>
 		</div>
 	</div>
 	<div id="right-body" class="body">
@@ -633,7 +636,7 @@
 				ev = `${BOOK}_ev`;
 				fv = `${BOOK}_fairVal`;
 			}
-			[ev, "player", "book", "bvp", "weather", "bookOdds.circa", "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
+			[ev, "player", "bvp", "book", "weather", "bookOdds.circa", "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
 			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>
