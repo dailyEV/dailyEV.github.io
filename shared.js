@@ -604,6 +604,8 @@ const propFormatter = function(cell) {
 		return data.under ? "NRFI" : "YRFI";
 	} else if (["make_cut"].includes(data.prop)) {
 		return data.under ? `MISS CUT` : "MAKE CUT";
+	} else if (data.prop.includes("top_")) {
+		return data.prop.toUpperCase().replace("_", " ");
 	} else if (["atgs"].includes(data.prop)) {
 		return data.under ? `u${data.prop.toUpperCase()}` : data.prop.toUpperCase();
 	} else if (data.prop.includes("ml")) {

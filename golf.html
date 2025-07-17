@@ -281,6 +281,7 @@
 					{title: "EV", field: "dk_ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: MOBILE ? plusMinusFormatter : evFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
 					{title: "FV", field: "dk-25_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "FV", field: "dk-25-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//
 					{title: "Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
@@ -292,7 +293,7 @@
 						width: MOBILE ? 80 : undefined,
 						formatterParams: {
 							sport: SPORT,
-							fullName: false
+							fullName: true
 						},
 						hozAlign: "left",
 						responsive: 0,
