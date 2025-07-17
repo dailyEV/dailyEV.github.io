@@ -22,6 +22,7 @@ const PAGE_DROPDOWN = `
 	<option value="barrels">⚾ Barrels</option>
 	<option value="trends">⚾ Trends</option>
 	<option value="mlb">⚾ Props</option>
+	<option value="golf">⛳ Props</option>
 	<option value="nfl">🏈 Props</option>
 	<option value="futures">🏈 Futures</option>
 	<option value="nhl">🏒 Props</option>
@@ -601,6 +602,8 @@ const propFormatter = function(cell) {
 		return data.under ? "No" : "Yes";
 	} else if (data.prop == "rfi") {
 		return data.under ? "NRFI" : "YRFI";
+	} else if (["make_cut"].includes(data.prop)) {
+		return data.under ? `MISS CUT` : "MAKE CUT";
 	} else if (["atgs"].includes(data.prop)) {
 		return data.under ? `u${data.prop.toUpperCase()}` : data.prop.toUpperCase();
 	} else if (data.prop.includes("ml")) {
