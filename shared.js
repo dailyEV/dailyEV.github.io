@@ -790,6 +790,7 @@ const playerFormatter = function(cell, params, rendered) {
 	}
 	return `
 		<div class="player-cell">
+			<div class='game-container'>${gameContainer}</div>
 			${p} ${prop}
 		</div>
 	`
