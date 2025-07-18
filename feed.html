@@ -12,6 +12,7 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<script src="math.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -116,55 +117,67 @@
 	}
 </style>
 <body>
-	<div id="left-body" class="body">
-		<div id="header">
-			<div id="sub-header">
-				<div class="dropdown">
-					<select id="page-select"></select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+	<div id="auth">
+		<span id="username"></span>
+		<div id="auth-buttons">
+			<span id="status"></span>
+			<input id="email" type="text" placeholder="Email" >
+			<button id="login" onclick="login()">Login</button>
+			<button id="logout" onclick="logout()">Logout</button>
+		</div>
+	</div>
+	<div id="content">
+		<div id="left-body" class="body">
+			<div id="header">
+				<div id="sub-header">
+					<div class="dropdown">
+						<select id="page-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div id="date-dropdown" class="dropdown">
+						<input type="text" id="date" />
+					</div>
+					<button onclick="groupByGameFeed();">Game Filter</button>
 				</div>
-				<div id="date-dropdown" class="dropdown">
-					<input type="text" id="date" />
+			</div>
+			<div id="table-container">
+				<div id="updated-container">
+					<div id="donate">
+						<div>Tip</div>
+						<div>
+							<a href="https://cash.app/$intersectinglines" target="_blank">
+								<img src="logos/cashapp.png" alt="cashapp" />
+							</a>
+							<a href="https://buymeacoffee.com/interlines" target="_blank">
+								<img src="logos/coffee.png" alt="coffee" />
+							</a>
+						</div>
+					</div>
+					<div id="updated">Updated: </div>
 				</div>
-				<button onclick="groupByGameFeed();">Game Filter</button>
+				<div id="table"></div>
 			</div>
 		</div>
-		<div id="table-container">
-			<div id="updated-container">
-				<div id="donate">
-					<div>Tip</div>
-					<div>
-						<a href="https://cash.app/$intersectinglines" target="_blank">
-							<img src="logos/cashapp.png" alt="cashapp" />
-						</a>
-						<a href="https://buymeacoffee.com/interlines" target="_blank">
-							<img src="logos/coffee.png" alt="coffee" />
-						</a>
+		<div id="right-body" class="body">
+			<div id="all">
+				<h2></h2>
+				<div>
+					<div id="table-dropdown" class="dropdown">
+						<select id="table-select">
+							<option value="homers">Homers</option>
+							<option value="close">Close</option>
+							<option value="barrels">Barrels</option>
+						</select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
 				</div>
-				<div id="updated">Updated: </div>
+				<div id="yby"></div>
+				<div id="hrtable"></div>
+				<div id="scatter"></div>
 			</div>
-			<div id="table"></div>
 		</div>
 	</div>
-	<div id="right-body" class="body">
-		<div id="all">
-			<h2></h2>
-			<div>
-				<div id="table-dropdown" class="dropdown">
-					<select id="table-select">
-						<option value="homers">Homers</option>
-						<option value="close">Close</option>
-						<option value="barrels">Barrels</option>
-					</select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-			</div>
-			<div id="yby"></div>
-			<div id="hrtable"></div>
-			<div id="scatter"></div>
-		</div>
-	</div>
+	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "feed";
@@ -288,7 +301,31 @@
 			}
 			Plotly.newPlot("yby", [hrAB], layout);
 		}
+
 		async function fetchFeed(render=false) {
+			let today = new Date().toISOString().split('T')[0];
+			if (DATE) {
+				today = DATE;
+			}
+
+			let url = "http://localhost:5000";
+			if (window.location.host.includes("localhost")) {
+				url = `http://feed-production-9971.up.railway.app/api/feed?date=${today}`;
+			}
+			//const session = await SB.auth.getSession();
+			//let token = session.data.session ? session.data.session.access_token : null;
+			fetch(url, {
+				headers: {
+					//Authorization: `Bearer ${token}`
+				}
+			}).then(res => res.json()).then(data => {
+				HRROWS = data.filter(r => r.result == "Home Run");
+				renderTable(data);
+				renderHRTable(HRROWS);
+			}).catch(err => console.log(err));
+		}
+
+		async function fetchFeed2(render=false) {
 			let url = "https://api.github.com/repos/dailyev/feed/contents/feed.json";
 			if (DATE && DATE != TODAY) {
 				url = `https://api.github.com/repos/dailyev/props/contents/static/splits/mlb_feed/${DATE}.json`;
@@ -382,7 +419,7 @@
 		}
 		let intervalId = 0;
 		if (!DEBUG && !PLAYER && (!DATE || DATE == TODAY)) {
-			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+			//intervalId = setInterval(() => fetchFeed(), 5 * 1000);
 		} else if (DATE) {
 			fetchHistorical();
 		}

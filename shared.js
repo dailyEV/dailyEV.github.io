@@ -3,7 +3,7 @@ let TEAM = "";
 let PAGE = "";
 let MOBILE = window.innerWidth <= 600;
 let UPDATED = {};
-if (window.location.protocol == "file:") {
+if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
 	HTML = ".html";
 }
 
@@ -51,7 +51,7 @@ setTimeout(() => {
 	} else {
 		select.value = PAGE;
 	}
-}, 100);
+}, 200);
 
 function changePage(page) {
 	if (page == "historical") {
@@ -531,8 +531,6 @@ const evBookFormatter = function(cell, params, rendered) {
 			</div>`;
 	}
 
-	console.log(PAGE);
-
 	if (PAGE == "derby") {
 		let line = data.line;
 		if (line > 0) {
@@ -776,7 +774,7 @@ const playerFormatter = function(cell, params, rendered) {
 		let s = ["feed", "dingers", "barrels"].includes(sport) ? "mlb" : sport;
 		let t = sport == "ncaab" ? data.teamId : data.team;
 		if (TEAM) {
-			t = TEAM;
+			//t = TEAM;
 		}
 		if (t) {
 			gameContainer = `<img class='team-img' src='logos/${s}/${t}.png' alt='${t}' title='${t}' />`;
@@ -790,6 +788,7 @@ const playerFormatter = function(cell, params, rendered) {
 	}
 	return `
 		<div class="player-cell">
+			<div class='game-container'>${gameContainer}</div>
 			${p} ${prop}
 		</div>
 	`

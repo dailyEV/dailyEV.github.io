@@ -13,6 +13,7 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<script src="math.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 	<style>
 		h1 {
 			display: none;
@@ -98,6 +99,12 @@
 		<div id="header">
 			<div id="header-container">
 				<h1>+EV Dingers</h1>
+			</div>
+			<div id="auth-buttons">
+				<span id="status"></span>
+				<input id="email" type="text" placeholder="Email" >
+				<button id="login" onclick="login()">Login</button>
+				<button id="logout" onclick="logout()">Logout</button>
 			</div>
 			<div id="sub-header">
 				<div class="dropdown">
@@ -213,7 +220,8 @@
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
 				if (TEAM) {
-					data = data.filter(r => r.team == TEAM);
+					let teams = TEAM.split(",");
+					data = data.filter(r => teams.includes(r.team));
 				}
 				RES = data;
 				renderTable(data);
@@ -256,7 +264,7 @@
 				initialSort: [
 					//{column: "barrel_ct", dir: "desc"},
 					{column: "game_trends.hard_hit_ct.5G", dir: "desc"},
-					{column: "game_trends.hard_hit_ct.3G", dir: "desc"},
+					{column: "hard_hit_ct", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
@@ -429,7 +437,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => {
-				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"];
+				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G", "homerLogs.close", "homerLogs.close7", "homerLogs.close3"];
 				if (L3 != undefined) {
 					arr.push("game_trends.barrel_ct.3G");
 					arr.push("game_trends.hard_hit_ct.3G");
@@ -440,5 +448,6 @@
 			});
 		}
 	</script>
+	<script src="auth.js"></script>
 </body>
 </html>

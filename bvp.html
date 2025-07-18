@@ -15,6 +15,7 @@
 	<link href="tabulator.min.css" rel="stylesheet">
 	<link href="flatpickr.min.css" rel="stylesheet">
 	<link href="style.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<style>
 		h1 {
@@ -101,6 +102,13 @@
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 				<button onclick="groupByGame();">Game Filter</button>
+			</div>
+			<span id="username"></span>
+			<div id="auth-buttons">
+				<span id="status"></span>
+				<input id="email" type="text" placeholder="Email" >
+				<button id="login" onclick="login()">Login</button>
+				<button id="logout" onclick="logout()">Logout</button>
 			</div>
 		</div>
 		<div id="table-container">
@@ -241,7 +249,7 @@
 				renderTable(data);
 				setTimeout(function() {
 					TABLE.redraw();
-					if (window.location.protocol == "file:") {
+					if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
 						printReddit_();
 						print_2();
 					}
@@ -302,6 +310,7 @@
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
 					{title: "Vs Team '25", field: "bvt", hozAlign: "left", width: 75},
+					{title: "@ 🏟 2025", field: "bvs", hozAlign: "left", width: 80, visible: false},
 					{title: "BPP HR Factors", columns: [
 						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
 						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}
@@ -735,8 +744,9 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => col.hide());
-			["daily.book", "player", "opp", "bvp", "bvt", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
+			["daily.book", "player", "opp", "bvp", "bvt", "bvs", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
 		}
 	</script>
+	<script src="auth.js"></script>
 </body>
 </html>

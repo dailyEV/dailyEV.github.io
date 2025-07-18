@@ -12,6 +12,7 @@
 	<!-- <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script> --> 
 	<script src="jspdf.umd.min.js"></script>
 	<script src="jspdf.plugin.autotable.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
@@ -80,10 +81,9 @@
 	}
 </style>
 <body>
-	<div id="left-body" class="body">
-		<div id="header">
+	<div id="header">
+		<div id="title">
 			<h1>+EV Dingers</h1>
-			<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
 			<div id="sub-header">
 				<div class="dropdown">
 					<select id="page-select"></select>
@@ -117,79 +117,91 @@
 				<button onclick="groupByGame();">Filter Game</button>
 			</div>
 		</div>
-		<div id="mobile-header">
-			<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
-				<div class="dropdown">
-					<select id="page-select"></select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<div class="dropdown">
-					<select id="promo-select">
-						<option value="" selected>All Books</option>
-						<option value="mgm-20">MGM 20% HR</option>
-						<option value="fd-50">FD 50%</option>
-						<option value="fd-30">FD 30%</option>
-						<option value="espn-hr">ESPN HR</option>
-						<option value="dk-dinger">DK Dinger</option>
-						<option value="dk-200">DK +200</option>
-						<option value="dk-50">DK 50%</option>
-						<option value="cz-50">CZ 50%</option>
-						<option value="dk-sweat">DK No Sweat</option>
-						<option value="mgm-sweat">MGM No Sweat</option>
-						<option value="fd">FD</option>
-						<option value="dk">DK</option>
-						<option value="mgm">MGM</option>
-						<option value="espn">ESPN</option>
-						<option value="vs-365">vs Bet365</option>
-						<option value="vs-pn">vs Pinny</option>
-						<option value="vs-circa">vs Circa</option>
-						<option value="vs-sharp">vs Sharps</option>
-					</select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<button onclick="groupByGame();">Filter Game</button>
-			</div>
+		<span id="username"></span>
+		<div id="auth-buttons">
+			<span id="status"></span>
+			<input id="email" type="text" placeholder="Email" >
+			<button id="login" onclick="login()">Login</button>
+			<button id="logout" onclick="logout()">Logout</button>
 		</div>
-		<div id="table-container">
-			<div id="updated-container">
-				<div id="donate">
-					<div>Tip</div>
-					<div>
-						<a href="https://cash.app/$intersectinglines" target="_blank">
-							<img src="logos/cashapp.png" alt="cashapp" />
-						</a>
-						<a href="https://buymeacoffee.com/interlines" target="_blank">
-							<img src="logos/coffee.png" alt="coffee" />
-						</a>
-					</div>
-				</div>
-				<div id="updated">
+	</div>
+		<div id="content">
+		<div id="left-body" class="body">
+			<div id="mobile-header">
+				<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
 					<div class="dropdown">
-						<label>Refresh</label>
-						<select id="refresh-select">
-							<option value="off">Off</option>
-							<option value="auto">Auto</option>
-							<option value="reload">Reload</option>
+						<select id="page-select"></select>
+						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+					</div>
+					<div class="dropdown">
+						<select id="promo-select">
+							<option value="" selected>All Books</option>
+							<option value="mgm-20">MGM 20% HR</option>
+							<option value="fd-50">FD 50%</option>
+							<option value="fd-30">FD 30%</option>
+							<option value="espn-hr">ESPN HR</option>
+							<option value="dk-dinger">DK Dinger</option>
+							<option value="dk-200">DK +200</option>
+							<option value="dk-50">DK 50%</option>
+							<option value="cz-50">CZ 50%</option>
+							<option value="dk-sweat">DK No Sweat</option>
+							<option value="mgm-sweat">MGM No Sweat</option>
+							<option value="fd">FD</option>
+							<option value="dk">DK</option>
+							<option value="mgm">MGM</option>
+							<option value="espn">ESPN</option>
+							<option value="vs-365">vs Bet365</option>
+							<option value="vs-pn">vs Pinny</option>
+							<option value="vs-circa">vs Circa</option>
+							<option value="vs-sharp">vs Sharps</option>
 						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 					</div>
+					<button onclick="groupByGame();">Filter Game</button>
 				</div>
 			</div>
-			<div id="table"></div>
-			<div id="watermark">
-				<img src="logos/logo.png">
+			<div id="table-container">
+				<div id="updated-container">
+					<div id="donate">
+						<div>Tip</div>
+						<div>
+							<a href="https://cash.app/$intersectinglines" target="_blank">
+								<img src="logos/cashapp.png" alt="cashapp" />
+							</a>
+							<a href="https://buymeacoffee.com/interlines" target="_blank">
+								<img src="logos/coffee.png" alt="coffee" />
+							</a>
+						</div>
+					</div>
+					<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
+					<div id="updated">
+						<div class="dropdown">
+							<label>Refresh</label>
+							<select id="refresh-select">
+								<option value="off">Off</option>
+								<option value="auto">Auto</option>
+								<option value="reload">Reload</option>
+							</select>
+							<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+						</div>
+					</div>
+				</div>
+				<div id="table"></div>
+				<div id="watermark">
+					<img src="logos/logo.png">
+				</div>
 			</div>
 		</div>
-	</div>
-	<div id="right-body" class="body">
-		<div class="dropdown">
-			<select id="btwn-select">
-				<option value="pa">PA Btwn</option>
-				<option value="feed">Feed</option>
-			</select>
-			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+		<div id="right-body" class="body">
+			<div class="dropdown">
+				<select id="btwn-select">
+					<option value="pa">PA Btwn</option>
+					<option value="feed">Feed</option>
+				</select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
+			<div id="chart"></div>
 		</div>
-		<div id="chart"></div>
 	</div>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
@@ -222,7 +234,7 @@
 		const promoSelect = document.querySelector(selectId+" #promo-select");
 		if (BOOK) {
 			promoSelect.value = BOOK;
-			document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
+			//document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
 		} else {
 			promoSelect.value = "";
 		}
@@ -640,5 +652,6 @@
 			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>
+	<script src="auth.js"></script>
 </body>
 </html>
