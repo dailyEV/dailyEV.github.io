@@ -309,7 +309,7 @@
 			}
 
 			let url = "http://localhost:5000";
-			if (window.location.host.includes("localhost")) {
+			if (!window.location.host.includes("localhost")) {
 				url = `http://feed-production-9971.up.railway.app/api/feed?date=${today}`;
 			}
 			//const session = await SB.auth.getSession();
