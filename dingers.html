@@ -84,41 +84,41 @@
 	<div id="header">
 		<div id="title">
 			<h1>+EV Dingers</h1>
-			<div id="sub-header">
-				<div class="dropdown">
-					<select id="page-select"></select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<div class="dropdown">
-					<select id="promo-select">
-						<option value="" selected>All Books</option>
-						<option value="mgm-20">MGM 20% HR</option>
-						<option value="fd-50">FD 50%</option>
-						<option value="fd-30">FD 30%</option>
-						<option value="espn-hr">ESPN HR</option>
-						<option value="espn-50">ESPN 50%</option>
-						<option value="dk-dinger">DK Dinger</option>
-						<option value="dk-200">DK +200</option>
-						<option value="dk-50">DK 50%</option>
-						<option value="cz-50">CZ 50%</option>
-						<option value="dk-sweat">DK No Sweat</option>
-						<option value="mgm-sweat">MGM No Sweat</option>
-						<option value="fd">FD</option>
-						<option value="dk">DK</option>
-						<option value="mgm">MGM</option>
-						<option value="espn">ESPN</option>
-						<option value="vs-365">vs Bet365</option>
-						<option value="vs-pn">vs Pinny</option>
-						<option value="vs-circa">vs Circa</option>
-						<option value="vs-sharp">vs Sharps</option>
-					</select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<button onclick="groupByGame();">Filter Game</button>
-			</div>
 		</div>
-		<span id="username"></span>
+		<div id="sub-header">
+			<div class="dropdown">
+				<select id="page-select"></select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
+			<div class="dropdown">
+				<select id="promo-select">
+					<option value="" selected>All Books</option>
+					<option value="mgm-20">MGM 20% HR</option>
+					<option value="fd-50">FD 50%</option>
+					<option value="fd-30">FD 30%</option>
+					<option value="espn-hr">ESPN HR</option>
+					<option value="espn-50">ESPN 50%</option>
+					<option value="dk-dinger">DK Dinger</option>
+					<option value="dk-200">DK +200</option>
+					<option value="dk-50">DK 50%</option>
+					<option value="cz-50">CZ 50%</option>
+					<option value="dk-sweat">DK No Sweat</option>
+					<option value="mgm-sweat">MGM No Sweat</option>
+					<option value="fd">FD</option>
+					<option value="dk">DK</option>
+					<option value="mgm">MGM</option>
+					<option value="espn">ESPN</option>
+					<option value="vs-365">vs Bet365</option>
+					<option value="vs-pn">vs Pinny</option>
+					<option value="vs-circa">vs Circa</option>
+					<option value="vs-sharp">vs Sharps</option>
+				</select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
+			<button onclick="groupByGame();">Filter Game</button>
+		</div>
 		<div id="auth-buttons">
+			<span id="username"></span>
 			<span id="status"></span>
 			<input id="email" type="text" placeholder="Email" >
 			<button id="login" onclick="login()">Login</button>
