@@ -594,7 +594,7 @@
 				layout: "fitDataFill",
 				initialSort: [
 					//{column: "pa", dir: "desc"},
-					{column: "dt", dir: "desc"},
+					{column: "created_at", dir: "desc"},
 				],
 				groupHeader: function(value, count, data, group){
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()}</span>`;
@@ -607,7 +607,7 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					//{title: "", field: "img", formatter: teamFormatter, hozAlign: "center", width: 30},
-					{title: "", field: "dt", formatter: dtFormatter, hozAlign: "center", visible: PLAYER ? true : false},
+					{title: "", field: "created_at", formatter: dtFormatter, hozAlign: "center", visible: PLAYER ? true : false},
 					{title: "", field: "in", formatter: inningFormatter, hozAlign: "center", width: 30, visible: PLAYER ? false : true},
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
@@ -645,7 +645,7 @@
 				tooltipsHeader: true,
 				data: data,
 				initialSort: [
-					{column: "dt", dir: "desc"},
+					{column: "created_at", dir: "desc"},
 				],
 				columnDefaults: {
 					headerSortStartingDir: "desc"
@@ -656,7 +656,7 @@
 				groupToggleElement: "header",
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
-					{title: "", field: "dt", formatter: dtFormatter, hozAlign: "center", visible: PLAYER ? true : false},
+					{title: "", field: "created_at", formatter: dtFormatter, hozAlign: "center", visible: PLAYER ? true : false},
 					{title: "", field: "in", formatter: inningFormatter, hozAlign: "center", width: 30, visible: PLAYER ? false : true},
 					{title: "Player", field: "player", headerFilter: "input",
 						formatter: playerFormatter,
