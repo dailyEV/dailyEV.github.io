@@ -13,6 +13,7 @@
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<script src="math.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<link rel="icon" type="image/x-icon" href="logos/icon.png">
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -302,7 +303,7 @@
 			Plotly.newPlot("yby", [hrAB], layout);
 		}
 
-		async function fetchFeed(render=false) {
+		async function fetchFeed2(render=false) {
 			let today = new Date().toISOString().split('T')[0];
 			if (DATE) {
 				today = DATE;
@@ -325,7 +326,7 @@
 			}).catch(err => console.log(err));
 		}
 
-		async function fetchFeed2(render=false) {
+		async function fetchFeed(render=false) {
 			let url = "https://api.github.com/repos/dailyev/feed/contents/feed.json";
 			if (DATE && DATE != TODAY) {
 				url = `https://api.github.com/repos/dailyev/props/contents/static/splits/mlb_feed/${DATE}.json`;

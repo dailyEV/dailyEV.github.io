@@ -448,7 +448,7 @@
 			let formattedDt = dt.toLocaleDateString("en-US", {month: "short", day: "numeric"});
 			const day = dt.getDate();
 			const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 || [11,12,13].includes(day)) ? 0 : day % 10];
-			o = `${formattedDt}${suffix} BvP (Batter vs Starting Pitcher History)\n\ndailyev.github.io/bvp\n\n`;
+			o = `${formattedDt}${suffix} BvP (Batter vs Starting Pitcher History)\n\nevdingers.com/bvp\n\n`;
 			let keys = Object.keys(out).sort().reverse();
 			for (hr of keys) {
 				let emoji = "🔥".repeat(parseInt(hr));

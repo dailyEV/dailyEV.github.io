@@ -161,6 +161,7 @@
 		let PLAYERS = URLParams.get("players");
 		TEAM = URLParams.get("team");
 		let TODAY = URLParams.get("today");
+		let MARK = URLParams.get("mark");
 		let ALL = URLParams.get("all") != undefined;
 		let BOOK = URLParams.get("book");
 		let SPORT = URLParams.get("sport");
@@ -182,6 +183,10 @@
 
 		if (TOGGLE_PERCENTILE) {
 			document.querySelector("#percentiles-btn").innerText = "Raw Values";
+		}
+
+		if (MARK != undefined) {
+			document.querySelector("#watermark").style.display = "initial";
 		}
 
 		document.querySelectorAll("#donate img").forEach(btn => {
@@ -253,7 +258,7 @@
 				data = filtered;
 			}
 			*/
-			//data = data.filter(r => r.book != "");
+			data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -437,7 +442,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => {
-				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G", "homerLogs.close", "homerLogs.close7", "homerLogs.close3"];
+				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"];
 				if (L3 != undefined) {
 					arr.push("game_trends.barrel_ct.3G");
 					arr.push("game_trends.hard_hit_ct.3G");

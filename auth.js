@@ -56,7 +56,6 @@ async function upsertProfile(session) {
 	if (!data) {
 		await SB.from('profiles').insert([{ id: session.user.id, tier: tier }]);
 	} else {
-		//console.log('User already has tier:', data.tier);
 		tier = data.tier;
 	}
 	let t = "🆓";
@@ -64,21 +63,24 @@ async function upsertProfile(session) {
 		t = "⭐";
 	} else if (tier == "vip") {
 		t = "👑";
+		document.querySelector("#upgrade").style.display = "none";
 	}
-	document.querySelector("#username").innerText = `${session.user.email} ${t}`;
+	document.querySelector("#username").innerText = `${t} ${session.user.email}`;
 }
 
 (async function handleSession() {
 	const { data: { session }, error } = await SB.auth.getSession();
 	if (session) {
 		console.log(session);
+
 		document.getElementById("login").style.display = "none";
 		document.getElementById("email").style.display = "none";
 		document.getElementById("username").innerText = `${session.user.email}`;
 		// make sure row exists in profile
 		upsertProfile(session);
 	} else {
-		document.getElementById("logout").style.display = "none";
+		// No Session
+		document.querySelectorAll(".loggedIn").map(x => x.style.display = "none");
 	}
 })();
 
@@ -88,3 +90,15 @@ document.getElementById("email").addEventListener("keypress", function(e) {
 		login();
 	}
 });
+
+async function upgrade(tier) {
+	const { data: { session }, error } = await SB.auth.getSession();
+	const url = `http://localhost:5000/api/checkout?user=${session.user.id}&tier=${tier}`;
+	const response = await fetch(url, { method: 'POST' });
+	const data = await response.json();
+	if (data.url) {
+		window.location.href = data.url; // Redirect to Stripe Checkout
+	} else {
+		alert('Error starting checkout');
+	}
+}

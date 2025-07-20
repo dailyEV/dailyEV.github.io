@@ -13,6 +13,7 @@
 	<script src="jspdf.umd.min.js"></script>
 	<script src="jspdf.plugin.autotable.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<link rel="icon" type="image/x-icon" href="logos/icon.png">
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
@@ -122,10 +123,11 @@
 			<span id="status"></span>
 			<input id="email" type="text" placeholder="Email" >
 			<button id="login" onclick="login()">Login</button>
-			<button id="logout" onclick="logout()">Logout</button>
+			<button id="account" class="loggedIn" onclick="openProfile()">Profile</button>
+			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
-		<div id="content">
+	<div id="content">
 		<div id="left-body" class="body">
 			<div id="mobile-header">
 				<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
@@ -213,6 +215,7 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let SPORT = "dingers";
 		let KAMBI = URLParams.get("kambi");
+		let MARK = URLParams.get("mark");
 		let BPP = URLParams.get("bpp") != undefined;
 		let PH = URLParams.get("ph") != undefined;
 		let SIMPLE = URLParams.get("simple");
@@ -237,6 +240,13 @@
 			//document.querySelector("h1").innerText = `+EV ${BOOK.replace("-", " ").toUpperCase()} Dingers`;
 		} else {
 			promoSelect.value = "";
+		}
+
+		if (MARK != undefined) {
+			document.querySelector("#watermark").style.display = "initial";
+			if (PRETTY != undefined) {
+				document.querySelector("#watermark").style.width = "20%";
+			}
 		}
 
 		document.querySelector("#btwn-select").value = "pa";
@@ -300,6 +310,7 @@
 
 		async function fetchData(render=true) {
 			let url = `https://api.github.com/repos/dailyev/odds/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
+			
 			if (DATE) {
 				url = "https://api.github.com/repos/dailyev/odds/contents/static/dingers/odds_historical.json";
 			}

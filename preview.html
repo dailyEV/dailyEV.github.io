@@ -132,6 +132,7 @@
 		const windowURL = new URL(window.location.href);
 		const URLParams = new URLSearchParams(windowURL.search);
 		let DATE = URLParams.get("date");
+		let MARK = URLParams.get("mark");
 		let TODAY = getToday();
 		let SPORT = "mlb";
 		let PROP = URLParams.get("prop");
@@ -149,6 +150,10 @@
 				const sport = btn.textContent;
 			});
 		});
+
+		if (MARK != undefined) {
+			document.querySelector("#watermark").style.display = "initial";
+		}
 
 		window.addEventListener("resize", () => {
 			MOBILE = window.innerWidth <= 600;

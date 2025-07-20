@@ -15,6 +15,7 @@ function getToday() {
 }
 
 const PAGE_DROPDOWN = `
+	<option value="profile">👤 Profile</option>
 	<option value="dingers">⚾ Dingers</option>
 	<option value="feed">⚾ Feed</option>
 	<option value="bvp">⚾ BvP</option>
@@ -52,6 +53,10 @@ setTimeout(() => {
 		select.value = PAGE;
 	}
 }, 200);
+
+function openProfile() {
+	changePage("profile");
+}
 
 function changePage(page) {
 	if (page == "historical") {
