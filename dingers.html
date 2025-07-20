@@ -316,7 +316,7 @@
 		async function fetchData(render=true) {
 			let url = "http://localhost:5000/api/ev";
 			if (!window.location.host.includes("localhost")) {
-				url = `http://api-production-3a3b.up.railway.app/api/ev`;
+				url = `https://api-production-3a3b.up.railway.app/api/ev`;
 			}
 			fetch(url, {
 				headers: {
