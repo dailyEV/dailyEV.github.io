@@ -123,7 +123,8 @@
 			<span id="status"></span>
 			<input id="email" type="text" placeholder="Email" >
 			<button id="login" onclick="login()">Login</button>
-			<button id="account" class="loggedIn" onclick="openProfile()">Profile</button>
+			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
+			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
 			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
@@ -206,6 +207,7 @@
 		</div>
 	</div>
 	<script type="text/javascript" src="shared.js"></script>
+	<script src="auth.js"></script>
 	<script type="text/javascript">
 		PAGE = "dingers";
 		let TABLE = null;
@@ -286,6 +288,7 @@
 		});
 
 		//fetchUpdated(repo="lines");
+		renderTable([]);
 		fetchData();
 		let intervalId = 0;
 		if (REFRESH == "auto") {
@@ -308,55 +311,75 @@
 			}, 30 * 1000);
 		}
 
+		function parseData(data, render) {
+			UPDATED["dingers"] = data["updated"];
+			data = data["data"];
+			let OLD = RES;
+			RES = data;
+			if (render) {
+				renderTable(data);
+			} else {
+				TABLE.updateOrAddData(data);
+				updateHeaders();
+				TABLE.setSort(TABLE.getSorters());
+			}
+
+			setTimeout(function() {
+				if (BOOK) {
+					TABLE.hideColumn("ev");
+					TABLE.hideColumn("fairVal");
+					TABLE.showColumn(`${BOOK}_ev`);
+					TABLE.showColumn(`${BOOK}_fairVal`);
+					TABLE.setSort([
+						{column: `${BOOK}_ev`, dir: "desc"}
+					]);
+				}
+				if (FILTER != undefined) {
+					TABLE.setSort([
+						{column: "ev", dir: "desc"},
+						{column: "startSortable", dir: "asc"},
+					])
+				}
+				if (PRETTY != undefined) {
+					pretty_();
+				}
+				if (GAME) {
+					TABLE.setFilter([
+						{field:"game", type:"=", value: GAME}
+					])
+				}
+				if (SIMPLE != undefined) {
+					["savant.exit_velocity_avg", "savant.barrels_per_bip", "pitcherData.flyballs_percent", "pitcherData.exit_velocity_avg", "pitcherData.barrel_batted_rate", "oppRank", "stadiumRank"].forEach(r => TABLE.hideColumn(r));
+				}
+			}, 200);
+		}
+
 		async function fetchData(render=true) {
+			let url = "http://localhost:5000/api/ev";
+			if (!window.location.host.includes("localhost")) {
+				url = `http://feed-production-9971.up.railway.app/api/ev`;
+			}
+			fetch(url, {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(res => res.json()).then(res => {
+				parseData(res.data, render);
+				setTimeout(function() {
+					updateTimes();
+				}, 500)
+			}).catch(err => console.log(err));
+		}
+
+		async function fetchData2(render=true) {
 			let url = `https://api.github.com/repos/dailyev/odds/contents/static/dingers/evArr${KAMBI != undefined ? "_kambi" : ""}.json`;
-			
 			if (DATE) {
 				url = "https://api.github.com/repos/dailyev/odds/contents/static/dingers/odds_historical.json";
 			}
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
-				UPDATED["dingers"] = data["updated"];
-				data = data["data"];
-				let OLD = RES;
-				RES = data;
-				if (render) {
-					renderTable(data);
-				} else {
-					TABLE.updateOrAddData(data);
-					updateHeaders();
-					TABLE.setSort(TABLE.getSorters());
-				}
-
-				setTimeout(function() {
-					if (BOOK) {
-						TABLE.hideColumn("ev");
-						TABLE.hideColumn("fairVal");
-						TABLE.showColumn(`${BOOK}_ev`);
-						TABLE.showColumn(`${BOOK}_fairVal`);
-						TABLE.setSort([
-							{column: `${BOOK}_ev`, dir: "desc"}
-						]);
-					}
-					if (FILTER != undefined) {
-						TABLE.setSort([
-							{column: "ev", dir: "desc"},
-							{column: "startSortable", dir: "asc"},
-						])
-					}
-					if (PRETTY != undefined) {
-						pretty_();
-					}
-					if (GAME) {
-						TABLE.setFilter([
-							{field:"game", type:"=", value: GAME}
-						])
-					}
-					if (SIMPLE != undefined) {
-						["savant.exit_velocity_avg", "savant.barrels_per_bip", "pitcherData.flyballs_percent", "pitcherData.exit_velocity_avg", "pitcherData.barrel_batted_rate", "oppRank", "stadiumRank"].forEach(r => TABLE.hideColumn(r));
-					}
-				}, 200);
+				parseData(data, render);
 			}).catch(err => console.log(err));
 		}
 
@@ -367,6 +390,10 @@
 		function updateHeaders() {
 			for (book in UPDATED["dingers"]) {
 				if (book == "dingers" || !UPDATED["dingers"][book]) {
+					continue;
+				}
+
+				if (!TABLE.getColumn(`bookOdds.${book.replace("b365", "365")}`)) {
 					continue;
 				}
 				let el = TABLE.getColumn(`bookOdds.${book.replace("b365", "365")}`).getElement();
@@ -518,16 +545,16 @@
 					{title: "EV Book", field: "book",  vertAlign:"bottom", width: MOBILE ? 65 : 70, formatter: evBookFormatter, formatterParams:{book:BOOK}, responsive: 0},
 					{title: "BPP", field: "bppProj", visible: BPP ? true : false, width: 50, sorter: "number", formatter: percentFormatter},
 					{title: "Diff", field: "bppDiff", visible: BPP ? true : false, width: 60, sorter: "number", formatter: percentFormatter},
-					{title: `FD<br>${timeAgo(UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 60, sorter: "number"},
+					{title: `FD<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["fd"], short=true)}`, field: "bookOdds.fd",  width: MOBILE ? 60 : 60, sorter: "number"},
 					{title: `Circa`, field: "bookOdds.circa",  width: 70, sorter: "number", visible: MOBILE ? true : false},
-					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? true : false},
-					{title: `B365<br>${timeAgo(UPDATED["dingers"]["b365"], short=true)}`, field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `DK<br>${timeAgo(UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 60, sorter: "number", responsive: 6, visible: HISTORICAL ? false : true},
-					{title: `MGM<br>${timeAgo(UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `ESPN*<br>${timeAgo(UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `PARX*<br>${timeAgo(UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: KAMBI ? true : false},
-					{title: `CZ<br>${timeAgo(UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 50, sorter: "number", visible: HISTORICAL ? false : true},
-					{title: `PN<br>${timeAgo(UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? false : true},
+					{title: `PN<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? true : false},
+					{title: `B365<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["b365"], short=true)}`, field: "bookOdds.365", hozAlign: "center", width: 70, sorter: "number", visible: HISTORICAL ? false : true},
+					{title: `DK<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["dk"], short=true)}`, field: "bookOdds.dk",  width: MOBILE ? 60 : 60, sorter: "number", responsive: 6, visible: HISTORICAL ? false : true},
+					{title: `MGM<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["mgm"], short=true)}`, field: "bookOdds.mgm",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
+					{title: `ESPN*<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["espn"], short=true)}`, field: "bookOdds.espn",  width: 70, sorter: "number", visible: HISTORICAL ? false : true},
+					{title: `PARX*<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["kambi"], short=true)}`, field: "bookOdds.kambi",  width: 70, sorter: "number", visible: KAMBI ? true : false},
+					{title: `CZ<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["cz"], short=true)}`, field: "bookOdds.cz",  width: 50, sorter: "number", visible: HISTORICAL ? false : true},
+					{title: `PN<br>${timeAgo(UPDATED ? 0 : UPDATED["dingers"]["pn"], short=true)}`, field: "bookOdds.pn",  width: 70, sorter: "number", visible: MOBILE ? false : true},
 					{title: "Circa", field: "bookOdds.circa", hozAlign: "center", width: 70, sorter: "number"},
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
@@ -663,6 +690,5 @@
 			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>
-	<script src="auth.js"></script>
 </body>
 </html>

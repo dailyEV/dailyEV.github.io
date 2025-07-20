@@ -1,22 +1,10 @@
 
+let ACCESS_TOKEN = null;
+
 const SB = supabase.createClient(
 	'https://nkdhryqpiulrepmphwmt.supabase.co',
 	'sb_publishable_mMniM5v3auOHfF72hlVL_w_LUNlh3yt'
 );
-
-/*
-SB.auth.onAuthStateChange((event, session) => {
-	if (event == "SIGNED_IN") {
-		upsertProfile(session);
-	}
-})
-*/
-
-async function anon_login() {
-	//const {data, error} = await sb.auth.signInAnonymously();
-	const {data, error} = await SB.auth.signInWithOtp({email: "intersectinglines7@gmail.com"});
-	console.log(data, error);
-}
 
 async function logout() {
 	await SB.auth.signOut();
@@ -71,8 +59,10 @@ async function upsertProfile(session) {
 (async function handleSession() {
 	const { data: { session }, error } = await SB.auth.getSession();
 	if (session) {
-		console.log(session);
-
+		//console.log(session);
+		if (session.access_token) {
+			ACCESS_TOKEN = session.access_token;
+		}
 		document.getElementById("login").style.display = "none";
 		document.getElementById("email").style.display = "none";
 		document.getElementById("username").innerText = `${session.user.email}`;
