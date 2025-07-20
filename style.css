@@ -712,6 +712,10 @@ nav {
 	}
 	#header {
 		justify-content: space-evenly;
+		padding: 0;
+	}
+	#content {
+		flex-direction: column;
 	}
 	#button-container {
 		width: initial;
@@ -761,7 +765,7 @@ nav {
 		width: 100% !important;
 	}
 	#table {
-		height: 250px;
+		height: 300px;
 	}
 	#player-odds {
 		width: 90%;
