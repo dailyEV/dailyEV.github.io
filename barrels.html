@@ -95,57 +95,59 @@
 </script>
 
 <body>
-	<div id="left-body" class="body">
-		<div id="header">
-			<div id="header-container">
-				<h1>+EV Dingers</h1>
-			</div>
-			<div id="auth-buttons">
-				<span id="status"></span>
-				<input id="email" type="text" placeholder="Email" >
-				<button id="login" onclick="login()">Login</button>
-				<button id="logout" onclick="logout()">Logout</button>
-			</div>
-			<div id="sub-header">
-				<div class="dropdown">
-					<select id="page-select"></select>
-					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-				</div>
-				<button onclick="filterDue()">Due</button>
-				<button id="percentiles-btn" onclick="viewPercentiles()">Percentiles</button>
-				<button onclick="filterToday()">Today</button>
-			</div>
+	<div id="header">
+		<div id="title">
+			<h1>+EV Dingers</h1>
 		</div>
-		<div id="table-container">
-			<div id="updated-container">
-				<div id="donate">
-					<div>Tip</div>
-					<div>
-						<a href="https://cash.app/$intersectinglines" target="_blank">
-							<img src="logos/cashapp.png" alt="cashapp" />
-						</a>
-						<a href="https://buymeacoffee.com/interlines" target="_blank">
-							<img src="logos/coffee.png" alt="coffee" />
-						</a>
-					</div>
-				</div>
-				<div id="updated"></div>
+		<div id="sub-header">
+			<div class="dropdown">
+				<select id="page-select"></select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 			</div>
-			<div id="table"></div>
-			<div id="watermark">
-				<img src="logos/logo.png">
-			</div>
+			<button onclick="filterDue()">Due</button>
+			<button id="percentiles-btn" onclick="viewPercentiles()">Percentiles</button>
+			<button onclick="filterToday()">Today</button>
 		</div>
 	</div>
-	<div id="right-body" class="body">
-		<div class="dropdown">
-			<select id="btwn-select">
-				<option value="pa">PA Btwn</option>
-				<option value="feed">Feed</option>
-			</select>
-			<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+	<div id="content">
+		<div id="left-body" class="body">
+			<div id="header">
+				<div id="header-container">
+					<h1>+EV Dingers</h1>
+				</div>
+				
+			</div>
+			<div id="table-container">
+				<div id="updated-container">
+					<div id="donate">
+						<div>Tip</div>
+						<div>
+							<a href="https://cash.app/$intersectinglines" target="_blank">
+								<img src="logos/cashapp.png" alt="cashapp" />
+							</a>
+							<a href="https://buymeacoffee.com/interlines" target="_blank">
+								<img src="logos/coffee.png" alt="coffee" />
+							</a>
+						</div>
+					</div>
+					<div id="updated"></div>
+				</div>
+				<div id="table"></div>
+				<div id="watermark">
+					<img src="logos/logo.png">
+				</div>
+			</div>
 		</div>
-		<div id="chart"></div>
+		<div id="right-body" class="body">
+			<div class="dropdown">
+				<select id="btwn-select">
+					<option value="pa">PA Btwn</option>
+					<option value="feed">Feed</option>
+				</select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
+			<div id="chart"></div>
+		</div>
 	</div>
 	<div id="tooltip"></div>
 	<script type="text/javascript" src="shared.js"></script>

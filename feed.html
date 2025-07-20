@@ -132,15 +132,6 @@
 			</div>
 			<button onclick="groupByGame();">Filter Game</button>
 		</div>
-		<div id="auth-buttons">
-			<span id="username"></span>
-			<span id="status"></span>
-			<input id="email" type="text" placeholder="Email" >
-			<button id="login" onclick="login()">Login</button>
-			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
-			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
-			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
-		</div>
 	</div>
 	<div id="content">
 		<div id="left-body" class="body">
@@ -384,7 +375,7 @@
 				}
 		}
 
-		async function fetchFeed(render=false) {
+		async function fetchFeed2(render=false) {
 			let today = new Date().toISOString().split('T')[0];
 			if (DATE) {
 				today = DATE;
@@ -409,7 +400,7 @@
 			}).catch(err => console.log(err));
 		}
 
-		async function fetchFeed2(render=false) {
+		async function fetchFeed(render=false) {
 			let url = "https://api.github.com/repos/dailyev/feed/contents/feed.json";
 			if (DATE && DATE != TODAY) {
 				url = `https://api.github.com/repos/dailyev/props/contents/static/splits/mlb_feed/${DATE}.json`;

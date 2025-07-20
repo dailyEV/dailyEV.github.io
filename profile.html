@@ -56,9 +56,38 @@
 			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
-	<div id="content">
-		<div id="pricing">
-			
+	<div id="profile-container">
+		<div class="profile-header">
+    	<div class="profile-badge">👑</div>
+    	<div id="profile-info">
+    		<p class="username"></p>
+    		<button class="upgrade-btn" onclick="changePage('pricing')">Upgrade / Manage</button>
+    	</div>
+    </div>
+		<div class="profile-subscription">
+	    <h3>Subscription Details</h3>
+	    <div class="sub-grid">
+	      <div>
+	        <span class="label">Plan:</span>
+	        <span class="value">VIP Tier</span>
+	      </div>
+	      <div>
+	        <span class="label">Next Renewal:</span>
+	        <span class="value">Aug 15, 2025</span>
+	      </div>
+	      <div>
+	        <span class="label">Payment Method:</span>
+	        <span class="value">•••• 4242</span>
+	      </div>
+	    </div>
+
+		  <!-- Quick Links -->
+		  <div class="profile-links">
+		    <h3>Account Actions</h3>
+		    <button class="link-btn">🔗 Connect Discord</button>
+		    <button class="link-btn">❌ Cancel Subscription</button>
+		    <button class="link-btn logout" onclick="logout()">🚪 Logout</button>
+		  </div>
 		</div>
 	</div>
 	<script src="auth.js"></script>

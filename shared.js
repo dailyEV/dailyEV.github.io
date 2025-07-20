@@ -2,6 +2,7 @@ let HTML = "";
 let TEAM = "";
 let PAGE = "";
 let MOBILE = window.innerWidth <= 600;
+let ACCESS_TOKEN = "";
 let UPDATED = {};
 if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
 	HTML = ".html";
@@ -15,7 +16,6 @@ function getToday() {
 }
 
 const PAGE_DROPDOWN = `
-	<option value="profile">👤 Profile</option>
 	<option value="dingers">⚾ Dingers</option>
 	<option value="feed">⚾ Feed</option>
 	<option value="bvp">⚾ BvP</option>

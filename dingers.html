@@ -118,15 +118,6 @@
 			</div>
 			<button onclick="groupByGame();">Filter Game</button>
 		</div>
-		<div id="auth-buttons">
-			<span id="username"></span>
-			<span id="status"></span>
-			<input id="email" type="text" placeholder="Email" >
-			<button id="login" onclick="login()">Login</button>
-			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
-			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
-			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
-		</div>
 	</div>
 	<div id="content">
 		<div id="left-body" class="body">
@@ -258,24 +249,25 @@
 		renderTable([]);
 		fetchData();
 		let intervalId = 0;
+		let seconds = 90;
 		if (REFRESH == "auto") {
 			intervalId = setInterval(() => {
 				if (!MOBILE || document.hasFocus()) {
 					fetchData(render=false);
 				}
-			}, 30 * 1000);
+			}, seconds * 1000);
 		} else if (REFRESH == "reload") {
 			setTimeout(() => {
 				if (!MOBILE || document.hasFocus()) {
 					window.location.href = window.location.href;
 				}
-			}, 30 * 1000);
+			}, seconds * 1000);
 		} else {
 			setInterval(() => {
 				if (!MOBILE || document.hasFocus()) {
 					updateTimes();
 				}
-			}, 30 * 1000);
+			}, seconds * 1000);
 		}
 
 		function parseData(data, render) {
