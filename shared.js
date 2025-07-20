@@ -97,6 +97,11 @@ function isBarrel2(row) {
 }
 
 function timeAgo(timestamp, short=false) {
+
+	if (timestamp === 0) {
+		return "";	
+	}
+
 	const now = new Date();
 	const past = new Date(timestamp);
 	const diff = Math.floor((now - past) / 1000);

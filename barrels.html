@@ -270,8 +270,12 @@
 				data: data,
 				initialSort: [
 					//{column: "barrel_ct", dir: "desc"},
-					{column: "game_trends.hard_hit_ct.5G", dir: "desc"},
-					{column: "hard_hit_ct", dir: "desc"},
+					
+					//{column: "game_trends.barrel_ct.5G", dir: "desc"},
+					//{column: "game_trends.barrel_ct.3G", dir: "desc"},
+
+					{column: "homerLogs.pa.z_median", dir: "desc"},
+					{column: "game_trends.barrel_ct.5G", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",
