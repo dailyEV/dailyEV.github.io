@@ -392,7 +392,7 @@
 
 			let url = `http://localhost:5000/api/feed?date=${today}`;
 			if (!window.location.host.includes("localhost")) {
-				url = `http://feed-production-9971.up.railway.app/api/feed?date=${today}`;
+				url = `http://api-production-3a3b.up.railway.app/api/feed?date=${today}`;
 			}
 			fetch(url, {
 				headers: {

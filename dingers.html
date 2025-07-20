@@ -34,6 +34,9 @@
 	.player-cell .team-img {
 		margin-top: -2px;
 	}
+	#left-body {
+		padding: 0;
+	}
 	#updated {
 	}
 	.tabulator .tabulator-col[tabulator-field=stadiumRank] .tabulator-col-content {
@@ -61,12 +64,9 @@
 			width: 100%;
 		}
 	}
-	@media (max-width: 600px) {
+	@media (max-width: 768px) {
 		#table {
 			height: 85%;
-		}
-		#sub-header {
-			display: none;
 		}
 		#header-container {
 			position: inherit;
@@ -130,39 +130,6 @@
 	</div>
 	<div id="content">
 		<div id="left-body" class="body">
-			<div id="mobile-header">
-				<div style="display: flex;width: 100%;justify-content: space-evenly; align-items: center;">
-					<div class="dropdown">
-						<select id="page-select"></select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-					<div class="dropdown">
-						<select id="promo-select">
-							<option value="" selected>All Books</option>
-							<option value="mgm-20">MGM 20% HR</option>
-							<option value="fd-50">FD 50%</option>
-							<option value="fd-30">FD 30%</option>
-							<option value="espn-hr">ESPN HR</option>
-							<option value="dk-dinger">DK Dinger</option>
-							<option value="dk-200">DK +200</option>
-							<option value="dk-50">DK 50%</option>
-							<option value="cz-50">CZ 50%</option>
-							<option value="dk-sweat">DK No Sweat</option>
-							<option value="mgm-sweat">MGM No Sweat</option>
-							<option value="fd">FD</option>
-							<option value="dk">DK</option>
-							<option value="mgm">MGM</option>
-							<option value="espn">ESPN</option>
-							<option value="vs-365">vs Bet365</option>
-							<option value="vs-pn">vs Pinny</option>
-							<option value="vs-circa">vs Circa</option>
-							<option value="vs-sharp">vs Sharps</option>
-						</select>
-						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-					</div>
-					<button onclick="groupByGame();">Filter Game</button>
-				</div>
-			</div>
 			<div id="table-container">
 				<div id="updated-container">
 					<div id="donate">
@@ -234,7 +201,7 @@
 			let [a,h] = GAME.split("-");
 			GAME = `${a} @ ${h}`;
 		}
-		const selectId = MOBILE ? "#mobile-header" : "#header";
+		const selectId = "#header";
 
 		const promoSelect = document.querySelector(selectId+" #promo-select");
 		if (BOOK) {
@@ -357,7 +324,7 @@
 		async function fetchData(render=true) {
 			let url = "http://localhost:5000/api/ev";
 			if (!window.location.host.includes("localhost")) {
-				url = `http://feed-production-9971.up.railway.app/api/ev`;
+				url = `http://api-production-3a3b.up.railway.app/api/ev`;
 			}
 			fetch(url, {
 				headers: {
