@@ -231,6 +231,37 @@
 
 		function fetchData() {
 			let s = SPORT;
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			renderTable([]);
+			fetch(url+`/api/bvp`, {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(response => response.json()).then(data => {
+				data = data.data;
+				initDatepicker(data.date);
+				data = data.res;
+				data = data.filter(r => r.game != "");
+				RES = data;
+				renderTable(data);
+				setTimeout(function() {
+					TABLE.redraw();
+					if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
+						printReddit_();
+						print_2();
+					}
+					if (PRETTY != undefined) {
+						pretty_();
+					}
+				}, 200);
+			}).catch(err => console.log(err));
+		}
+
+		function fetchData2() {
+			let s = SPORT;
 			const url = `https://api.github.com/repos/dailyev/props/contents/static/mlb/stats_bvp.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -256,6 +287,7 @@
 		function renderTable(data) {
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    			placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",

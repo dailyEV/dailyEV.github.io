@@ -222,6 +222,36 @@
 
 		function fetchData() {
 			let s = SPORT;
+			renderTable([]);
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			fetch(url+"/api/barrels", {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(response => response.json()).then(data => {
+				data = data.data;
+				if (TEAM) {
+					let teams = TEAM.split(",");
+					data = data.filter(r => teams.includes(r.team));
+				}
+				RES = data;
+				renderTable(data);
+				setTimeout(() => {
+					if (PRETTY != undefined) {
+						pretty_();
+					}
+					if (DUE != undefined) {
+						filterDue();
+					}
+				}, 100);
+			}).catch(err => console.log(err));
+		}
+
+		function fetchData2() {
+			let s = SPORT;
 			const url = `https://api.github.com/repos/dailyev/props/contents/static/baseballreference/barrels.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -260,10 +290,11 @@
 				data = filtered;
 			}
 			*/
-			data = data.filter(r => r.book != "");
+			//data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    			placeholder:"Data Loading...",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "hide",
 				autoResize: true,
@@ -444,7 +475,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => {
-				let arr = ["book", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"];
+				let arr = ["", "player", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median", "barrel_ct", "game_trends.barrel_ct.5G", "hard_hit_ct", "game_trends.hard_hit_ct.5G"];
 				if (L3 != undefined) {
 					arr.push("game_trends.barrel_ct.3G");
 					arr.push("game_trends.hard_hit_ct.3G");

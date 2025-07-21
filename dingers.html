@@ -397,6 +397,7 @@
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    		placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",

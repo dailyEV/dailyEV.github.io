@@ -151,6 +151,7 @@
 		</div>
 	</div>
 	<script type="text/javascript" src="shared.js"></script>
+	<script src="auth.js"></script>
 	<script type="text/javascript">
 		PAGE = "props";
 		let TABLE = null;
@@ -326,9 +327,54 @@
 
 		function fetchData() {
 			let s = SPORT;
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			renderTable([]);
+			fetch(url+`/api/props?sport=${s}`, {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(response => response.json()).then(data => {
+				data = data.data;
+				if (PROP) {
+					data = data.filter(r => r.prop == PROP);
+				}
+				if (MIN) {
+					data = data.filter(r => r.books.length >= MIN);
+				}
+				if (OVER == "true") {
+					data = data.filter(r => r.under == false);
+				}
+				RES = data;
+				renderTable(data);
+				setTimeout(function() {
+					if (PROP) {
+						TABLE.setHeaderFilterValue("prop", PROP.toUpperCase());
+					}
+					const rows = TABLE.getRows("active").filter(r => {
+						let data = r.getData();
+						return data.prop != "ml" && !data.prop.includes("total")
+					});
+					if (rows.length > 0 && !DEBUG) {
+						if (window.location.protocol != "file:") {
+							rows[0].getElement().click();
+						}
+					}
+					hideCols();
+					TABLE.redraw();
+				}, 200);
+			}).catch(err => console.log(err));
+		}
+
+		function fetchData2() {
+			let s = SPORT;
 			const url = `https://api.github.com/repos/dailyev/props/contents/static/${s}/evArr.json`;
 			fetch(url, {
-				headers: { "Accept": "application/vnd.github.v3.raw" }
+				headers: {
+					"Accept": "application/vnd.github.v3.raw"
+				}
 			}).then(response => response.json()).then(data => {
 				if (PROP) {
 					data = data.filter(r => r.prop == PROP);
@@ -679,6 +725,7 @@
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    		placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
@@ -814,6 +861,5 @@
 			}
 		}
 	</script>
-	<script src="auth.js"></script>
 </body>
 </html>
