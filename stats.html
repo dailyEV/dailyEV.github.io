@@ -377,6 +377,44 @@
 
 		function fetchData() {
 			let s = SPORT;
+			renderTable([]);
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			fetch(url+`/api/stats?prop=${PROP}&sport=${SPORT}`, {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(response => response.json()).then(data => {
+				data = data.data;
+				if (LEADERS) {
+					data = data.filter(r => r.feed.evo.length > 20);
+				}
+				RES = data;
+				renderTable(data);
+				setTimeout(function() {
+					if (PROP) {
+						document.querySelector("#prop-select").value = PROP;
+						if (PROP != "hr") {
+							TABLE.setSort([
+								{column: "hitRate", dir: "desc"},
+								{column: "hitRateL10", dir: "desc"},
+								{column: "startSortable", dir: "asc"},
+							])
+						}
+					}
+					hideCols();
+					TABLE.redraw();
+
+					hoverPitcher()
+					filterConfirmed()
+				}, 200);
+			}).catch(err => console.log(err));
+		}
+
+		function fetchData2() {
+			let s = SPORT;
 			const url = `https://api.github.com/repos/dailyev/props/contents/static/mlb/stats_${PROP}.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -835,6 +873,7 @@
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    			placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "hide",

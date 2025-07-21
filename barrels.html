@@ -222,6 +222,36 @@
 
 		function fetchData() {
 			let s = SPORT;
+			renderTable([]);
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			fetch(url+"/api/barrels", {
+				headers: {
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				}
+			}).then(response => response.json()).then(data => {
+				data = data.data;
+				if (TEAM) {
+					let teams = TEAM.split(",");
+					data = data.filter(r => teams.includes(r.team));
+				}
+				RES = data;
+				renderTable(data);
+				setTimeout(() => {
+					if (PRETTY != undefined) {
+						pretty_();
+					}
+					if (DUE != undefined) {
+						filterDue();
+					}
+				}, 100);
+			}).catch(err => console.log(err));
+		}
+
+		function fetchData2() {
+			let s = SPORT;
 			const url = `https://api.github.com/repos/dailyev/props/contents/static/baseballreference/barrels.json`;
 			fetch(url, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
@@ -264,18 +294,15 @@
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    			placeholder:"Data Loading...",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "hide",
 				autoResize: true,
 				data: data,
 				initialSort: [
 					//{column: "barrel_ct", dir: "desc"},
-					
-					//{column: "game_trends.barrel_ct.5G", dir: "desc"},
-					//{column: "game_trends.barrel_ct.3G", dir: "desc"},
-
-					{column: "homerLogs.pa.z_median", dir: "desc"},
 					{column: "game_trends.barrel_ct.5G", dir: "desc"},
+					{column: "game_trends.hard_hit_ct.5G", dir: "desc"},
 				],
 				columnDefaults: {
 					vertAlign: "middle",

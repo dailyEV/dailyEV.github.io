@@ -165,10 +165,15 @@
 
 		function fetchData() {
 			let s = SPORT;
-			const url = `https://api.github.com/repos/dailyev/props/contents/static/baseballreference/pitcherPreview.json`;
-			fetch(url, {
+			let url = `http://localhost:5000`;
+			if (!window.location.host.includes("localhost")) {
+				url = `https://api-production-3a3b.up.railway.app`;
+			}
+			renderTable([]);
+			fetch(url+`/api/preview?sport=${s}`, {
 				headers: { "Accept": "application/vnd.github.v3.raw" }
 			}).then(response => response.json()).then(data => {
+				data = data.data;
 				RES = data;
 				renderTable(data);
 				setTimeout(function() {
@@ -182,6 +187,7 @@
 		function renderTable(data) {
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
+    			placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
