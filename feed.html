@@ -297,7 +297,7 @@
 			Plotly.newPlot("yby", [hrAB], layout);
 		}
 
-		function parseData(res) {
+		function parseData(res, render=false) {
 			const data = [];
 				ALMOST = [];
 				BARRELS = [];
@@ -336,9 +336,6 @@
 						}
 						for (row of res[game]) {
 							row["id"] = `${game}-${row["pa"]}`;
-							if (DATE && HIST) {
-								row["dt"] = HIST[game][row["pa"]];
-							}
 							data.push(row);
 							if (row["result"] == "Home Run") {
 								HRROWS.push(row);
@@ -391,7 +388,7 @@
 				}
 			}).then(res => res.json()).then(res => {
 				// from static g
-				parseData(res);
+				parseData(res, render);
 				
 				// When we go DB calls
 				//HRROWS = data.filter(r => r.result == "Home Run");
@@ -415,7 +412,7 @@
 			}).then(
 				response => response.json()
 			).then(res => {
-				parseData(res);
+				parseData(res, render);
 			}).catch(err => console.log(err));
 		}
 		renderTable([]);
