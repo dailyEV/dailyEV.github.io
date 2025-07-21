@@ -359,7 +359,7 @@
 					});
 					if (rows.length > 0 && !DEBUG) {
 						if (window.location.protocol != "file:") {
-							rows[0].getElement().click();
+							//rows[0].getElement().click();
 						}
 					}
 					hideCols();
@@ -725,7 +725,7 @@
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
-    		placeholder:"Data Loading...",
+				placeholder:"Data Loading...",
 				//ajaxURL: "https://raw.githubusercontent.com/dailyev/props/main/static/dailyev/evArr.json",
 				layout: "fitDataFill",
 				responsiveLayout: MOBILE ? "" : "",
