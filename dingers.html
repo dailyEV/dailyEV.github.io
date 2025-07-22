@@ -95,16 +95,17 @@
 				<select id="promo-select">
 					<option value="" selected>All Books</option>
 					<option value="mgm-20">MGM 20% HR</option>
-					<option value="fd-50">FD 50%</option>
 					<option value="fd-30">FD 30%</option>
-					<option value="espn-hr">ESPN HR</option>
-					<option value="espn-50">ESPN 50%</option>
-					<option value="dk-dinger">DK Dinger</option>
-					<option value="dk-200">DK +200</option>
+					<option value="fd-50">FD 50%</option>
+					<option value="dk-15">DK 15%</option>
 					<option value="dk-50">DK 50%</option>
+					<option value="espn-50">ESPN 50%</option>
 					<option value="cz-50">CZ 50%</option>
+					<option value="dk-200">DK +200</option>
 					<option value="dk-sweat">DK No Sweat</option>
 					<option value="mgm-sweat">MGM No Sweat</option>
+					<option value="espn-hr" hidden>ESPN HR</option>
+					<option value="dk-dinger" hidden>DK Dinger</option>
 					<option value="fd">FD</option>
 					<option value="dk">DK</option>
 					<option value="mgm">MGM</option>
@@ -451,6 +452,8 @@
 					{title: "EV", field: "cz-30_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "cz-50-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "cz-30-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "dk-15_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "EV", field: "dk-15-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "dk-50_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-30_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "fd-30-vs-circa_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
