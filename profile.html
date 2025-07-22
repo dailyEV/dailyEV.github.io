@@ -19,11 +19,11 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX06BZ5MRL"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-  gtag('config', 'G-FX06BZ5MRL');
+	gtag('config', 'G-FX06BZ5MRL');
 </script>
 
 <style>
@@ -56,44 +56,64 @@
 			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
-	<div id="profile-container">
+	<div class="profile-container">
 		<div class="profile-header">
-    	<div class="profile-badge">👑</div>
-    	<div id="profile-info">
-    		<p class="username"></p>
-    		<button class="upgrade-btn" onclick="changePage('pricing')">Upgrade / Manage</button>
-    	</div>
-    </div>
+			<div class="profile-badge">👑</div>
+			<div id="profile-info">
+				<h2 class="username">zhecht7@gmail.com</h2>
+				<button class="upgrade-btn" onclick="changePage('pricing')">Upgrade / Manage</button>
+			</div>
+		</div>
 		<div class="profile-subscription">
-	    <h3>Subscription Details</h3>
-	    <div class="sub-grid">
-	      <div>
-	        <span class="label">Plan:</span>
-	        <span class="value">VIP Tier</span>
-	      </div>
-	      <div>
-	        <span class="label">Next Renewal:</span>
-	        <span class="value">Aug 15, 2025</span>
-	      </div>
-	      <div>
-	        <span class="label">Payment Method:</span>
-	        <span class="value">•••• 4242</span>
-	      </div>
-	    </div>
+			<h3>Subscription Details</h3>
+			<div class="sub-grid">
+				<div>
+					<span class="label">Plan:</span>
+					<span class="value">VIP Tier</span>
+				</div>
+				<div>
+					<span class="label">Next Renewal:</span>
+					<span class="value">Aug 15, 2025</span>
+				</div>
+				<div>
+					<span class="label">Payment Method:</span>
+					<span class="value">•••• 4242</span>
+				</div>
+			</div>
 
-		  <!-- Quick Links -->
-		  <div class="profile-links">
-		    <h3>Account Actions</h3>
-		    <button class="link-btn">🔗 Connect Discord</button>
-		    <button class="link-btn">❌ Cancel Subscription</button>
-		    <button class="link-btn logout" onclick="logout()">🚪 Logout</button>
-		  </div>
+			<!-- Quick Links -->
+			<div class="profile-links">
+				<h3>Account Actions</h3>
+				<button class="link-btn" onclick="connectDiscord()">🔗 Connect Discord</button>
+				<button class="link-btn" onclick="cancelSubscription()">❌ Cancel Subscription</button>
+			</div>
 		</div>
 	</div>
 	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "profile";
+
+		async function connectDiscord() {
+			const response = await fetch('http://localhost:5000/api/discord/login', {
+				method: 'POST',
+				headers: { 
+					Authorization: `Bearer ${ACCESS_TOKEN}`
+				},
+			});
+			const data = await response.json();
+
+		}
+
+		async function cancelSubscription() {
+			const response = await fetch('/api/create-portal-session', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ customerId: "CURRENT_USER_CUSTOMER_ID" })
+		});
+		const data = await response.json();
+		window.location.href = data.url; // Stripe handles the rest
+			}
 	</script>
 </body>
 </html>

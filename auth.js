@@ -49,9 +49,12 @@ async function upsertProfile(session) {
 		t = "⭐";
 	} else if (tier == "vip") {
 		t = "👑";
-		document.querySelector("#upgrade").style.display = "none";
 	}
-	document.querySelector(".profile-badge").innerText = t;
+
+	if (tier != "vip") {
+		document.querySelector("#upgrade").style.display = "initial";
+	}
+	//document.querySelector(".profile-badge").innerText = t;
 	document.querySelector("#username").innerHTML = `${t} ${session.user.email}`;
 }
 
@@ -82,11 +85,28 @@ document.getElementById("email").addEventListener("keypress", function(e) {
 
 async function upgrade(tier) {
 	const { data: { session }, error } = await SB.auth.getSession();
+	const url = `http://localhost:5000/api/stripe-portal`;
+	const response = await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${ACCESS_TOKEN}`
+		}
+	});
+	const data = await response.json();
+	if (data.url) {
+		window.location.href = data.url;
+	} else {
+		alert('Error starting checkout');
+	}
+}
+
+async function upgrade2(tier) {
+	const { data: { session }, error } = await SB.auth.getSession();
 	const url = `http://localhost:5000/api/checkout?user=${session.user.id}&tier=${tier}`;
 	const response = await fetch(url, { method: 'POST' });
 	const data = await response.json();
 	if (data.url) {
-		window.location.href = data.url; // Redirect to Stripe Checkout
+		window.location.href = data.url;
 	} else {
 		alert('Error starting checkout');
 	}

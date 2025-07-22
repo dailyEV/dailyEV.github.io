@@ -35,61 +35,103 @@
 	#content {
 		justify-content: center;
 	}
-	#pricing {
-		display: grid;
-		grid-template-columns: 1.5fr 1fr 1fr 1fr;
-		gap: 4px;
-		font-family: sans-serif;
-		max-width: 800px;
-		margin: 0 auto;
-	}
-
-	#pricing .row {
-		display: contents; /* allows rows to line up in the grid */
-	}
-
-	#pricing .col {
-		padding: 8px;
-		border-bottom: 1px solid #ccc;
-		display: flex;
-		align-items: center;
-	}
-
-	#pricing .feature-title {
-		font-weight: bold;
-	}
-
-	#pricing .sub {
-		padding-left: 16px;
-		font-weight: normal;
-		color: #555;
-	}
-
-	#pricing .header .col {
-		font-weight: bold;
-		background: #f4f4f4;
-		border-top: 2px solid #333;
-		border-bottom: 2px solid #333;
-	}
-
-	.upgrade-btn {
-	  background-color: #6772e5; /* Stripe purple */
-	  color: #fff;
-	  border: none;
-	  padding: 8px 16px;
-	  border-radius: 4px;
-	  cursor: pointer;
-	  font-weight: bold;
-	  transition: background 0.3s;
-	}
-	.upgrade-btn:hover {
-	  background-color: #5469d4;
-	}
-	.upgrade-row .col {
+	#pricing-cards {
 	  text-align: center;
-	  border: none;
-	  padding: 12px 0;
+	  padding: 2rem 1rem;
+	  font-family: sans-serif;
+	  width: 100%;
 	}
+
+#pricing-cards h2 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  justify-content: center;
+}
+
+#pricing-cards .pricing-intro {
+  color: #aaa;
+  margin-bottom: 2rem;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.pricing-card {
+  background: #1b1d1e;
+  color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.pricing-card.popular {
+  border-color: gold;
+}
+
+.pricing-card.vip {
+  border-color: purple;
+}
+
+.pricing-card h3 {
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+
+.pricing-card .price {
+  font-size: 1.8rem;
+  margin: 0.5rem 0 1rem;
+}
+.pricing-card .price span {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.pricing-card ul {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.pricing-card ul li {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.select-btn {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+.select-btn:hover {
+  background: #666;
+}
+.select-btn.highlight {
+  background: gold;
+  color: #000;
+}
+.select-btn.highlight:hover {
+  background: #e6c200;
+}
+.select-btn:disabled {
+  background: #333;
+  color: #777;
+  cursor: default;
+}
 	@media (max-width: 600px) {
 	}
 </style>
@@ -115,7 +157,67 @@
 		</div>
 	</div>
 	<div id="content">
-		<div id="pricing">
+		<section id="pricing-cards">
+		  <h2>Choose Your Plan</h2>
+		  <p class="pricing-intro">
+		    Pick the tier that fits your betting style. Upgrade anytime.
+		  </p>
+
+		  <div class="pricing-grid">
+		    <!-- Free -->
+		    <div class="pricing-card">
+		      <h3>🆓 Free</h3>
+		      <p class="price">$0 <span>/mo</span></p>
+		      <ul>
+		        <li>⚾ Limited Website Access</li>
+		        <li>⏳ Delayed Odds & Feed</li>
+		        <li>📊 Basic Stats</li>
+		        <li>❌ No Discord Access</li>
+		      </ul>
+		      <button class="select-btn" disabled>Current</button>
+		    </div>
+
+		    <!-- Website Only -->
+		    <div class="pricing-card">
+		      <h3>💻 Website Only</h3>
+		      <p class="price">$10 <span>/mo</span></p>
+		      <ul>
+		        <li>⚡ Full Website Access</li>
+		        <li>📊 Advanced Stats</li>
+		        <li>⏳ Minimal Delay</li>
+		        <li>❌ No Discord Access</li>
+		      </ul>
+		      <button class="select-btn">Upgrade</button>
+		    </div>
+
+		    <!-- Website + Discord -->
+		    <div class="pricing-card popular">
+		      <h3>⭐ Website + Discord</h3>
+		      <p class="price">$20 <span>/mo</span></p>
+		      <ul>
+		        <li>⚡ Full Website Access</li>
+		        <li>✅ Discord Channels</li>
+		        <li>📈 BvP & Advanced Tables</li>
+		        <li>🔔 Alerts & Insights</li>
+		      </ul>
+		      <button class="select-btn highlight" onclick="upgrade('discord')">Upgrade</button>
+		    </div>
+
+		    <!-- VIP -->
+		    <div class="pricing-card vip">
+		      <h3>👑 VIP</h3>
+		      <p class="price">$40 <span>/mo</span></p>
+		      <ul>
+		        <li>⚡ Full Website Access</li>
+		        <li>✅ Discord Private Channels</li>
+		        <li>📈 Circa Movement Data</li>
+		        <li>🚀 Early Alerts & Insights</li>
+		      </ul>
+		      <button class="select-btn">Go VIP</button>
+		    </div>
+  		</div>
+		</section>
+	<!--
 			<div class="row header">
 				<div class="col feature-title">Feature</div>
 				<div class="col">🆓 Free Tier</div>
@@ -123,7 +225,6 @@
 				<div class="col">👑 VIP Tier</div>
 			</div>
 
-			<!-- Features -->
 			<div class="row">
 				<div class="col feature-title">Price</div>
 				<div class="col">Free</div>
@@ -154,7 +255,7 @@
 
 			<div class="row">
 				<div class="col feature-title sub">↳ Odds Page</div>
-				<div class="col">⚠️ Limited</div>
+				<div class="col">⏳ Delay (30m)</div>
 				<div class="col">✅ (live)</div>
 				<div class="col">✅ (live)</div>
 			</div>
@@ -168,7 +269,7 @@
 
 			<div class="row">
 				<div class="col feature-title sub">↳ Feed</div>
-				<div class="col">⏳ Delay</div>
+				<div class="col">⏳ Delay (5m)</div>
 				<div class="col">✅ (live)</div>
 				<div class="col">✅ (live)</div>
 			</div>
@@ -204,7 +305,9 @@
 					<button class="upgrade-btn" onclick="upgrade('vip')">Upgrade</button>
 				</div>
 			</div>
+			-->
 		</div>
+
 		</div>
 	</div>
 	<script src="auth.js"></script>

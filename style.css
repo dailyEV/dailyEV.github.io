@@ -162,21 +162,24 @@ input, textarea, select {
   gap: 0.5rem;
   flex-wrap: wrap;
   margin: 0.5rem auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 button {
 	margin: 0;
-	padding: 0.5rem;
+	padding: 0.4rem 0.8rem;
 	border-radius: 4px;
-	border: 1px solid rgba(164, 164, 170, 0.3);
+	border: none;
 	outline: none;
 	text-indent: 0px;
-	background-color: #1b1d1e;
-	color: #d3cfca;
-	outline-color: currentcolor;
+	background: #444;
+  color: #fff;
+  cursor: pointer;
 	width: max-content;
 }
 #sub-header button:hover, #auth-buttons button:hover {
-	cursor: pointer;
+	background: #666;
 }
 #content {
 	display: flex;
@@ -204,6 +207,9 @@ button {
 }
 #auth #login {
 	margin-left: 0.5rem;
+}
+#upgrade {
+	display: none;
 }
 #button-container {
 	display: flex;
@@ -607,25 +613,39 @@ nav {
   max-width: 700px;
   margin: 2rem auto;
   background: #1b1d1e;
-  border-radius: 8px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 2rem;
   color: #f0f0f0;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
 .profile-badge {
   font-size: 3rem;
 }
 
-.profile-info h2 {
-  margin: 0;
+.profile-info {
+	display: flex;
+	flex-direction: column;
 }
+.profile-info h2.username {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
 .profile-info .email {
   font-size: 0.9rem;
   color: #aaa;
-  margin: 0.2rem 0;
 }
+
 .profile-info .tier {
+  margin-top: 0.3rem;
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
@@ -640,30 +660,38 @@ nav {
   background: #0f0;
   color: #000;
 }
+
 .upgrade-btn {
   background: #444;
   color: #fff;
   border: none;
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 600;
 }
 .upgrade-btn:hover {
   background: #666;
 }
 
 .profile-subscription h3,
+.profile-links {
+	text-align: center;
+}
 .profile-links h3 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
 }
 
 .sub-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
+  gap: 0.8rem 1.2rem;
+  margin-bottom: 1.5rem;
 }
+
 .label {
   font-weight: 600;
   color: #aaa;
@@ -675,20 +703,21 @@ nav {
 }
 
 .profile-links {
-  margin-top: 1.5rem;
   border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 1rem;
 }
+
 .link-btn {
   display: block;
   background: #333;
   color: #fff;
   border: none;
-  padding: 0.5rem;
+  padding: 0.6rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
   cursor: pointer;
   text-align: left;
+  font-weight: 600;
 }
 .link-btn:hover {
   background: #555;
@@ -716,6 +745,7 @@ nav {
 	}
 	#content {
 		flex-direction: column;
+		height: initial;
 	}
 	#button-container {
 		width: initial;
@@ -796,7 +826,6 @@ nav {
 }
 
 @media (max-width: 768px) {
-
 }
 
 @media (hover: hover) and (pointer: fine) {
