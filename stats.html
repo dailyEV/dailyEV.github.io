@@ -1047,6 +1047,7 @@
 
 		function filterConfirmed() {
 			//TABLE.setFilter("order", "!=", "-");
+			//return;
 			if (!IS_PITCHER) {
 				TABLE.setFilter("daily.book", "!=", undefined);
 				if (TABLE.getRows("active").length == 0) {
