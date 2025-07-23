@@ -870,6 +870,7 @@
 				select.appendChild(el);
 			});
 			*/
+			data = data.filter(r => r.player != "kyle teel")
 			let books = [...new Set(data.map(row => row.book.toUpperCase()))];
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,

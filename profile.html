@@ -32,6 +32,9 @@
 		font-size: 18px;
 		height: 100vh;
 	}
+	#discord_username {
+		margin-bottom: 0.5rem;
+	}
 	@media (max-width: 600px) {
 	}
 </style>
@@ -73,11 +76,13 @@
 				</div>
 				<div>
 					<span class="label">Next Renewal:</span>
-					<span class="value">Aug 15, 2025</span>
+					<span id="next_renewal" class="value"></span>
 				</div>
 				<div>
 					<span class="label">Discord:</span>
-					<span class="value"><button class="link-btn" onclick="connectDiscord()">🔗 Connect Discord</button></span>
+					<span class="value">
+						<span id="discord_username">N/A</span>
+					</span>
 				</div>
 			</div>
 
@@ -95,6 +100,7 @@
 		PAGE = "profile";
 
 		async function connectDiscord() {
+			/*
 			const response = await fetch('http://localhost:5000/api/discord/login', {
 				method: 'POST',
 				headers: { 
@@ -102,7 +108,9 @@
 				},
 			});
 			const data = await response.json();
-
+			*/
+			const { data: { session }, error } = await SB.auth.getSession();
+			window.location.href = "http://localhost:5000/api/discord/login?user_id="+session.user.id;
 		}
 
 		async function cancelSubscription() {

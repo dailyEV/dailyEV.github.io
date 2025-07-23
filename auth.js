@@ -35,7 +35,7 @@ async function login() {
 
 async function upsertProfile(session) {
 	const { data, error } = await SB.from('profiles')
-		.select('tier')
+		.select('tier, discord_username, next_renewal')
 		.eq('id', session.user.id)
 		.maybeSingle();
 	let tier = "free";
@@ -56,6 +56,16 @@ async function upsertProfile(session) {
 	}
 	//document.querySelector(".profile-badge").innerText = t;
 	document.querySelector("#username").innerHTML = `${t} ${session.user.email}`;
+	if (window.location.pathname.includes("/profile")) {
+		if (data.discord_username) {
+			document.querySelector("#discord_username").innerText = data.discord_username;
+		}
+		if (data.next_renewal) {
+			let d = new Date(data.next_renewal);
+			const options = {year: 'numeric', month: 'short', day: 'numeric'};
+			document.querySelector("#next_renewal").innerText = d.toLocaleDateString("en-US", options);
+		}
+	}
 }
 
 (async function handleSession() {
