@@ -3,9 +3,14 @@ let TEAM = "";
 let PAGE = "";
 let MOBILE = window.innerWidth <= 600;
 let ACCESS_TOKEN = "";
+let API_BASE = "http://localhost:5000";
 let UPDATED = {};
+
 if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
 	HTML = ".html";
+}
+if (!window.location.host.includes("localhost")) {
+	API_BASE = `https://api-production-3a3b.up.railway.app`;
 }
 
 function getToday() {

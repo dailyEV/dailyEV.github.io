@@ -75,9 +75,11 @@ async function upsertProfile(session) {
 		if (session.access_token) {
 			ACCESS_TOKEN = session.access_token;
 		}
-		document.getElementById("login").style.display = "none";
-		document.getElementById("email").style.display = "none";
-		document.getElementById("username").innerText = `${session.user.email}`;
+		if (document.getElementById("login")) {
+			document.getElementById("login").style.display = "none";
+			document.getElementById("email").style.display = "none";
+			document.getElementById("username").innerText = `${session.user.email}`;
+		}
 		// make sure row exists in profile
 		upsertProfile(session);
 	} else {
