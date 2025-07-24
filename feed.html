@@ -439,7 +439,7 @@
 		renderHRTable([]);
 		let intervalId = 0;
 		if (!DEBUG && !PLAYER && (!DATE || DATE == TODAY)) {
-			intervalId = setInterval(() => fetchFeed(), 5 * 1000);
+			intervalId = setInterval(() => fetchFeed(), 30 * 1000);
 		} else if (DATE) {
 			fetchHistorical();
 		}
