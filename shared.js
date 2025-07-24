@@ -21,6 +21,8 @@ function getToday() {
 }
 
 const PAGE_DROPDOWN = `
+	<option value="profile">Profile</option>
+	<option value="pricing">Pricing</option>
 	<option value="dingers">⚾ Dingers</option>
 	<option value="feed">⚾ Feed</option>
 	<option value="bvp">⚾ BvP</option>
@@ -183,6 +185,9 @@ const percentFormatter = function(cell, params, rendered) {
 	if (!cell.getValue()) {
 		return "";
 	}
+	if (cell.getRow().getData().blurred) {
+		return "<div class='blurred'>"+cell.getValue()+"</div>";
+	}
 	return cell.getValue()+"%";
 }
 
@@ -282,16 +287,23 @@ const percentileFormatter = function(cell) {
 	`;
 }
 
+const blurFormatter = function(cell) {
+	if (!cell.getRow().getData().blurred) {
+		return cell.getValue();
+	}
+	return `<div class="blurred">${cell.getValue()}</div>`;
+}
+
 const thresholds = {
 	"exit_velocity_avg": [87.6, 90.8],
 	"la": [0, 26],
 	"evo": [0, 95],
 	"dist": [0, 300],
 	"hard_hit_percent": [35.5, 45.5],
-	"barrel_batted_rate": [5,10.5],
-	"barrels_per_bip": [5,10.5],
-	"sweet_spot_percent": [28.3, 37.5],
-	"flyballs_percent": [21, 32],
+	"barrel_batted_rate": [5.7,11.6],
+	"barrels_per_bip": [5.7,11.6],
+	"sweet_spot_percent": [29.4, 39.1],
+	"flyballs_percent": [20.7, 32.4],
 	// strikeout
 	"k_percent": [18.5, 26.3],
 	"whiff_percent": [22.2, 29],
@@ -327,6 +339,9 @@ const summaryFormatter = function(cell, params, rendered) {
 	let suffix = field == "dist" ? " ft" : "";
 	if (field.includes("rate") || field.includes("percent") || field.includes("barrel")) {
 		suffix = "%";
+	}
+	if (data.blurred) {
+		cls = "blurred";
 	}
 	return `<div class="${cls}">${cell.getValue()}${suffix}</div>`;
 }
@@ -453,7 +468,11 @@ const rankingFormatter = function(cell) {
 		return "";
 	}
 	if (field == "oppRank" || ["nba"].includes(SPORT)) {
-		return `<div class='${data.oppRankClass}'>${cell.getValue()}</div>`;
+		cls = data.oppRankClass;
+		if (data.blurred) {
+			cls = "blurred";
+		}
+		return `<div class='${cls}'>${cell.getValue()}</div>`;
 	} else {
 		if (data.team == "ath") {
 			return "";
@@ -463,6 +482,9 @@ const rankingFormatter = function(cell) {
 			cls = "positive";
 		} else if (data.stadiumRank >= 20) {
 			cls = "negative";
+		}
+		if (data.blurred) {
+			cls = "blurred";
 		}
 		return `<div class='${cls}'>${addSuffix(cell.getValue())}</div>`;
 	}
@@ -591,8 +613,12 @@ const evBookFormatter = function(cell, params, rendered) {
 		implied = 100 / (lineInt + 100);
 	}
 	implied = parseInt(implied * 100);
+	let cls = "evbook-cell";
+	if (data.blurred) {
+		cls += " blurred";
+	}
 	return `
-		<div class='evbook-cell'>
+		<div class='${cls}'>
 			<span class='evbook-odds'>${line}</span>
 			<span class='evbook-implied'>${implied}%</span>
 			<img class='book-img' src='logos/${book}.png' alt='${book}' title='${book}' />
@@ -719,6 +745,9 @@ const windFormatter = function(cell, params, rendered) {
 	if (data.prop == "separator") return "";
 	if (!data.game) {
 		return "";
+	}
+	if (data.blurred) {
+		return "<div class='blurred'>"+cell.getValue()+"</div>";
 	}
 	return getWindHTML(data);
 }

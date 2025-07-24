@@ -86,11 +86,32 @@
 </script>
 
 <body>
+	<div id="header">
+		<div id="title">
+			<h1>+EV Dingers</h1>
+		</div>
+		<div id="sub-header">
+			<div class="dropdown">
+				<select id="page-select"></select>
+				<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+			</div>
+		</div>
+		<div id="auth-buttons">
+			<span id="username"></span>
+			<span id="status"></span>
+			<input id="email" type="text" placeholder="Email" >
+			<button id="login" onclick="login()">Login</button>
+			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
+			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
+			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
+		</div>
+	</div>
 	<div id="left-body" class="body">
 		<div id="header">
 			<div id="header-container">
 				<h1>+EV Dingers</h1>
 				<span class="disclaimer"><i>Analysis only, bet responsibly.</i></span>
+
 			</div>
 			<div id="sub-header">
 				<div class="dropdown">
@@ -231,12 +252,8 @@
 
 		function fetchData() {
 			let s = SPORT;
-			let url = `http://localhost:5000`;
-			if (!window.location.host.includes("localhost")) {
-				url = `https://api-production-3a3b.up.railway.app`;
-			}
 			renderTable([]);
-			fetch(url+`/api/bvp`, {
+			fetch(API_BASE+`/api/bvp`, {
 				headers: {
 					Authorization: `Bearer ${ACCESS_TOKEN}`
 				}
@@ -244,6 +261,7 @@
 				data = data.data;
 				initDatepicker(data.date);
 				data = data.res;
+				console.log(data)
 				data = data.filter(r => r.game != "");
 				RES = data;
 				renderTable(data);
@@ -334,8 +352,8 @@
 
 					//{title: "Pitcher Summary", field: "pitcherSummary"},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", width: 75},
-					{title: "Vs Team '25", field: "bvt", hozAlign: "left", width: 75},
-					{title: "@ 🏟 2025", field: "bvs", hozAlign: "left", width: 80, visible: true},
+					{title: "Vs Team '25", field: "bvt", hozAlign: "left", width: 75, formatter: blurFormatter},
+					{title: "@ 🏟 2025", field: "bvs", hozAlign: "left", width: 80, visible: true, formatter: blurFormatter},
 					{title: "BPP HR Factors", columns: [
 						{title: "Game", field: "bpp", width: 50, formatter: bppFormatter},
 						{title: "Player", field: "playerFactor", width: 50, formatter: bppPlayerFormatter}

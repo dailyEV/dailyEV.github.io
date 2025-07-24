@@ -13,7 +13,7 @@
 	<script src="plotly-3.0.0.min.js" charset="utf-8"></script>
 	<script src="math.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<link rel="icon" type="image/x-icon" href="logos/icon.png">
+	<link rel="icon" type="image/x-icon" href="logos/icon2.png">
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -54,10 +54,10 @@
 }
 
 .pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rem;
+  justify-content: center;
 }
 
 .pricing-card {
@@ -65,8 +65,8 @@
   color: #fff;
   border-radius: 12px;
   padding: 1.5rem;
-  max-width: 280px;
   display: flex;
+  max-width: 400px;
   flex-direction: column;
   align-items: center;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -169,12 +169,12 @@
 		      <h3>🆓 Free</h3>
 		      <p class="price">$0 <span>/mo</span></p>
 		      <ul>
-		        <li>⚾ Limited Website Access</li>
-		        <li>⏳ Delayed Odds & Feed</li>
+		        <li>✋ Limited Website Access</li>
 		        <li>📊 Basic Stats</li>
-		        <li>❌ No Discord Access</li>
+		        <li>⏳ Delayed Odds & Feed</li>
+		        <li>🔓 Free Discord channels</li>
 		      </ul>
-		      <button class="select-btn" disabled>Current</button>
+		      <button class="select-btn" onclick="upgrade('free')" disabled>Current</button>
 		    </div>
 
 		    <!-- Website Only -->
@@ -185,9 +185,9 @@
 		        <li>⚡ Full Website Access</li>
 		        <li>📊 Advanced Stats</li>
 		        <li>⏳ Minimal Delay</li>
-		        <li>❌ No Discord Access</li>
+		        <li>🔓 Free Discord channels</li>
 		      </ul>
-		      <button class="select-btn">Upgrade</button>
+		      <button class="select-btn" onclick="upgrade('website')">Upgrade</button>
 		    </div>
 
 		    <!-- Website + Discord -->
@@ -197,11 +197,11 @@
 		      <ul>
 		        <li>⚡ Full Website Access</li>
 		        <li>✅ Discord Channels</li>
-		        <li>📊 BvP & Advanced Tables</li>
 		        <li>📈 Circa movement</li>
+		        <li>🎟️ Full +EV Betting Slate</li>
 		        <li>🔔 Alerts & Insights</li>
 		      </ul>
-		      <button class="select-btn highlight" onclick="upgrade('discord')">Upgrade</button>
+		      <button class="select-btn highlight" onclick="upgrade('sharp')">Upgrade</button>
 		    </div>
 
 		    <!-- VIP -->
@@ -303,7 +303,7 @@
 	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
-		PAGE = "profile";
+		PAGE = "pricing";
 	</script>
 </body>
 </html>

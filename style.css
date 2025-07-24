@@ -47,6 +47,18 @@ input, textarea, select {
 	border-width: 1px;
 	color: #e8e6e3;
 }
+.blurred {
+  filter: blur(4px);
+  opacity: 0.6;
+}
+.locked::after {
+  content: "🔒";
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  font-size: 0.8em;
+  opacity: 0.8;
+}
 #tooltip {
 	position: absolute;
 	background-color: black;

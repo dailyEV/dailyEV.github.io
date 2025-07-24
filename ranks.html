@@ -98,7 +98,13 @@
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 				<div class="dropdown">
-					<select id="pos-select"></select>
+					<select id="pos-select">
+						<option value="all">All</option>
+						<option value="qb">QB</option>
+						<option value="rb">RB</option>
+						<option value="wr">WR</option>
+						<option value="te">TE</option>
+					</select>
 					<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
 				</div>
 			</div>
@@ -158,6 +164,13 @@
 		if (MARK != undefined) {
 			document.querySelector("#watermark").style.display = "initial";
 		}
+
+		document.querySelector("#pos-select").value = "all";
+		document.querySelector("#pos-select").addEventListener("change", (event) => {
+			if (event.target.value) {
+
+			}
+		});
 
 		window.addEventListener("resize", () => {
 			MOBILE = window.innerWidth <= 600;

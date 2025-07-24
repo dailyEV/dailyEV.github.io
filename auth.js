@@ -46,9 +46,9 @@ async function upsertProfile(session) {
 	}
 	let t = "🆓";
 	if (tier == "premium") {
-		t = "⭐";
+		t = "💻";
 	} else if (tier == "vip") {
-		t = "👑";
+		t = "🎯";
 	}
 
 	if (tier != "vip") {
@@ -84,7 +84,7 @@ async function upsertProfile(session) {
 		upsertProfile(session);
 	} else {
 		// No Session
-		document.querySelectorAll(".loggedIn").map(x => x.style.display = "none");
+		Array.from(document.querySelectorAll(".loggedIn")).map(x => x.style.display = "none");
 	}
 })();
 

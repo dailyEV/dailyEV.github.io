@@ -274,8 +274,13 @@
 		function parseData(data, render) {
 			UPDATED["dingers"] = data["updated"];
 			data = data["data"];
+
+			if (PLAYER) {
+				data = data.filter(r => PLAYER.split(",").includes(r.player))
+			}
 			let OLD = RES;
 			RES = data;
+
 			if (render) {
 				renderTable(data);
 			} else {
