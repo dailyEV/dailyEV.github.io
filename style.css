@@ -481,6 +481,9 @@ nav {
 #player-lines-select {
 	min-width: 70px;
 }
+#pos-select {
+	min-width: 70px;
+}
 #player-year-select {
 	display: none;
 	min-width: 70px;

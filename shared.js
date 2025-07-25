@@ -25,6 +25,7 @@ const PAGE_DROPDOWN = `
 	<option value="mlb">⚾ Props</option>
 	<option value="golf">⛳ Props</option>
 	<option value="nfl">🏈 Props</option>
+	<option value="ranks">🏈 Fantasy Ranks</option>
 	<option value="futures">🏈 Futures</option>
 	<option value="nhl">🏒 Props</option>
 	<option value="nba">🏀 Props</option>
