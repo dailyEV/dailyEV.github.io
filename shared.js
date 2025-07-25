@@ -1207,6 +1207,11 @@ function plotHRGap(showGames = false) {
 	}, 100);
 }
 
+const ecrFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return data.ecr.pos_rank;
+}
+
 function fetchUpdated(repo="props", render=true) {
 	const url = `https://api.github.com/repos/dailyev/${repo}/contents/updated.json`;
 	fetch(url, {
