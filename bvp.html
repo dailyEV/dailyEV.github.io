@@ -246,11 +246,11 @@
 			});
 		}
 
-		fetchData();
+		//fetchData();
 		//fetchUpdated();
 		//initDatepicker("2025-05-11");
 
-		function fetchData() {
+		async function fetchBVPData() {
 			let s = SPORT;
 			renderTable([]);
 			fetch(API_BASE+`/api/bvp`, {
@@ -261,7 +261,6 @@
 				data = data.data;
 				initDatepicker(data.date);
 				data = data.res;
-				console.log(data)
 				data = data.filter(r => r.game != "");
 				RES = data;
 				renderTable(data);

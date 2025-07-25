@@ -20,7 +20,7 @@ function getToday() {
 	return `${Y}-${M}-${D}`;
 }
 
-const PAGE_DROPDOWN = `
+let PAGE_DROPDOWN = `
 	<option value="profile">Profile</option>
 	<option value="pricing">Pricing</option>
 	<option value="dingers">⚾ Dingers</option>
@@ -51,6 +51,10 @@ setTimeout(() => {
 		const page = event.target.value;
 		changePage(page);
 	});
+
+	if (PAGE == "disclaimer") {
+		PAGE_DROPDOWN += `<option value="${PAGE}">${PAGE}</option>`;
+	}
 	select.innerHTML = PAGE_DROPDOWN;
 	if (PAGE == "props") {
 		select.value = SPORT;
@@ -1239,6 +1243,11 @@ function plotHRGap(showGames = false) {
 	setTimeout(() => {
 		Plotly.Plots.resize("chart");
 	}, 100);
+}
+
+const ecrFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	return data.ecr.pos_rank;
 }
 
 function fetchUpdated(repo="props", render=true) {

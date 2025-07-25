@@ -167,8 +167,21 @@
 
 		document.querySelector("#pos-select").value = "all";
 		document.querySelector("#pos-select").addEventListener("change", (event) => {
-			if (event.target.value) {
+			let pos = event.target.value.toUpperCase();
+			if (pos == "ALL") {
+				TABLE.setFilter();
+				return;
+			}
+			if (pos) {
+				TABLE.setFilter([
+					{field:"pos", type:"=", value: pos}
+				]);
+				if (pos != "QB") {
+					["both.pass_td", "both.pass_yd", "both.int"].map(x => TABLE.hideColumn(x))
+				}
+				if (pos == "WR") {
 
+				}
 			}
 		});
 
@@ -230,7 +243,8 @@
 				columns: [
 					//{title: "Confirmed", field: "confirmed", formatter:"tickCross", width: 30, hozAlign: "center"},
 					//{title: "EV", field: "ev",  width: MOBILE ? 40 : 60, sorter: "number", formatter: evFormatter, responsive: 0},
-
+					
+					{title: "½ PPR<br>Pts", field: "pts", width: 55, sorter: "number" },
 					{
 						title: "Player",
 						field: "player",
@@ -242,20 +256,22 @@
 						responsive: 0,
 						frozen: MOBILE ? true : false
 					},
-					{title: "Pts", field: "pts", width: 45, sorter: "number" },
+					{title: "FPros<br>ECR", field: "ecr.rank_ecr", width: 55, formatter: ecrFormatter, sorter: "number" },
+					{title: "Yahoo<br>ADP", field: "yahooADP", width: 55, sorter: "number" },
+
 					{title: "Passing", columns: [
-						{title: "Yards", field: "props.pass_yd", width: 60 },
-						{title: "TDs", field: "props.pass_td", width: 60 },
-						{title: "Int", field: "props.int", width: 60 },	
+						{title: "Yards", field: "both.pass_yd", width: 60 },
+						{title: "TDs", field: "both.pass_td", width: 60 },
+						{title: "Int", field: "both.int", width: 60 },	
 					]},
 					{title: "Receiving", columns: [
-						{title: "Yards", field: "props.rec_yd", width: 60 },
-						{title: "TDs", field: "props.rec_td", width: 60 },
+						{title: "Yards", field: "both.rec_yd", width: 60 },
+						{title: "TDs", field: "both.rec_td", width: 60 },
 					]},
 					,
 					{title: "Rushing", columns: [
-						{title: "Yards", field: "props.rush_yd", width: 60 },
-						{title: "TDs", field: "props.rush_td", width: 60 },
+						{title: "Yards", field: "both.rush_yd", width: 60 },
+						{title: "TDs", field: "both.rush_td", width: 60 },
 					]}
 				]
 			});

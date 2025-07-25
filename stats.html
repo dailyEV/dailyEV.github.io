@@ -109,10 +109,10 @@
 						<!-- <button onclick="toggleFilterProp()">All Props</button> -->
 						<select id="prop-select">
 							<option value="hr">HR</option>
-							<option value="h+r+rbi">H+R+RBI</option>
+							<!-- <option value="h+r+rbi">H+R+RBI</option> -->
 							<option value="h">Hit</option>
-							<option value="tb">TB</option>
-							<!-- <option value="sb">SB</option> -->
+							<!-- <option value="tb">TB</option>
+							<option value="sb">SB</option> -->
 							<option value="k">K</option>
 						</select>
 						<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="dropdown__arrow css-jbgpyq ehya2ln0" fill="#A4A4AA" stroke="#A4A4AA" stroke-width="0"><title>Right Arrow</title><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
@@ -372,17 +372,12 @@
 			MOBILE = window.innerWidth <= 600;
 		});
 
-		fetchUpdated();
-		fetchData();
+		//fetchUpdated();
 
-		function fetchData() {
+		function fetchStatsData() {
 			let s = SPORT;
 			renderTable([]);
-			let url = `http://localhost:5000`;
-			if (!window.location.host.includes("localhost")) {
-				url = `https://api-production-3a3b.up.railway.app`;
-			}
-			fetch(url+`/api/stats?prop=${PROP}&sport=${SPORT}`, {
+			fetch(API_BASE+`/api/stats?prop=${PROP}&sport=${SPORT}`, {
 				headers: {
 					Authorization: `Bearer ${ACCESS_TOKEN}`
 				}

@@ -51,11 +51,13 @@ async function upsertProfile(session) {
 		t = "🎯";
 	}
 
-	if (tier != "vip") {
+	if (tier != "vip" && document.querySelector("#upgrade")) {
 		document.querySelector("#upgrade").style.display = "initial";
 	}
 	//document.querySelector(".profile-badge").innerText = t;
-	document.querySelector("#username").innerHTML = `${t} ${session.user.email}`;
+	if (document.querySelector("#username")) {
+		document.querySelector("#username").innerHTML = `${t} ${session.user.email}`;
+	}
 	if (window.location.pathname.includes("/profile")) {
 		if (data.discord_username) {
 			document.querySelector("#discord_username").innerText = data.discord_username;
@@ -81,19 +83,26 @@ async function upsertProfile(session) {
 			document.getElementById("username").innerText = `${session.user.email}`;
 		}
 		// make sure row exists in profile
-		upsertProfile(session);
+		await upsertProfile(session);
 	} else {
 		// No Session
 		Array.from(document.querySelectorAll(".loggedIn")).map(x => x.style.display = "none");
 	}
+	if (PAGE == "bvp") {
+		fetchBVPData();
+	} else if (PAGE == "stats") {
+		fetchStatsData();
+	}
 })();
 
-document.getElementById("email").addEventListener("keypress", function(e) {
-	if (e.key == "Enter") {
-		e.preventDefault();
-		login();
-	}
-});
+if (document.getElementById("email")) {
+	document.getElementById("email").addEventListener("keypress", function(e) {
+		if (e.key == "Enter") {
+			e.preventDefault();
+			login();
+		}
+	});
+}
 
 async function upgrade(tier) {
 	const { data: { session }, error } = await SB.auth.getSession();

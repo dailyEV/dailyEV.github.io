@@ -158,8 +158,11 @@ input, textarea, select {
 	display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   flex-wrap: wrap;
+}
+footer {
+	text-align: center;
 }
 #mobile-header {
 	display: none;
@@ -623,7 +626,7 @@ nav {
 
 .profile-container {
   max-width: 700px;
-  margin: 2rem auto;
+  margin: auto;
   background: #1b1d1e;
   border-radius: 12px;
   padding: 2rem;
