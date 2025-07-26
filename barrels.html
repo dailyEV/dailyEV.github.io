@@ -290,7 +290,7 @@
 				data = filtered;
 			}
 			*/
-			//data = data.filter(r => r.book != "");
+			data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -471,6 +471,23 @@
 			} else {
 				window.location.href = `./barrels${HTML}?percentiles=`;
 			}
+		}
+
+		function exitVelo() {
+			TABLE.setSort([
+				{column: "exit_velocity_avg", dir: "desc"}
+			]);
+			TABLE.getColumns().map(col => {
+				let arr = ["book", "player", "sweet_spot_percent", "barrel_ct", "hard_hit_ct", "exit_velocity_avg"];
+				if (!arr.includes(col.getField())) {
+					col.hide();
+				}
+			});
+			const rows = TABLE.getData("active");
+			const tweet = rows.slice(0, 10).map((row, idx) => {
+				return `${idx+1}. ${title(row.player)} - ${row.exit_velocity_avg} mph`;
+			})
+			console.log(tweet.join("\n"));
 		}
 
 		function pretty_() {

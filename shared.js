@@ -418,10 +418,11 @@ const impliedFormatter = function(cell, params, rendered) {
 	if (!cell.getValue()) {
 		return "";
 	}
-	const cls = data.mostLikely == cell.getField().split(".").at(-1) ? "positive" : "";
+	let cls = "";
+	//const cls = data.mostLikely == cell.getField().split(".").at(-1) ? "positive" : "";
 	return `
 		<div class="${cls}">
-			${(parseFloat(cell.getValue()) * 100).toFixed(1)}%
+			${(parseFloat(cell.getValue())).toFixed(1)}%
 		</div>
 	`;
 }

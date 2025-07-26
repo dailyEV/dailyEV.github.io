@@ -177,6 +177,7 @@
 		let LEADERS = URLParams.get("leaders");
 		let PLAYER = URLParams.get("player");
 		let BVP = URLParams.get("bvp");
+		let BVS = URLParams.get("bvs");
 		let PRETTY = URLParams.get("pretty");
 		//let LAST = URLParams.get("last") != undefined;
 		let LAST = false;
@@ -231,6 +232,9 @@
 				renderTable(data);
 				setTimeout(function() {
 					TABLE.redraw();
+					if (BVS != undefined) {
+						bvs();
+					}
 					if (window.location.protocol == "file:" || window.location.host.includes("localhost")) {
 						printReddit_();
 						print_2();
@@ -354,6 +358,8 @@
 					{title: "Weather", field: "weather", formatter: windFormatter, hozAlign: "left"},
 					
 					// hidden
+					{title: "", field: "bvsHRAB", sorter: "number", visible: false},
+					{title: "", field: "bvsHR", sorter: "number", visible: false},
 					{title: "", field: "bvpHR", sorter: "number", visible: false},
 					{title: "", field: "bvpH", sorter: "number", visible: false},
 					{title: "", field: "bvpAvg", sorter: "number", visible: false},
@@ -748,6 +754,13 @@
 				o += "\n";
 			}
 			console.log(o);
+		}
+
+		function bvs() {
+			TABLE.setSort([
+				//{"column": "bvsH", "dir": "desc"},
+				{"column": "bvsHRAB", "dir": "desc"},
+			]);
 		}
 
 		function pretty_() {

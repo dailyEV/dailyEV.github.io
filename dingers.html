@@ -188,6 +188,7 @@
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
 		let PRETTY = URLParams.get("pretty");
+		let IMP = URLParams.get("imp");
 		let GAME = URLParams.get("game");
 		let DATE = URLParams.get("date");
 
@@ -325,6 +326,9 @@
 				}
 				if (PRETTY != undefined) {
 					pretty_();
+				}
+				if (IMP != undefined) {
+					implied();
 				}
 				if (GAME) {
 					TABLE.setFilter([
@@ -496,29 +500,30 @@
 					{title: "EV", field: "vs-365_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-pn_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					{title: "EV", field: "vs-sharp_ev",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
-					{title: "FV", field: "vs-fd_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "espn-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "espn-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-pn_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-365_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "cz-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "cz-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "cz-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "cz-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "fd-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "dk-200_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "dk-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "dk-34-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "dk-20-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "dk-200-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
-					{title: "FV", field: "vs-sharp_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0},
+					{title: "Fair<br>Value", field: "vs-fd_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Implied", field: "vs-circa_implied",  width: MOBILE ? 40 : 45, sorter: "number", formatter: impliedFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "espn-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "espn-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "vs-pn_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "vs-365_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "cz-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "cz-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-30_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "cz-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "cz-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-50-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "fd-30-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "dk-200_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "dk-50_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "dk-34-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "dk-20-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "dk-200-vs-circa_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
+					{title: "Fair<br>Value", field: "vs-sharp_fairVal",  width: MOBILE ? 40 : 45, sorter: "number", formatter: plusMinusFormatter, responsive: 0, visible: false},
 					//{title: "Kelly", field: "kelly",  width: MOBILE ? 40 : 60, sorter: "number", formatter: kellyFormatter},
 					{
 						title: "Player",
@@ -550,7 +555,7 @@
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: "Pinch Hits", field: "ph", visible: PH ? true : false},
-					{title: "HR/<br>PA", field: "pitcherHR_PA", width: 55},
+					{title: "Pitcher<br>HR/PA", field: "pitcherHR_PA", width: 50, formatter:percentFormatter},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", formatter: bvpFormatter, width: 75},
 					{title: "Historical FD", columns: [
 						{title: "Med", field: "analysis.fd_median", width: 45, sorter: "number", visible: HISTORICAL ? true : false},
@@ -670,6 +675,21 @@
 			}
 		}
 
+		function implied() {
+			TABLE.getColumns().map(c => c.hide());
+			["vs-circa_ev", "vs-circa_fairVal", "vs-circa_implied", "pitcherHR_PA", "player", "bvp", "book", "weather", "bookOdds.circa",  "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
+			document.querySelector("#table").style.width = "max-content";
+			TABLE.setSort([
+				{column: "vs-circa_implied", dir: "desc"}
+			]);
+
+			const rows = TABLE.getData("active");
+			const tweet = rows.slice(0, 10).map((row, idx) => {
+				return `${idx+1}. ${title(row.player)} - ${row["vs-circa_implied"]}%`;
+			})
+			console.log(tweet.join("\n"));
+		}
+
 		function pretty_() {
 			TABLE.getColumns().map(c => c.hide());
 			let ev = `ev`;
@@ -678,7 +698,7 @@
 				ev = `${BOOK}_ev`;
 				fv = `${BOOK}_fairVal`;
 			}
-			[ev, "player", "bvp", "book", "weather", "bookOdds.circa",  "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
+			[ev,fv,"pitcherHR_PA", "player", "bvp", "book", "weather", "bookOdds.circa",  "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
 			document.querySelector("#table").style.width = "max-content";
 		}
 	</script>
