@@ -537,8 +537,12 @@ const evFormatter = function(cell, params, rendered) {
 const bvpFormatter = function(cell) {
 	const data = cell.getRow().getData();
 
+	let cls = "";
+	if (data.blurred && !["bvp"].includes(PAGE)) {
+		cls = "blurred";
+	}
 	return `
-		<div class="bvp-cell">
+		<div class="bvp-cell ${cls}">
 			<div class="bvp-pitcher">${title(data.pitcher).split(" ")[1]}</div>
 			<div class="bvp-value">${cell.getValue()}</div>
 		</div>
@@ -619,7 +623,7 @@ const evBookFormatter = function(cell, params, rendered) {
 	}
 	implied = parseInt(implied * 100);
 	let cls = "evbook-cell";
-	if (data.blurred) {
+	if (data.blurred && ![PAGE].includes("dingers")) {
 		cls += " blurred";
 	}
 	return `

@@ -753,6 +753,13 @@ nav {
 	body {
 		flex-direction: column;
 	}
+
+	#sub-header {
+		position: initial;
+		transform: initial;
+		justify-content: center;
+	}
+
 	.body, #left-body {
 		width: 100%;
 	}
