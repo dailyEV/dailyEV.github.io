@@ -221,11 +221,33 @@
 			}
 		});
 
+		let lastPromo = "";
 		promoSelect.addEventListener("change", (event) => {
 			const book = event.target.value;
 			let url = new URL(window.location.href);
-			url.searchParams.set("book", book);
-			window.location.href = `./dingers${HTML}${url.search}`;
+			//url.searchParams.set("book", book);
+			//window.location.href = `./dingers${HTML}${url.search}`;
+			if (lastPromo) {
+				TABLE.hideColumn(`${lastPromo}_ev`);
+				TABLE.hideColumn(`${lastPromo}_fairVal`);
+			} else {
+				TABLE.hideColumn("ev");
+				TABLE.hideColumn("fairVal");
+			}
+			lastPromo = book;
+			if (book) {
+				TABLE.showColumn(`${book}_ev`);
+				TABLE.showColumn(`${book}_fairVal`);
+				TABLE.setSort([
+						{column: `${book}_ev`, dir: "desc"}
+					]);
+			} else {
+				TABLE.showColumn(`ev`);
+				TABLE.showColumn(`fairVal`);
+				TABLE.setSort([
+						{column: `ev`, dir: "desc"}
+					]);
+			}
 		});
 
 		document.querySelector("#refresh-select").value = REFRESH;
