@@ -448,10 +448,13 @@ const oppFormatter = function(cell, params, rendered) {
 	} else {
 		pitcher = MOBILE || params.lastName ? title(data.pitcher).split(" ")[1] : title(data.pitcher);
 	}
+	const badge = data.doubleheader ? 
+		"<span class='dbl-badge'>2</span>" : "";
+	const gameContainer = badge ? `<div style='position:relative;'>${badge}${getTeamImg(SPORT, cell.getValue())}</div>` : `${getTeamImg(SPORT, cell.getValue())}`;
 	return `
 		<div class="opp-cell" aria-label="${data.pitcherSummary}">
 			${ah}
-			${getTeamImg(SPORT, cell.getValue())}
+			${gameContainer}
 			${pitcher}
 		</div>
 	`;
