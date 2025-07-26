@@ -182,7 +182,6 @@
 		let SIMPLE = URLParams.get("simple");
 		let PLAYER = URLParams.get("player");
 		let REFRESH = URLParams.get("refresh") || "off";
-		let FILTER = URLParams.get("filter");
 		let BOOK = URLParams.get("book");
 		let HISTORICAL = URLParams.get("historical");
 		let PRETTY = URLParams.get("pretty");
@@ -316,12 +315,6 @@
 						{column: `${BOOK}_ev`, dir: "desc"}
 					]);
 				}
-				if (FILTER != undefined) {
-					TABLE.setSort([
-						{column: "ev", dir: "desc"},
-						{column: "startSortable", dir: "asc"},
-					])
-				}
 				if (PRETTY != undefined) {
 					pretty_();
 				}
@@ -446,7 +439,7 @@
 					return `<span style='color: #c8c3bc'>${value.toUpperCase()} (${data[0].start})</span>`;
 				},
 				groupToggleElement: "header",
-				groupBy: FILTER != undefined ? "game" : "",
+				groupBy: "",
 				groupStartOpen: function (value) {
 					return value == first[0].game;
 				},
@@ -547,6 +540,7 @@
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: "Pinch Hits", field: "ph", visible: PH ? true : false},
+					{title: "HR/<br>PA", field: "pitcherHR_PA", width: 55},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", formatter: bvpFormatter, width: 75},
 					{title: "Historical FD", columns: [
 						{title: "Med", field: "analysis.fd_median", width: 45, sorter: "number", visible: HISTORICAL ? true : false},
@@ -652,17 +646,17 @@
 		}
 
 		function groupByGame() {
-			let q = window.location.search;
-			console.log(TABLE.options.groupBy)
 			if (!TABLE.options.groupBy) {
-				if (q) {
-					q += "&filter=";
-				} else {
-					q += "?filter=";
-				}
-				window.location.href = `./dingers${HTML}${q}`;
+				TABLE.setSort([
+					{column: "ev", dir: "desc"},
+					{column: "startSortable", dir: "asc"},
+				]);
+				TABLE.setGroupBy("game");
 			} else {
-				window.location.href = `./dingers${HTML}${q.replace("filter=", "")}`;
+				TABLE.setGroupBy("");
+				TABLE.setSort([
+					{column: "ev", dir: "desc"},
+				]);
 			}
 		}
 
