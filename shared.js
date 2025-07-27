@@ -521,6 +521,15 @@ const inningFormatter = function(cell) {
 	`;
 }
 
+const evMutFormatter = function(cell) {
+	const data = cell.getRow().getData();
+	const ev = cell.getValue();
+	if (parseFloat(ev) > 0) {
+		return `<div class="positive">+${ev}%<div>`
+	}
+	return ev+"%";
+}
+
 const evFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	let ev = cell.getValue();
@@ -570,6 +579,9 @@ const evBookFormatter = function(cell, params, rendered) {
 	const data = cell.getRow().getData();
 	if (data.prop == "separator" || !cell.getValue()) return "";
 
+	if (PAGE == "dingers") {
+		params.book = BOOK;
+	}
 	if (PAGE == "hedge") {
 		let line = data.line;
 		if (line > 0) {
