@@ -35,6 +35,44 @@
 	#discord_username {
 		margin-bottom: 0.5rem;
 	}
+	.discord-error {
+	  background: #ffefef;
+	  color: #b30000;
+	  padding: 1rem;
+	  border: 1px solid #b30000;
+	  border-radius: 4px;
+	  margin-bottom: 1rem;
+	  font-size: 0.9rem;
+	  text-align: center;
+	}
+	.discord-error a {
+	  color: #b30000;
+	  font-weight: bold;
+	}
+	.discord-error button {
+	  background: #b30000;
+	  color: #fff;
+	  border: none;
+	  padding: 0.3rem 0.6rem;
+	  border-radius: 4px;
+	  cursor: pointer;
+	}
+	.discord-error button:hover {
+	  background: #ff4d4d;
+	}
+	.discord-success {
+	  background: #e6ffed;
+	  color: #14532d;
+	  padding: 1rem;
+	  border: 1px solid #1bb34b;
+	  border-radius: 4px;
+	  margin-bottom: 1rem;
+	  font-size: 0.9rem;
+	  text-align: center;
+	}
+	.discord-success strong {
+	  font-weight: 600;
+	}
 	@media (max-width: 600px) {
 	}
 </style>
@@ -50,7 +88,7 @@
 			</div>
 		</div>
 		<div id="auth-buttons">
-			<span id="username"></span>
+			<span id="username" class="username"></span>
 			<span id="status"></span>
 			<input id="email" type="text" placeholder="Email" >
 			<button id="login" onclick="login()">Login</button>
@@ -61,9 +99,9 @@
 	</div>
 	<div class="profile-container">
 		<div class="profile-header">
-			<div class="profile-badge">👑</div>
+			<div class="profile-badge"></div>
 			<div id="profile-info">
-				<h2 class="username"></h2>
+				<h2 id="profile-username"></h2>
 				<button class="upgrade-btn" onclick="changePage('pricing')">Upgrade / Manage</button>
 			</div>
 		</div>
@@ -72,32 +110,93 @@
 			<div class="sub-grid">
 				<div>
 					<span class="label">Plan:</span>
-					<span class="value">VIP Tier</span>
+					<span id="profile-plan" class="value">loading...</span>
 				</div>
 				<div>
 					<span class="label">Next Renewal:</span>
-					<span id="next_renewal" class="value"></span>
+					<span id="next-renewal" class="value">loading...</span>
 				</div>
 				<div>
 					<span class="label">Discord:</span>
 					<span class="value">
-						<span id="discord_username">N/A</span>
+						<span id="discord-username">loading...</span>
 					</span>
 				</div>
 			</div>
-
+			<div id="discord-error"></div>
 			<!-- Quick Links -->
 			<div class="profile-links">
 				<h3>Account Actions</h3>
-				<button class="link-btn" onclick="connectDiscord()">🔗 Connect Discord</button>
+				<button id="link-discord-btn" class="link-btn" onclick="connectDiscord()">
+					Connect Discord
+					<span class="spinner" style="display: none;"></span>
+				</button>
 				<button class="link-btn" onclick="cancelSubscription()">❌ Cancel Subscription</button>
 			</div>
 		</div>
 	</div>
+	<footer class="site-footer">
+		<p>All content is for entertainment purposes only. +EV Dingers is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
+	</footer>
 	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "profile";
+		const windowURL = new URL(window.location.href);
+		const URLParams = new URLSearchParams(windowURL.search);
+		let discordError = URLParams.get("discordError");
+		let discordSuccess = URLParams.get("discordSuccess");
+
+		const linkBtn = document.getElementById("link-discord-btn");
+		const spinner = linkBtn.querySelector('.spinner');
+		const btnText = linkBtn.querySelector('.btn-text');
+
+		linkBtn.addEventListener('click', () => {
+			spinner.style.display = 'inline-block';
+			btnText.textContent = 'Connecting…';
+			linkBtn.disabled = true;
+
+			window.location.href = `${API_BASE}/api/discord/login`;
+		});
+
+		if (discordSuccess != undefined) {
+			// Create a success message container
+		  const successMsg = document.createElement('div');
+		  successMsg.className = 'discord-success';
+		  successMsg.innerHTML = `
+		    ✅ <strong>Success!</strong> Your Discord account has been linked. 🎉<br>
+		    Enjoy your +EV channels and perks!
+		  `;
+		  // Insert it near the top of the profile container
+		  document.querySelector('.profile-container').prepend(successMsg);
+
+		  // Clean up the URL so the param isn't visible anymore
+			const newUrl = `${window.location.pathname}`;
+			history.replaceState({}, '', newUrl);
+		}
+
+		if (discordError === "not_in_guild") {
+			const msg = document.createElement('div');
+	    msg.className = 'discord-error';
+	    msg.innerHTML = `
+	      ⚠️ You’ve linked your Discord account, but you haven’t joined our server yet.<br>
+	      <a href="https://discord.gg/JQq3MHWj" target="_blank">👉 Join the Discord here 👈</a><br>
+	      After joining, click <button id="recheck-roles">Recheck Roles</button>.
+	    `;
+	    document.querySelector('.profile-container').prepend(msg);
+
+	    document.getElementById('recheck-roles').addEventListener('click', async () => {
+	      // Optional: hit an endpoint to retry role assignment
+	      await fetch('/api/discord/recheck', {
+	        method: 'POST',
+	        headers: { Authorization: `Bearer ${ACCESS_TOKEN}` }
+	      });
+	      alert("We'll re-check your roles shortly.");
+	    });
+	    // Clean up the URL so the param isn't visible anymore
+			const newUrl = `${window.location.pathname}`;
+			history.replaceState({}, '', newUrl);
+		}
 
 		async function connectDiscord() {
 			/*
@@ -124,7 +223,4 @@
 			}
 	</script>
 </body>
-<footer class="site-footer">
-	<p>All content is for entertainment purposes only. +EV Dingers is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
-</footer>
 </html>

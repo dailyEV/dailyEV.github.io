@@ -267,6 +267,21 @@ h1 {
 #donate a {
 	color: transparent;
 }
+.spinner {
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: 8px;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 .body {
 	display: flex;
 	flex-direction: column;
@@ -305,7 +320,7 @@ h1 {
 	justify-content: center;
 	align-items: end;
 	width: 100%;
-	margin-bottom: 0.25rem;
+	padding-bottom: 0.75rem;
 }
 #table {
 	width: 100%;
@@ -602,11 +617,16 @@ nav {
 	margin: 0;
 	padding: 0.5rem;
 	border-radius: 4px;
+	border: none;
+	background-color: #444; color: #fff;
+	/* 
 	border: 1px solid rgba(164, 164, 170, 0.3);
+	background-color: #1b1d1e;color: #d3cfca;
+	*/
 	outline: none;
 	text-indent: 0px;
-	background-color: #1b1d1e;
-	color: #d3cfca;
+	
+	
 	outline-color: currentcolor;
 	cursor: pointer;
 }
@@ -703,6 +723,14 @@ nav {
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
+}
+.upgrade-link {
+	color: #1da1f2;
+	font-weight: 700;
+	text-decoration: none;
+}
+.upgrade-link:hover {
+	text-decoration: underline;
 }
 .upgrade-btn:hover {
   background: #666;

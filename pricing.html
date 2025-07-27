@@ -165,7 +165,7 @@
 
 		  <div class="pricing-grid">
 		    <!-- Free -->
-		    <div class="pricing-card">
+		    <div class="pricing-card" data-tier="free">
 		      <h3>🆓 Free</h3>
 		      <p class="price">$0 <span>/mo</span></p>
 		      <ul>
@@ -174,11 +174,14 @@
 		        <li>⏳ Delayed Odds & Feed</li>
 		        <li>🔓 Free Discord channels</li>
 		      </ul>
-		      <button class="select-btn" onclick="upgrade('free')" disabled>Current</button>
+		      <button class="select-btn" onclick="handlePlanClick(this, 'free')" disabled>
+		      	<span class="btn-text">Current</span>
+  					<span class="spinner" style="display:none;"></span>
+		      </button>
 		    </div>
 
 		    <!-- Website Only -->
-		    <div class="pricing-card">
+		    <div class="pricing-card" data-tier="analyst">
 		      <h3>💻 Analysts</h3>
 		      <p class="price">$12 <span>/mo</span></p>
 		      <ul>
@@ -187,11 +190,14 @@
 		        <li>🔓 Analysts Discord channels</li>
 		        <li>💾 Data Dumps</li>
 		      </ul>
-		      <button class="select-btn" onclick="upgrade('website')">Upgrade</button>
+		      <button class="select-btn" onclick="handlePlanClick(this, 'analyst')">
+		      	<span class="btn-text">Upgrade</span>
+  					<span class="spinner" style="display:none;"></span>
+		      </button>
 		    </div>
 
 		    <!-- Website + Discord -->
-		    <div class="pricing-card popular">
+		    <div class="pricing-card popular" data-tier="sharp">
 		      <h3>🎯 Sharps</h3>
 		      <p class="price">$25 <span>/mo</span></p>
 		      <ul>
@@ -200,109 +206,34 @@
 		        <li>🎟️ Full +EV Betting Slate</li>
 		        <li>🔓 All Discord channels</li>
 		      </ul>
-		      <button class="select-btn highlight" onclick="upgrade('sharp')">Upgrade</button>
+		      <button class="select-btn highlight" onclick="handlePlanClick(this, 'sharp')">
+		      	<span class="btn-text">Upgrade</span>
+  					<span class="spinner" style="display:none;"></span>
+		      </button>
 		    </div>
-
-		    <!-- VIP -->
   		</div>
 		</section>
-	<!--
-			<div class="row header">
-				<div class="col feature-title">Feature</div>
-				<div class="col">🆓 Free Tier</div>
-				<div class="col">⭐ Premium Tier</div>
-				<div class="col">👑 VIP Tier</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">Price</div>
-				<div class="col">Free</div>
-				<div class="col">$15/mo</div>
-				<div class="col">$30/mo</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">Full Betting Slate</div>
-				<div class="col">❌</div>
-				<div class="col">⏳ 30m-1h delay</div>
-				<div class="col">✅ ASAP</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">Website Access</div>
-				<div class="col">⚠️ Limited</div>
-				<div class="col">✅</div>
-				<div class="col">✅</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title sub">↳ BvP Page</div>
-				<div class="col">✅</div>
-				<div class="col">✅</div>
-				<div class="col">✅</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title sub">↳ Odds Page</div>
-				<div class="col">⏳ Delay (30m)</div>
-				<div class="col">✅ (live)</div>
-				<div class="col">✅ (live)</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title sub">↳ Barrels, Stats</div>
-				<div class="col">⚠️ Limited</div>
-				<div class="col">✅</div>
-				<div class="col">✅</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title sub">↳ Feed</div>
-				<div class="col">⏳ Delay (5m)</div>
-				<div class="col">✅ (live)</div>
-				<div class="col">✅ (live)</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">Discord</div>
-				<div class="col">❌</div>
-				<div class="col">✅</div>
-				<div class="col">✅ Private Channels</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">Circa Movement</div>
-				<div class="col">❌</div>
-				<div class="col">⏳ Delay</div>
-				<div class="col">✅ Alerts</div>
-			</div>
-
-			<div class="row">
-				<div class="col feature-title">BvP/Due/data posts</div>
-				<div class="col">Normal</div>
-				<div class="col">1H Early</div>
-				<div class="col">2-4H Early</div>
-			</div>
-
-			<div class="row upgrade-row">
-				<div class="col feature-title"></div>
-				<div class="col"></div>
-				<div class="col">
-					<button class="upgrade-btn" onclick="upgrade('premium')">Upgrade</button>
-				</div>
-				<div class="col">
-					<button class="upgrade-btn" onclick="upgrade('vip')">Upgrade</button>
-				</div>
-			</div>
-			-->
-		</div>
-
-		</div>
 	</div>
+	<footer class="site-footer">
+		<p>All content is for entertainment purposes only. +EV Dingers is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
+		</footer>
 	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
 		PAGE = "pricing";
+
+		function handlePlanClick(button, plan) {
+			// Get inner elements
+			console.log(button);
+			const btnText = button.querySelector('.btn-text');
+			const spinner = button.querySelector('.spinner');
+
+			// Show spinner and disable button
+			btnText.textContent = 'Processing…';
+			spinner.style.display = 'inline-block';
+			button.disabled = true;
+			upgrade(plan);
+		}
 	</script>
 </body>
 </html>

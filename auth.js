@@ -45,28 +45,77 @@ async function upsertProfile(session) {
 		tier = data.tier;
 	}
 	let t = "🆓";
-	if (tier == "premium") {
+	if (tier == "analyst") {
 		t = "💻";
-	} else if (tier == "vip") {
+	} else if (tier == "sharp") {
 		t = "🎯";
 	}
 
-	if (tier != "vip" && document.querySelector("#upgrade")) {
+	if (tier != "sharp" && document.querySelector("#upgrade")) {
 		document.querySelector("#upgrade").style.display = "initial";
 	}
 	//document.querySelector(".profile-badge").innerText = t;
-	if (document.querySelector("#username")) {
-		document.querySelector("#username").innerHTML = `${t} ${session.user.email}`;
+	if (document.querySelector(".profile-badge")) {
+		for (el of document.querySelectorAll(".profile-badge")) {
+			el.innerText = t;
+		}
+	}
+	if (document.getElementById("username")) {
+		document.getElementById("username").innerText = `${t} ${session.user.email}`;
 	}
 	if (window.location.pathname.includes("/profile")) {
-		if (data.discord_username) {
-			document.querySelector("#discord_username").innerText = data.discord_username;
-		}
-		if (data.next_renewal) {
-			let d = new Date(data.next_renewal);
-			const options = {year: 'numeric', month: 'short', day: 'numeric'};
-			document.querySelector("#next_renewal").innerText = d.toLocaleDateString("en-US", options);
-		}
+		fillProfile(data, tier, session);
+	} else if (window.location.pathname.includes("/pricing")) {
+		fillPricing(tier);
+	}
+}
+
+const tierOrder = {
+  free: 0,
+  analyst: 1,
+  sharp: 2
+};
+
+function fillPricing(tier) {
+	const currentLevel = tierOrder[tier];
+
+	document.querySelectorAll('.pricing-card').forEach(card => {
+	  const btn = card.querySelector('.select-btn');
+	  const btnText = btn.querySelector(".btn-text");
+	  if (!btn) return;
+	  const cardTier = card.dataset.tier;
+	  const cardLevel = tierOrder[cardTier];
+
+	  if (cardTier === tier) {
+	    btnText.textContent = 'Current';
+	    btn.disabled = true;
+	    btn.classList.add('current-btn');
+	  } else if (cardLevel < currentLevel) {
+	  	btnText.textContent = 'Downgrade';
+		btn.disabled = false;
+		btn.classList.remove('current-btn');
+	  } else {
+	    btnText.textContent = 'Upgrade';
+	    btn.disabled = false;
+	    btn.classList.remove('current-btn');
+	  }
+	});
+}
+
+function fillProfile(data, tier, session) {
+	if (document.querySelector("#profile-username")) {
+		document.querySelector("#profile-username").innerText = `${session.user.email}`;
+	}
+	if (document.querySelector("#profile-plan")) {
+		document.querySelector("#profile-plan").innerText = `${title(tier)}`;
+	}
+	if (document.querySelector("#discord-username") && data.discord_username) {
+		document.querySelector("#discord-username").innerText = data.discord_username;
+	}
+	if (data.next_renewal) {
+		let d = new Date(data.next_renewal);
+		const options = {year: 'numeric', month: 'short', day: 'numeric'};
+		document.querySelector("#next-renewal").innerText = d.toLocaleDateString("en-US", options);
 	}
 }
 
@@ -80,10 +129,11 @@ async function upsertProfile(session) {
 		if (document.getElementById("login")) {
 			document.getElementById("login").style.display = "none";
 			document.getElementById("email").style.display = "none";
-			document.getElementById("username").innerText = `${session.user.email}`;
 		}
+		Array.from(document.querySelectorAll(".loggedOut")).map(x => x.style.display = "none");
 		// make sure row exists in profile
 		await upsertProfile(session);
+
 	} else {
 		// No Session
 		Array.from(document.querySelectorAll(".loggedIn")).map(x => x.style.display = "none");
@@ -105,9 +155,7 @@ if (document.getElementById("email")) {
 }
 
 async function upgrade(tier) {
-	const { data: { session }, error } = await SB.auth.getSession();
-	const url = `http://localhost:5000/api/stripe-portal`;
-	const response = await fetch(url, {
+	const response = await fetch(`${API_BASE}/api/stripe-portal`, {
 		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${ACCESS_TOKEN}`
@@ -117,18 +165,6 @@ async function upgrade(tier) {
 	if (data.url) {
 		window.location.href = data.url;
 	} else {
-		alert('Error starting checkout');
-	}
-}
-
-async function upgrade2(tier) {
-	const { data: { session }, error } = await SB.auth.getSession();
-	const url = `http://localhost:5000/api/checkout?user=${session.user.id}&tier=${tier}`;
-	const response = await fetch(url, { method: 'POST' });
-	const data = await response.json();
-	if (data.url) {
-		window.location.href = data.url;
-	} else {
-		alert('Error starting checkout');
+		alert('Error starting checkout. Contact evsharps@gmail.com');
 	}
 }
