@@ -73,6 +73,7 @@
 	.discord-success strong {
 	  font-weight: 600;
 	}
+	
 	@media (max-width: 600px) {
 	}
 </style>
@@ -88,12 +89,14 @@
 			</div>
 		</div>
 		<div id="auth-buttons">
+			<button id="discord-login" class="oauth-btn discord-btn">
+				<img src="/logos/discord.png" alt="Discord logo" class="oauth-icon">
+				Sign in with Discord
+			</button>
 			<span id="username" class="username"></span>
-			<span id="status"></span>
-			<input id="email" type="text" placeholder="Email" >
-			<button id="login" onclick="login()">Login</button>
+			<button id="pricing" class="loggedOut" onclick="changePage('pricing')">Pricing</button>
 			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
-			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
+			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 🎯</button>
 			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
@@ -146,6 +149,19 @@
 		const URLParams = new URLSearchParams(windowURL.search);
 		let discordError = URLParams.get("discordError");
 		let discordSuccess = URLParams.get("discordSuccess");
+
+		document.getElementById('discord-login').addEventListener('click', async () => {
+		  const { data, error } = await SB.auth.signInWithOAuth({
+		    provider: 'discord',
+		    options: {
+		      redirectTo: window.location.origin + '/profile.html'
+		    }
+		  });
+		  if (error) {
+		    console.error('Discord login failed:', error.message);
+		    alert('Unable to log in with Discord. Please try again.');
+		  }
+		});
 
 		const linkBtn = document.getElementById("link-discord-btn");
 		const spinner = linkBtn.querySelector('.spinner');

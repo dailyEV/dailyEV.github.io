@@ -9,30 +9,6 @@ async function logout() {
 	location.reload();
 }
 
-async function login() {
-	const email = document.getElementById("email").value;
-	if (!email) {
-		document.getElementById('status').textContent = 'Enter an email first!';
-		return;
-	}
-
-	document.getElementById('status').textContent = 'Sending magic link...';
-
-	const { data, error } = await SB.auth.signInWithOtp({
-		email,
-		options: {
-			emailRedirectTo: `http://localhost:3000/feed.html`
-		}
-	});
-	if (error) {
-		console.error(error);
-		document.getElementById('status').textContent = 'Error: ' + error.message;
-		return;
-	}
-
-	document.getElementById('status').textContent = 'Check your email for the sign-in link!';
-}
-
 async function upsertProfile(session) {
 	const { data, error } = await SB.from('profiles')
 		.select('tier, discord_username, next_renewal')
@@ -126,10 +102,6 @@ function fillProfile(data, tier, session) {
 		if (session.access_token) {
 			ACCESS_TOKEN = session.access_token;
 		}
-		if (document.getElementById("login")) {
-			document.getElementById("login").style.display = "none";
-			document.getElementById("email").style.display = "none";
-		}
 		Array.from(document.querySelectorAll(".loggedOut")).map(x => x.style.display = "none");
 		// make sure row exists in profile
 		await upsertProfile(session);
@@ -137,6 +109,9 @@ function fillProfile(data, tier, session) {
 	} else {
 		// No Session
 		Array.from(document.querySelectorAll(".loggedIn")).map(x => x.style.display = "none");
+		if (PAGE == "profile") {
+			window.location = `/pricing${HTML}`;
+		}
 	}
 	if (PAGE == "bvp") {
 		fetchBVPData();
@@ -145,13 +120,40 @@ function fillProfile(data, tier, session) {
 	}
 })();
 
-if (document.getElementById("email")) {
-	document.getElementById("email").addEventListener("keypress", function(e) {
-		if (e.key == "Enter") {
-			e.preventDefault();
-			login();
-		}
-	});
+async function loginWithDiscord() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'discord',
+    options: {
+      redirectTo: window.location.origin + '/profile.html'
+    }
+  });
+
+  if (error) {
+    console.error('Discord OAuth error', error);
+  }
+}
+
+async function saveDiscordToProfile() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user && user.app_metadata?.provider === 'discord') {
+    const discordId = user.user_metadata.provider_id; // Discord ID
+    const discordName = user.user_metadata.full_name; // Discord username
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        discord_id: discordId,
+        discord_username: discordName
+      })
+      .eq('id', user.id);
+
+    if (error) {
+      console.error('❌ Failed to save Discord info', error);
+    } else {
+      console.log('✅ Discord info saved to profile', data);
+    }
+  }
 }
 
 async function upgrade(tier) {
@@ -165,6 +167,6 @@ async function upgrade(tier) {
 	if (data.url) {
 		window.location.href = data.url;
 	} else {
-		alert('Error starting checkout. Contact evsharps@gmail.com');
+		alert('Error starting checkout. Contact plusevsharps@gmail.com');
 	}
 }

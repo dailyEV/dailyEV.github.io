@@ -36,101 +36,101 @@
 		justify-content: center;
 	}
 	#pricing-cards {
-	  text-align: center;
-	  padding: 2rem 1rem;
-	  font-family: sans-serif;
-	  width: 100%;
+		text-align: center;
+		padding: 2rem 1rem;
+		font-family: sans-serif;
+		width: 100%;
 	}
 
 #pricing-cards h2 {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-  justify-content: center;
+	font-size: 2rem;
+	margin-bottom: 0.25rem;
+	justify-content: center;
 }
 
 #pricing-cards .pricing-intro {
-  color: #aaa;
-  margin-bottom: 2rem;
+	color: #aaa;
+	margin-bottom: 2rem;
 }
 
 .pricing-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10rem;
-  justify-content: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10rem;
+	justify-content: center;
 }
 
 .pricing-card {
-  background: #1b1d1e;
-  color: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  max-width: 400px;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
+	background: #1b1d1e;
+	color: #fff;
+	border-radius: 12px;
+	padding: 1.5rem;
+	display: flex;
+	max-width: 400px;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+	border: 1px solid rgba(255,255,255,0.1);
 }
 
 .pricing-card.popular {
-  border-color: gold;
+	border-color: gold;
 }
 
 .pricing-card.vip {
-  border-color: purple;
+	border-color: purple;
 }
 
 .pricing-card h3 {
-  margin-top: 0;
-  font-size: 1.4rem;
+	margin-top: 0;
+	font-size: 1.4rem;
 }
 
 .pricing-card .price {
-  font-size: 1.8rem;
-  margin: 0.5rem 0 1rem;
+	font-size: 1.8rem;
+	margin: 0.5rem 0 1rem;
 }
 .pricing-card .price span {
-  font-size: 0.9rem;
-  color: #aaa;
+	font-size: 0.9rem;
+	color: #aaa;
 }
 
 .pricing-card ul {
-  text-align: left;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
+	text-align: left;
+	list-style: none;
+	padding: 0;
+	margin: 0 0 1.5rem;
 }
 .pricing-card ul li {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
+	margin: 0.5rem 0;
+	font-size: 0.95rem;
 }
 
 .select-btn {
-  background: #444;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: bold;
-  transition: background 0.2s ease;
+	background: #444;
+	color: #fff;
+	border: none;
+	padding: 0.6rem 1.2rem;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: bold;
+	transition: background 0.2s ease;
 }
 .select-btn:hover {
-  background: #666;
+	background: #666;
 }
 .select-btn.highlight {
-  background: gold;
-  color: #000;
+	background: gold;
+	color: #000;
 }
 .select-btn.highlight:hover {
-  background: #e6c200;
+	background: #e6c200;
 }
 .select-btn:disabled {
-  background: #333;
-  color: #777;
-  cursor: default;
+	background: #333;
+	color: #777;
+	cursor: default;
 }
 	@media (max-width: 600px) {
 	}
@@ -147,71 +147,73 @@
 			</div>
 		</div>
 		<div id="auth-buttons">
-			<span id="username"></span>
-			<span id="status"></span>
-			<input id="email" type="text" placeholder="Email" >
-			<button id="login" onclick="login()">Login</button>
+			<button id="discord-login" class="oauth-btn discord-btn">
+				<img src="/logos/discord.png" alt="Discord logo" class="oauth-icon">
+				Sign in with Discord
+			</button>
+			<span id="username" class="username"></span>
+			<button id="pricing" class="loggedOut" onclick="changePage('pricing')">Pricing</button>
 			<button id="account" class="loggedIn" onclick="changePage('profile')">Profile</button>
-			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 👑</button>
+			<button id="upgrade" class="loggedIn" onclick="changePage('pricing')">Upgrade 🎯</button>
 			<button id="logout" class="loggedIn" onclick="logout()">Logout</button>
 		</div>
 	</div>
 	<div id="content">
 		<section id="pricing-cards">
-		  <h2>Choose Your Plan</h2>
-		  <p class="pricing-intro">
-		    Pick the tier that fits your betting style. Upgrade anytime. Cancel anytime.
-		  </p>
+			<h2>Choose Your Plan</h2>
+			<p class="pricing-intro">
+				Pick the tier that fits your betting style. Upgrade anytime. Cancel anytime.
+			</p>
 
-		  <div class="pricing-grid">
-		    <!-- Free -->
-		    <div class="pricing-card" data-tier="free">
-		      <h3>🆓 Free</h3>
-		      <p class="price">$0 <span>/mo</span></p>
-		      <ul>
-		        <li>✋ Limited Website Access</li>
-		        <li>📊 Basic Stats</li>
-		        <li>⏳ Delayed Odds & Feed</li>
-		        <li>🔓 Free Discord channels</li>
-		      </ul>
-		      <button class="select-btn" onclick="handlePlanClick(this, 'free')" disabled>
-		      	<span class="btn-text">Current</span>
-  					<span class="spinner" style="display:none;"></span>
-		      </button>
-		    </div>
+			<div class="pricing-grid">
+				<!-- Free -->
+				<div class="pricing-card" data-tier="free">
+					<h3>🆓 Free</h3>
+					<p class="price">$0 <span>/mo</span></p>
+					<ul>
+						<li>✋ Limited Website Access</li>
+						<li>📊 Basic Stats</li>
+						<li>⏳ Delayed Odds & Feed</li>
+						<li>🔓 Free Discord channels</li>
+					</ul>
+					<button class="select-btn" onclick="handlePlanClick(this, 'free')" disabled>
+						<span class="btn-text">Current</span>
+						<span class="spinner" style="display:none;"></span>
+					</button>
+				</div>
 
-		    <!-- Website Only -->
-		    <div class="pricing-card" data-tier="analyst">
-		      <h3>💻 Analysts</h3>
-		      <p class="price">$12 <span>/mo</span></p>
-		      <ul>
-		        <li>⚡ Full Website Access</li>
-		        <li>📊 Advanced Stats</li>
-		        <li>🔓 Analysts Discord channels</li>
-		        <li>💾 Data Dumps</li>
-		      </ul>
-		      <button class="select-btn" onclick="handlePlanClick(this, 'analyst')">
-		      	<span class="btn-text">Upgrade</span>
-  					<span class="spinner" style="display:none;"></span>
-		      </button>
-		    </div>
+				<!-- Website Only -->
+				<div class="pricing-card" data-tier="analyst">
+					<h3>💻 Analysts</h3>
+					<p class="price">$12 <span>/mo</span></p>
+					<ul>
+						<li>⚡ Full Website Access</li>
+						<li>📊 Advanced Stats</li>
+						<li>🔓 Analysts Discord channels</li>
+						<li>💾 Data Dumps</li>
+					</ul>
+					<button class="select-btn" onclick="handlePlanClick(this, 'analyst')">
+						<span class="btn-text">Upgrade</span>
+						<span class="spinner" style="display:none;"></span>
+					</button>
+				</div>
 
-		    <!-- Website + Discord -->
-		    <div class="pricing-card popular" data-tier="sharp">
-		      <h3>🎯 Sharps</h3>
-		      <p class="price">$25 <span>/mo</span></p>
-		      <ul>
-		        <li>💻 Everything in Analyst Tier</li>
-		        <li>📈 Circa movement</li>
-		        <li>🎟️ Full +EV Betting Slate</li>
-		        <li>🔓 All Discord channels</li>
-		      </ul>
-		      <button class="select-btn highlight" onclick="handlePlanClick(this, 'sharp')">
-		      	<span class="btn-text">Upgrade</span>
-  					<span class="spinner" style="display:none;"></span>
-		      </button>
-		    </div>
-  		</div>
+				<!-- Website + Discord -->
+				<div class="pricing-card popular" data-tier="sharp">
+					<h3>🎯 Sharps</h3>
+					<p class="price">$25 <span>/mo</span></p>
+					<ul>
+						<li>💻 Everything in Analyst Tier</li>
+						<li>📈 Circa movement</li>
+						<li>🎟️ Full +EV Betting Slate</li>
+						<li>🔓 All Discord channels</li>
+					</ul>
+					<button class="select-btn highlight" onclick="handlePlanClick(this, 'sharp')">
+						<span class="btn-text">Upgrade</span>
+						<span class="spinner" style="display:none;"></span>
+					</button>
+				</div>
+			</div>
 		</section>
 	</div>
 	<footer class="site-footer">
@@ -223,8 +225,13 @@
 		PAGE = "pricing";
 
 		function handlePlanClick(button, plan) {
-			// Get inner elements
-			console.log(button);
+
+			if (!ACCESS_TOKEN) {
+				alert("🔒 Please log in first to upgrade!");
+				// optionally focus your top-right login field
+				document.getElementById("email")?.focus();
+				return;
+			}
 			const btnText = button.querySelector('.btn-text');
 			const spinner = button.querySelector('.spinner');
 

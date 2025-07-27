@@ -501,7 +501,7 @@
 					//{title: "Kambi*", field: "bookOdds.kambi",  width: 70, sorter: "number"},
 					{title: "#", field: "order",  width: MOBILE ? 20 : 40, sorter: "number", visible: HISTORICAL ? false : true},
 					{title: "Pinch Hits", field: "ph", visible: PH ? true : false},
-					{title: "Pitcher<br>HR/PA", field: "pitcherHR_PA", width: 55},
+					{title: "Pitcher<br>HR/PA", field: "pitcherHR_PA", width: 50, formatter: percentFormatter},
 					{title: "Vs Pitcher", field: "bvp", hozAlign: "left", formatter: bvpFormatter, width: 75},
 					{title: "Historical FD", columns: [
 						{title: "Med", field: "analysis.fd_median", width: 45, sorter: "number", visible: HISTORICAL ? true : false},

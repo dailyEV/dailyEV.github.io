@@ -109,7 +109,7 @@
 						<!-- <button onclick="toggleFilterProp()">All Props</button> -->
 						<select id="prop-select">
 							<option value="hr">HR</option>
-							<!-- <option value="h+r+rbi">H+R+RBI</option> -->
+							<option value="h_r_rbi">H+R+RBI</option>
 							<option value="h">Hit</option>
 							<!-- <option value="tb">TB</option>
 							<option value="sb">SB</option> -->
@@ -463,7 +463,7 @@
 			if (PROP == "hr") {
 				["savant.est_ba", "savant.est_woba", "savant.sweet_spot_percent", "pitcherData.flyballs_percent", "pitcherData.p_era", "pitcherData.xwoba", "pitcherData.xba", "daily.line"].map(x => TABLE.hideColumn(x));
 				["savant.hard_hit_percent", "pitcherData.hard_hit_percent"].map(x => TABLE.showColumn(x));
-			} else if (["h", "h+r+rbi"].includes(PROP)) {
+			} else if (["h", "h_r_rbi"].includes(PROP)) {
 				["savant.exit_velocity_avg", "pitcherData.exit_velocity_avg"].map(x => TABLE.hideColumn(x));
 				["pitcherData.xba", "pitcherData.xwoba"].map(x => TABLE.showColumn(x));
 			}

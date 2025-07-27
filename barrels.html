@@ -290,7 +290,7 @@
 				data = filtered;
 			}
 			*/
-			data = data.filter(r => r.book != "");
+			//data = data.filter(r => r.book != "");
 
 			TABLE = new Tabulator("#table", {
 				tooltipsHeader: true,
@@ -301,7 +301,7 @@
 				data: data,
 				initialSort: [
 					//{column: "barrel_ct", dir: "desc"},
-					{column: "game_trends.hard_hit_ct.3G", dir: "desc"},
+					{column: "game_trends.barrel_ct.5G", dir: "desc"},
 					{column: "game_trends.barrel_ct.3G", dir: "desc"},
 				],
 				columnDefaults: {
@@ -408,6 +408,7 @@
 				TABLE.setFilter([
 					{field:"homerLogs.pa.z_median", type:">=", value: -0.1},
 					{field:"game", type:"!=", value: ""},
+					{field:"book", type:"!=", value: ""},
 					//{field:"game_trends.hard_hit_ct.5GPercentile", type:">=", value: 75},
 					{field:"barrel_ctPercentile", type:">=", value: 50},
 					{field:"game_trends.barrel_ct.5G", type:">", value: 0},

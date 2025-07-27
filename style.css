@@ -17,6 +17,32 @@ body {
 	height: 100vh;
 	color: #e8e6e3;
 }
+.oauth-btn {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 8px;
+	  padding: 10px 16px;
+	  border: none;
+	  border-radius: 6px;
+	  font-size: 1rem;
+	  font-weight: 600;
+	  cursor: pointer;
+	  transition: background 0.2s ease;
+	}
+
+	.discord-btn {
+	  background-color: #5865F2; /* Discord blurple */
+	  color: #fff;
+	}
+
+	.discord-btn:hover {
+	  background-color: #4752C4;
+	}
+
+	.oauth-icon {
+	  width: 20px;
+	  height: 20px;
+	}
 #header-container {
 	position: absolute;
 	width: 100%;
