@@ -268,7 +268,7 @@
 		renderTable([]);
 		fetchData();
 		let intervalId = 0;
-		let seconds = 5 * 60;
+		let seconds = 60;
 		if (REFRESH == "auto") {
 			intervalId = setInterval(() => {
 				if (!MOBILE || document.hasFocus()) {
@@ -302,9 +302,13 @@
 			if (render) {
 				renderTable(data);
 			} else {
-				TABLE.updateOrAddData(data);
-				updateHeaders();
-				TABLE.setSort(TABLE.getSorters());
+				if (!TABLE.options.groupBy) {
+					TABLE.setData(TABLE.getData());
+				} else {
+					TABLE.updateOrAddData(data);
+					updateHeaders();
+					TABLE.setSort(TABLE.getSorters());
+				}
 			}
 
 			setTimeout(function() {

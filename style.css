@@ -43,6 +43,23 @@ body {
 	  width: 20px;
 	  height: 20px;
 	}
+	.discord-login {
+		background-color: #5865F2; /* Discord brand color */
+	  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+	}
+	.discord-login img {
+  height: 24px;
+  width: auto;
+}
 #header-container {
 	position: absolute;
 	width: 100%;
