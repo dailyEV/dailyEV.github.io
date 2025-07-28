@@ -470,6 +470,18 @@
 						responsive: 0
 					},
 					{
+						title: "Implied",
+						field: "impliedMut",
+						width: MOBILE ? 40 : 60,
+						sorter: "number",
+						formatter: impliedFormatter,
+						mutatorData: (value, data) => {
+							let pre = BOOK ? `${BOOK}_` : "";
+							return data[`${pre}implied`] || "";
+						},
+						responsive: 0
+					},
+					{
 						title: "Player",
 						field: "player",
 						headerFilter: "input",
@@ -627,15 +639,15 @@
 
 		function implied() {
 			TABLE.getColumns().map(c => c.hide());
-			["vs-circa_ev", "vs-circa_fairVal", "vs-circa_implied", "pitcherHR_PA", "player", "bvp", "book", "weather", "bookOdds.circa",  "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
+			["evMut", "fairValMut", "impliedMut", "pitcherHR_PA", "player", "bvp", "book", "weather", "bookOdds.circa",  "bpp", "homerLogs.pa.streak", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(c => TABLE.showColumn(c));
 			document.querySelector("#table").style.width = "max-content";
 			TABLE.setSort([
-				{column: "vs-circa_implied", dir: "desc"}
+				{column: "impliedMut", dir: "desc"}
 			]);
 
 			const rows = TABLE.getData("active");
-			const tweet = rows.slice(0, 10).map((row, idx) => {
-				return `${idx+1}. ${title(row.player)} - ${row["vs-circa_implied"]}%`;
+			const tweet = rows.slice(0, 20).map((row, idx) => {
+				return `${idx+1}. ${title(row.player)} - ${row["impliedMut"]}%`;
 			})
 			console.log(tweet.join("\n"));
 		}

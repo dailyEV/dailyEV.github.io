@@ -16,6 +16,25 @@ body {
 	margin: 0; padding: 0;
 	height: 100vh;
 	color: #e8e6e3;
+	/* Blue Gradient */
+	background: linear-gradient(160deg, #0d3b66 0%, #021526 100%);
+
+	/*
+	position: relative;
+	background: url('/logos/big_house.png') center/cover no-repeat fixed;
+	*/
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* adjust to taste */
+  pointer-events: none;
+}
+#content, header, #header, footer, .profile-container {
+  position: relative;
+  z-index: 1; /* ensure your content is above overlay */
+  color: #fff;
 }
 .oauth-btn {
 	  display: inline-flex;
@@ -44,22 +63,132 @@ body {
 	  height: 20px;
 	}
 	.discord-login {
-		background-color: #5865F2; /* Discord brand color */
-	  color: white;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
+		display: inline-flex;
+	  align-items: center;
+	  gap: 8px;
+	  background-color: #5865F2;
+	  color: #fff;
+	  font-weight: 600;
+	  border: none;
+	  border-radius: 6px;
+	  padding: 8px 10px;
+	  font-size: 14px;
+	  cursor: pointer;
+	  transition: background 0.2s ease;
+	}
+	.discord-login:hover {
+	  background-color: #4752C4;
 	}
 	.discord-login img {
-  height: 24px;
-  width: auto;
-}
+	  height: 24px;
+	  width: auto;
+	}
+	.gsi-material-button {
+	  -moz-user-select: none;
+	  -webkit-user-select: none;
+	  -ms-user-select: none;
+	  -webkit-appearance: none;
+	  background-color: WHITE;
+	  background-image: none;
+	  border: 1px solid #747775;
+	  -webkit-border-radius: 4px;
+	  border-radius: 4px;
+	  -webkit-box-sizing: border-box;
+	  box-sizing: border-box;
+	  color: #1f1f1f;
+	  cursor: pointer;
+	  font-family: 'Roboto', arial, sans-serif;
+	  font-size: 14px;
+	  height: 40px;
+	  letter-spacing: 0.25px;
+	  outline: none;
+	  overflow: hidden;
+	  padding: 0;
+	  position: relative;
+	  text-align: center;
+	  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+	  transition: background-color .218s, border-color .218s, box-shadow .218s;
+	  vertical-align: middle;
+	  white-space: nowrap;
+	  width: 40px;
+	  max-width: 400px;
+	  min-width: min-content;
+	}
+
+	.gsi-material-button .gsi-material-button-icon {
+	  height: 20px;
+	  margin-right: 12px;
+	  min-width: 20px;
+	  width: 20px;
+	  margin: 0;
+	  padding: 9px;
+	}
+
+	.gsi-material-button .gsi-material-button-content-wrapper {
+	  -webkit-align-items: center;
+	  align-items: center;
+	  display: flex;
+	  -webkit-flex-direction: row;
+	  flex-direction: row;
+	  -webkit-flex-wrap: nowrap;
+	  flex-wrap: nowrap;
+	  height: 100%;
+	  justify-content: space-between;
+	  position: relative;
+	  width: 100%;
+	}
+
+	.gsi-material-button .gsi-material-button-contents {
+	  -webkit-flex-grow: 1;
+	  flex-grow: 1;
+	  font-family: 'Roboto', arial, sans-serif;
+	  font-weight: 500;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  vertical-align: top;
+	}
+
+	.gsi-material-button .gsi-material-button-state {
+	  -webkit-transition: opacity .218s;
+	  transition: opacity .218s;
+	  bottom: 0;
+	  left: 0;
+	  opacity: 0;
+	  position: absolute;
+	  right: 0;
+	  top: 0;
+	}
+
+	.gsi-material-button:disabled {
+	  cursor: default;
+	  background-color: #ffffff61;
+	  border-color: #1f1f1f1f;
+	}
+
+	.gsi-material-button:disabled .gsi-material-button-contents {
+	  opacity: 38%;
+	}
+
+	.gsi-material-button:disabled .gsi-material-button-icon {
+	  opacity: 38%;
+	}
+
+	.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+	.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+	  background-color: #303030;
+	  opacity: 12%;
+	}
+
+	.gsi-material-button:not(:disabled):hover {
+	  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+	  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+	}
+
+	.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+	  background-color: #303030;
+	  opacity: 8%;
+	}
+
 #header-container {
 	position: absolute;
 	width: 100%;
@@ -227,7 +356,7 @@ footer {
 }
 button {
 	margin: 0;
-	padding: 0.4rem 0.8rem;
+	padding: 10px 10px;
 	border-radius: 4px;
 	border: none;
 	outline: none;
@@ -263,6 +392,10 @@ button {
 #page-select {
 }
 #auth-buttons {
+	display: flex;
+  align-items: center;
+  gap: 10px; /* space between buttons */
+  justify-content: flex-end; /* push to right side of header */
 }
 #auth #login {
 	margin-left: 0.5rem;
@@ -658,7 +791,7 @@ nav {
 	-moz-appearance: none;
 	-ms-appearance: none;
 	margin: 0;
-	padding: 0.5rem;
+	padding: 10px 10px;
 	border-radius: 4px;
 	border: none;
 	background-color: #444; color: #fff;

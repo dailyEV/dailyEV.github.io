@@ -853,6 +853,8 @@
 
 		function renderTable(data) {
 			let props = [...new Set(data.map(row => row.prop.toUpperCase()))];
+
+			data = data.filter(r => r.player != "josh naylor");
 			/*
 			const select = document.querySelector("#prop-select");
 			select.innerHTML = `
