@@ -16,6 +16,25 @@ body {
 	margin: 0; padding: 0;
 	height: 100vh;
 	color: #e8e6e3;
+	/* Blue Gradient */
+	background: linear-gradient(160deg, #0d3b66 0%, #021526 100%);
+
+	/*
+	position: relative;
+	background: url('/logos/big_house.png') center/cover no-repeat fixed;
+	*/
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* adjust to taste */
+  pointer-events: none;
+}
+#content, header, #header, footer, .profile-container {
+  position: relative;
+  z-index: 1; /* ensure your content is above overlay */
+  color: #fff;
 }
 #header-container {
 	position: absolute;
