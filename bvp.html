@@ -75,7 +75,7 @@
 <body>
 	<header id="header">
 		<div id="title">
-			<h1>+EV Dingers</h1>
+			<h1>+EV Sharps</h1>
 		</div>
 		<div id="sub-header">
 			<div class="dropdown">
@@ -158,7 +158,7 @@
 		</div>
 	</main>
 	<footer class="site-footer">
-		<p>All content is for entertainment purposes only. +EV Dingers is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
+		<p>All content is for entertainment purposes only. +EV Sharps is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
 	</footer>
 	<script type="text/javascript" src="shared.js"></script>
 	<script type="text/javascript">
@@ -179,6 +179,7 @@
 		let BVP = URLParams.get("bvp");
 		let BVS = URLParams.get("bvs");
 		let PRETTY = URLParams.get("pretty");
+		let MARK = URLParams.get("mark");
 		//let LAST = URLParams.get("last") != undefined;
 		let LAST = false;
 		let YEAR = new Date();
@@ -197,6 +198,13 @@
 		window.addEventListener("resize", () => {
 			MOBILE = window.innerWidth <= 600;
 		});
+
+		if (MARK != undefined) {
+			document.querySelector("#watermark").style.display = "initial";
+			if (PRETTY != undefined) {
+				document.querySelector("#watermark").style.width = "20%";
+			}
+		}
 
 		function initDatepicker(dt) {
 			flatpickr("#date", {
@@ -765,7 +773,7 @@
 
 		function pretty_() {
 			TABLE.getColumns().map(col => col.hide());
-			["daily.book", "player", "opp", "bvp", "bvt", "bvs", "bpp", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
+			["daily.book", "player", "opp", "bvp", "bvt", "bvs", "bpp", "pitcherHR_PA", "homerLogs.pa.streak", "homerLogs.pa.avg", "homerLogs.pa.med", "homerLogs.pa.z_median"].forEach(col => TABLE.showColumn(col));
 		}
 	</script>
 	<script src="auth.js"></script>

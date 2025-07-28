@@ -21,25 +21,25 @@ function getToday() {
 }
 
 let PAGE_DROPDOWN = `
-	<option value="profile">Profile</option>
-	<option value="pricing">Pricing</option>
-	<option value="dingers">⚾ Dingers</option>
-	<option value="feed">⚾ Feed</option>
-	<option value="bvp">⚾ BvP</option>
-	<option value="stats">📊 Stats</option>
-	<option value="barrels">🏏 Barrels</option>
-	<option value="trends">⚾ Trends</option>
-	<option value="mlb">⚾ Props</option>
-	<option value="golf">⛳ Props</option>
-	<option value="nfl">🏈 Props</option>
-	<option value="ranks">🏈 Fantasy Ranks</option>
-	<option value="futures">🏈 Futures</option>
-	<option value="nhl">🏒 Props</option>
-	<option value="nba">🏀 Props</option>
+	<option value="profile">👤 Profile</option>
+	<option value="pricing">💳 Pricing</option>
+	<option value="dingers">🚀 MLB Dingers</option>
+	<option value="feed">📡 MLB Feed</option>
+	<option value="bvp">🆚 MLB BvP</option>
+	<option value="stats">📊 MLB Stats</option>
+	<option value="barrels">🏏 MLB Barrels</option>
+	<option value="trends">📈 MLB Trends</option>
+	<option value="mlb">🎯 MLB Props</option>
+	<option value="historical">📜 MLB Dingers (H)</option>
+	<option value="kambi">🚀 MLB Dingers (K)</option>
+	<option value="preview">🔍 MLB Preview</option>
+	<option value="nfl">🏈 NFL Props</option>
+	<option value="ranks">📋 NFL Fantasy Ranks</option>
+	<option value="futures">🔮 NFL Futures</option>
+	<option value="golf">⛳ GOLF Props</option>
+	<option value="nhl">🏒 NHL Props</option>
+	<option value="nba">🏀 NBA Props</option>
 	<option value="ncaab">🏀 CBB Props</option>
-	<option value="historical">⚾ Dingers (H)</option>
-	<option value="kambi">⚾ Dingers (K)</option>
-	<option value="preview">⚾ Preview</option>
 `;
 
 setTimeout(() => {

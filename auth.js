@@ -25,7 +25,7 @@ async function upsertProfile(session) {
 	let tier = "free";
 	let discordId = null;
 	let discordUsername = null;
-	// check identities array
+	// check identities array for discord
 	const discordIdentity = session.user.identities?.find(
 		(id) => id.provider === "discord"
 	);

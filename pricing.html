@@ -27,13 +27,9 @@
 </script>
 
 <style>
-	body {
-		margin: 0; padding: 0;
-		font-size: 18px;
-		height: 100vh;
-	}
 	#content {
 		justify-content: center;
+		align-items: center;
 	}
 	#pricing-cards {
 		text-align: center;
@@ -42,103 +38,103 @@
 		width: 100%;
 	}
 
-#pricing-cards h2 {
-	font-size: 2rem;
-	margin-bottom: 0.25rem;
-	justify-content: center;
-}
+	#pricing-cards h2 {
+		font-size: 2rem;
+		margin-bottom: 0.25rem;
+		justify-content: center;
+	}
 
-#pricing-cards .pricing-intro {
-	color: #aaa;
-	margin-bottom: 2rem;
-}
+	#pricing-cards .pricing-intro {
+		color: #aaa;
+		margin-bottom: 2rem;
+	}
 
-.pricing-grid {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10rem;
-	justify-content: center;
-}
+	.pricing-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10rem;
+		justify-content: center;
+	}
 
-.pricing-card {
-	background: #1b1d1e;
-	color: #fff;
-	border-radius: 12px;
-	padding: 1.5rem;
-	display: flex;
-	max-width: 400px;
-	flex-direction: column;
-	align-items: center;
-	box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-	border: 1px solid rgba(255,255,255,0.1);
-}
+	.pricing-card {
+		background: #1b1d1e;
+		color: #fff;
+		border-radius: 12px;
+		padding: 1.5rem;
+		display: flex;
+		max-width: 400px;
+		flex-direction: column;
+		align-items: center;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+		border: 1px solid rgba(255,255,255,0.1);
+	}
 
-.pricing-card.popular {
-	border-color: gold;
-}
+	.pricing-card.popular {
+		border-color: gold;
+	}
 
-.pricing-card.vip {
-	border-color: purple;
-}
+	.pricing-card.vip {
+		border-color: purple;
+	}
 
-.pricing-card h3 {
-	margin-top: 0;
-	font-size: 1.4rem;
-}
+	.pricing-card h3 {
+		margin-top: 0;
+		font-size: 1.4rem;
+	}
 
-.pricing-card .price {
-	font-size: 1.8rem;
-	margin: 0.5rem 0 1rem;
-}
-.pricing-card .price span {
-	font-size: 0.9rem;
-	color: #aaa;
-}
+	.pricing-card .price {
+		font-size: 1.8rem;
+		margin: 0.5rem 0 1rem;
+	}
+	.pricing-card .price span {
+		font-size: 0.9rem;
+		color: #aaa;
+	}
 
-.pricing-card ul {
-	text-align: left;
-	list-style: none;
-	padding: 0;
-	margin: 0 0 1.5rem;
-}
-.pricing-card ul li {
-	margin: 0.5rem 0;
-	font-size: 0.95rem;
-}
+	.pricing-card ul {
+		text-align: left;
+		list-style: none;
+		padding: 0;
+		margin: 0 0 1.5rem;
+	}
+	.pricing-card ul li {
+		margin: 0.5rem 0;
+		font-size: 0.95rem;
+	}
 
-.select-btn {
-	background: #444;
-	color: #fff;
-	border: none;
-	padding: 0.6rem 1.2rem;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 0.95rem;
-	font-weight: bold;
-	transition: background 0.2s ease;
-}
-.select-btn:hover {
-	background: #666;
-}
-.select-btn.highlight {
-	background: gold;
-	color: #000;
-}
-.select-btn.highlight:hover {
-	background: #e6c200;
-}
-.select-btn:disabled {
-	background: #333;
-	color: #777;
-	cursor: default;
-}
+	.select-btn {
+		background: #444;
+		color: #fff;
+		border: none;
+		padding: 0.6rem 1.2rem;
+		border-radius: 6px;
+		cursor: pointer;
+		font-size: 0.95rem;
+		font-weight: bold;
+		transition: background 0.2s ease;
+	}
+	.select-btn:hover {
+		background: #666;
+	}
+	.select-btn.highlight {
+		background: gold;
+		color: #000;
+	}
+	.select-btn.highlight:hover {
+		background: #e6c200;
+	}
+	.select-btn:disabled {
+		background: #333;
+		color: #777;
+		cursor: default;
+	}
 	@media (max-width: 600px) {
 	}
 </style>
 <body>
 	<div id="header">
 		<div id="title">
-			<h1>+EV Dingers</h1>
+			<h1>+EV Sharps</h1>
 		</div>
 		<div id="sub-header">
 			<div class="dropdown">
@@ -200,7 +196,7 @@
 
 				<!-- Website Only -->
 				<div class="pricing-card" data-tier="analyst">
-					<h3>💻 Analysts</h3>
+					<h3>💻 Analyst</h3>
 					<p class="price">$12 <span>/mo</span></p>
 					<ul>
 						<li>⚡ Full Website Access</li>
@@ -216,7 +212,7 @@
 
 				<!-- Website + Discord -->
 				<div class="pricing-card popular" data-tier="sharp">
-					<h3>🎯 Sharps</h3>
+					<h3>🎯 Sharp</h3>
 					<p class="price">$25 <span>/mo</span></p>
 					<ul>
 						<li>💻 Everything in Analyst Tier</li>
@@ -233,7 +229,7 @@
 		</section>
 	</div>
 	<footer class="site-footer">
-		<p>All content is for entertainment purposes only. +EV Dingers is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
+		<p>All content is for entertainment purposes only. +EV Sharps is not affiliated with MLB. <a href="/disclaimer">Read Full Terms</a></p>
 		</footer>
 	<script src="auth.js"></script>
 	<script type="text/javascript" src="shared.js"></script>
